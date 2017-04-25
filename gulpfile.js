@@ -51,7 +51,7 @@ gulp.task('build:js', () => {
     moduleName: 'Planck',
     sourceMap: true,
     plugins: [
-      nodeResolve({ main: true, browser: true }),
+      nodeResolve({ main: true, module: true, browser: true }),
       babel({
         presets: [
           ['es2015', { modules: false }],
@@ -87,7 +87,7 @@ gulp.task('build:js:module', () => {
     entry: './src/main.js',
     format: 'es',
     plugins: [
-      nodeResolve({ main: true, browser: true, module: true }),
+      nodeResolve({ main: true, module: true, browser: true }),
       babel({
         presets: [
           'es2017',
