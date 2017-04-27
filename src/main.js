@@ -22,30 +22,15 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import CustomEvent from './event/CustomEvent'
-import Event from './event/Event'
-import EventBundle from './event/EventBundle'
-import EventDispatcher from './event/EventDispatcher'
-import EventTarget from './event/EventTarget'
-import GenericEvent from './event/GenericEvent'
-import KeyboardEvent from './event/KeyboardEvent'
-import MouseEvent from './event/MouseEvent'
-import Touch from './event/Touch'
-import TouchEvent from './event/TouchEvent'
-import TouchList from './event/TouchList'
-import WheelEvent from './event/WheelEvent'
-
-export {
-  CustomEvent,
-  Event,
-  EventBundle,
-  EventDispatcher,
-  EventTarget,
-  GenericEvent,
-  KeyboardEvent,
-  MouseEvent,
-  Touch,
-  TouchEvent,
-  TouchList,
-  WheelEvent,
-}
+export { default as CustomEvent } from './event/CustomEvent'
+export { default as Event } from './event/Event'
+export { default as EventBundle } from './event/EventBundle'
+export { default as EventDispatcher } from './event/EventDispatcher'
+export { default as EventTarget } from './event/EventTarget'
+export { default as GenericEvent } from './event/GenericEvent'
+export { default as KeyboardEvent } from './event/KeyboardEvent'
+export { default as MouseEvent } from './event/MouseEvent'
+export { default as Touch } from './event/Touch'
+export { default as TouchEvent } from './event/TouchEvent'
+export { default as TouchList } from './event/TouchList'
+export { default as WheelEvent } from './event/WheelEvent'
