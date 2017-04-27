@@ -22,10 +22,11 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import { Namespace } from 'planck-core'
+
 import Event, { modifyEvent } from '../event/Event'
 import EventDispatcher from '../event/EventDispatcher'
 import GenericEvent from '../event/GenericEvent'
-import Namespace from '../core/Namespace'
 
 export const internal = Namespace('EventTarget')
 

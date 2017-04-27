@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import Namespace from '../core/Namespace'
+import { Namespace } from 'planck-core'
 
 export const internal = Namespace('Touch')
 

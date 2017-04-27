@@ -56,6 +56,329 @@ function Namespace(name = undefined) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
+function AssertionError(message) {
+  this.message = message;
+}
+
+Object.setPrototypeOf(AssertionError, Error);
+AssertionError.prototype = Object.create(Error.prototype);
+AssertionError.prototype.name = 'AssertionError';
+AssertionError.prototype.message = '';
+AssertionError.prototype.constructor = AssertionError;
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+
+class Environment {
+  static get type() {
+    try {
+      // eslint-disable-next-line no-new-func
+      if (new Function('return this === window')()) {
+        return 'browser';
+      }
+    } catch (error) {}
+    try {
+      // eslint-disable-next-line no-new-func
+      if (new Function('return this === self')()) {
+        return 'worker';
+      }
+    } catch (error) {}
+    try {
+      // eslint-disable-next-line no-new-func
+      if (new Function('return this === global')()) {
+        return 'node';
+      }
+    } catch (error) {}
+    throw new Error();
+  }
+
+  static get global() {
+    switch (this.type) {
+      case 'browser':
+        return window;
+      case 'worker':
+        return self;
+      case 'node':
+        return global;
+      default:
+        break;
+    }
+    throw new Error();
+  }
+}
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+let path;
+if (Environment.type === 'node') {
+  // eslint-disable-next-line global-require
+  path = require('path');
+}
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+function ImplementationError(message) {
+  this.message = message;
+}
+
+Object.setPrototypeOf(ImplementationError, Error);
+ImplementationError.prototype = Object.create(Error.prototype);
+ImplementationError.prototype.name = 'ImplementationError';
+ImplementationError.prototype.message = '';
+ImplementationError.prototype.constructor = ImplementationError;
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+const internal$5 = Namespace('Semaphore');
+
+class Task {
+  constructor(semaphore, callback) {
+    const promises = [new Promise((resolve, reject) => {
+      this.resolve = resolve;
+      this.reject = reject;
+    }), new Promise(resolve => {
+      this.let = resolve;
+    }).then(() => {
+      callback(this.resolve, this.reject);
+    })];
+    this.promise = Promise.all(promises).then(values => {
+      semaphore.signal();
+      return values[0];
+    }, reason => {
+      semaphore.signal();
+      return Promise.reject(reason);
+    });
+  }
+}
+
+function createCommonjsModule(fn, module) {
+  return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var base64Arraybuffer = createCommonjsModule(function (module, exports) {
+  /*
+   * base64-arraybuffer
+   * https://github.com/niklasvh/base64-arraybuffer
+   *
+   * Copyright (c) 2012 Niklas von Hertzen
+   * Licensed under the MIT license.
+   */
+  (function () {
+    "use strict";
+
+    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    // Use a lookup table to find the index.
+    var lookup = new Uint8Array(256);
+    for (var i = 0; i < chars.length; i++) {
+      lookup[chars.charCodeAt(i)] = i;
+    }
+
+    exports.encode = function (arraybuffer) {
+      var bytes = new Uint8Array(arraybuffer),
+          i,
+          len = bytes.length,
+          base64 = "";
+
+      for (i = 0; i < len; i += 3) {
+        base64 += chars[bytes[i] >> 2];
+        base64 += chars[(bytes[i] & 3) << 4 | bytes[i + 1] >> 4];
+        base64 += chars[(bytes[i + 1] & 15) << 2 | bytes[i + 2] >> 6];
+        base64 += chars[bytes[i + 2] & 63];
+      }
+
+      if (len % 3 === 2) {
+        base64 = base64.substring(0, base64.length - 1) + "=";
+      } else if (len % 3 === 1) {
+        base64 = base64.substring(0, base64.length - 2) + "==";
+      }
+
+      return base64;
+    };
+
+    exports.decode = function (base64) {
+      var bufferLength = base64.length * 0.75,
+          len = base64.length,
+          i,
+          p = 0,
+          encoded1,
+          encoded2,
+          encoded3,
+          encoded4;
+
+      if (base64[base64.length - 1] === "=") {
+        bufferLength--;
+        if (base64[base64.length - 2] === "=") {
+          bufferLength--;
+        }
+      }
+
+      var arraybuffer = new ArrayBuffer(bufferLength),
+          bytes = new Uint8Array(arraybuffer);
+
+      for (i = 0; i < len; i += 4) {
+        encoded1 = lookup[base64.charCodeAt(i)];
+        encoded2 = lookup[base64.charCodeAt(i + 1)];
+        encoded3 = lookup[base64.charCodeAt(i + 2)];
+        encoded4 = lookup[base64.charCodeAt(i + 3)];
+
+        bytes[p++] = encoded1 << 2 | encoded2 >> 4;
+        bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
+        bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
+      }
+
+      return arraybuffer;
+    };
+  })();
+});
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+if (Environment.type === 'node') {
+  // eslint-disable-next-line global-require
+  const encoding = require('text-encoding');
+  if (Environment.global.TextEncoder === undefined) {
+    Environment.global.TextEncoder = encoding.TextEncoder;
+  }
+  if (Environment.global.TextDecoder === undefined) {
+    Environment.global.TextDecoder = encoding.TextDecoder;
+  }
+}
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
 const internal = Namespace('Event');
 
 class Event {
@@ -248,7 +571,7 @@ class CustomEvent extends Event {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$1 = Namespace('EventBundle');
+const internal$1$1 = Namespace('EventBundle');
 
 class EventBundle extends Event {
   init(_ref = {}) {
@@ -256,23 +579,23 @@ class EventBundle extends Event {
         rest = objectWithoutProperties(_ref, ['originalEvent']);
 
     super.init(_extends({}, rest));
-    const scope = internal$1(this);
+    const scope = internal$1$1(this);
     scope.originalEvent = originalEvent;
     return this;
   }
 
   preventDefault() {
-    const scope = internal$1(this);
+    const scope = internal$1$1(this);
     scope.originalEvent.preventDefault();
   }
 
   get defaultPrevented() {
-    const scope = internal$1(this);
+    const scope = internal$1$1(this);
     return scope.originalEvent.defaultPrevented;
   }
 
   get originalEvent() {
-    const scope = internal$1(this);
+    const scope = internal$1$1(this);
     return scope.originalEvent;
   }
 }
@@ -644,7 +967,7 @@ class KeyboardEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$4 = Namespace('MouseEvent');
+const internal$4$1 = Namespace('MouseEvent');
 
 class MouseEvent extends EventBundle {
   init(_ref = {}) {
@@ -652,7 +975,7 @@ class MouseEvent extends EventBundle {
         rest = objectWithoutProperties(_ref, ['x', 'y', 'movementX', 'movementY']);
 
     super.init(_extends({}, rest));
-    const scope = internal$4(this);
+    const scope = internal$4$1(this);
     scope.x = x;
     scope.y = y;
     scope.movementX = movementX;
@@ -661,22 +984,22 @@ class MouseEvent extends EventBundle {
   }
 
   get x() {
-    const scope = internal$4(this);
+    const scope = internal$4$1(this);
     return scope.x;
   }
 
   get y() {
-    const scope = internal$4(this);
+    const scope = internal$4$1(this);
     return scope.y;
   }
 
   get movementX() {
-    const scope = internal$4(this);
+    const scope = internal$4$1(this);
     return scope.movementX;
   }
 
   get movementY() {
-    const scope = internal$4(this);
+    const scope = internal$4$1(this);
     return scope.movementY;
   }
 
@@ -725,7 +1048,7 @@ class MouseEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$5 = Namespace('Touch');
+const internal$5$1 = Namespace('Touch');
 
 class Touch {
   constructor(...args) {
@@ -733,7 +1056,7 @@ class Touch {
   }
 
   init({ x, y, target, originalTouch } = {}) {
-    const scope = internal$5(this);
+    const scope = internal$5$1(this);
     scope.x = x;
     scope.y = y;
     scope.target = target;
@@ -746,22 +1069,22 @@ class Touch {
   }
 
   get x() {
-    const scope = internal$5(this);
+    const scope = internal$5$1(this);
     return scope.x;
   }
 
   get y() {
-    const scope = internal$5(this);
+    const scope = internal$5$1(this);
     return scope.y;
   }
 
   get target() {
-    const scope = internal$5(this);
+    const scope = internal$5$1(this);
     return scope.target;
   }
 
   get originalTouch() {
-    const scope = internal$5(this);
+    const scope = internal$5$1(this);
     return scope.originalTouch;
   }
 }
@@ -790,7 +1113,7 @@ class Touch {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$6 = Namespace('TouchEvent');
+const internal$6$1 = Namespace('TouchEvent');
 
 class TouchEvent extends EventBundle {
   init(_ref = {}) {
@@ -798,19 +1121,19 @@ class TouchEvent extends EventBundle {
         rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
 
     super.init(_extends({}, rest));
-    const scope = internal$6(this);
+    const scope = internal$6$1(this);
     scope.touches = touches;
     scope.changedTouches = changedTouches;
     return this;
   }
 
   get touches() {
-    const scope = internal$6(this);
+    const scope = internal$6$1(this);
     return scope.touches;
   }
 
   get changedTouches() {
-    const scope = internal$6(this);
+    const scope = internal$6$1(this);
     return scope.changedTouches;
   }
 

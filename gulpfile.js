@@ -44,7 +44,7 @@ const uglify = require('uglify-js')
 
 // Build
 
-gulp.task('build:js', () => {
+gulp.task('build:main', () => {
   return rollup({
     entry: './src/main.js',
     format: 'umd',
@@ -82,7 +82,7 @@ gulp.task('build:js', () => {
   .pipe(gulp.dest('./build'))
 })
 
-gulp.task('build:js:module', () => {
+gulp.task('build:module', () => {
   return rollup({
     entry: './src/main.js',
     format: 'es',
@@ -112,7 +112,7 @@ gulp.task('build:js:module', () => {
 
 // Compress
 
-gulp.task('compress:js', () => {
+gulp.task('compress:main', () => {
   return gulp.src([
     './build/planck-event.js',
   ])
@@ -129,7 +129,7 @@ gulp.task('compress:js', () => {
 
 // Lint
 
-gulp.task('lint:js', () => {
+gulp.task('lint', () => {
   return gulp.src([
     './gulpfile.js',
     './src/**/*.js',
@@ -150,12 +150,8 @@ gulp.task('clean', () => {
 gulp.task('build', sequence(...[
   'clean',
   [
-    'build:js',
-    'build:js:module',
+    'build:main',
+    'build:module',
   ],
-  'compress:js',
+  'compress:main',
 ]))
-
-gulp.task('lint', [
-  'lint:js',
-])

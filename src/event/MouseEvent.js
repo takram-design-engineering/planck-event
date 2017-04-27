@@ -22,8 +22,9 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import { Namespace } from 'planck-core'
+
 import EventBundle from '../event/EventBundle'
-import Namespace from '../core/Namespace'
 
 export const internal = Namespace('MouseEvent')
 
