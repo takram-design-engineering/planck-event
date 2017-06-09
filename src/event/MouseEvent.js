@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from 'planck-core'
+import { Namespace } from '@takram/planck-core'
 
 import EventBundle from '../event/EventBundle'
 
@@ -32,10 +32,10 @@ export default class MouseEvent extends EventBundle {
   init({ x, y, movementX, movementY, ...rest } = {}) {
     super.init({ ...rest })
     const scope = internal(this)
-    scope.x = x
-    scope.y = y
-    scope.movementX = movementX
-    scope.movementY = movementY
+    scope.x = x || 0
+    scope.y = y || 0
+    scope.movementX = movementX || 0
+    scope.movementY = movementY || 0
     return this
   }
 

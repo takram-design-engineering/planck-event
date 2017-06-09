@@ -1,0 +1,118 @@
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+import chai from 'chai'
+
+import { Event, modifyEvent } from '../..'
+
+const expect = chai.expect
+
+describe('Event', () => {
+  it('supports instanceof', () => {
+    expect(new Event()).instanceof(Event)
+  })
+
+  it('initializes properties', () => {
+    const event = new Event()
+    expect(event.type).equal(null)
+    expect(event.target).equal(null)
+    expect(event.currentTarget).equal(null)
+    expect(event.phase).equal(null)
+    expect(event.captures).equal(true)
+    expect(event.bubbles).equal(false)
+    expect(event.timestamp).a('number')
+    expect(event.propagationStopped).equal(false)
+    expect(event.immediatePropagationStopped).equal(false)
+  })
+
+  describe('#init', () => {
+    it('allows call without arguments', () => {
+      const event = new Event()
+      expect(() => {
+        event.init()
+      }).not.throws()
+    })
+
+    it('applies parameters', done => {
+      const event = new Event()
+      event.init({
+        type: 'test',
+        captures: false,
+        bubbles: true,
+      })
+      event.stopImmediatePropagation()
+      const target = {}
+      const currentTarget = {}
+      modifyEvent(event).target = target
+      modifyEvent(event).currentTarget = currentTarget
+      modifyEvent(event).phase = 'bubble'
+      const timestamp = event.timestamp
+      setTimeout(() => {
+        event.init({ type: 'init' })
+        expect(event.type).equal('init')
+        expect(event.target).equal(null)
+        expect(event.currentTarget).equal(null)
+        expect(event.phase).equal(null)
+        expect(event.captures).equal(true)
+        expect(event.bubbles).equal(false)
+        expect(event.timestamp).not.equal(timestamp)
+        expect(event.propagationStopped).equal(false)
+        expect(event.immediatePropagationStopped).equal(false)
+        done()
+      }, 10)
+    })
+  })
+
+  describe('#modifyEvent', () => {
+    it('allows changing targets and phase', () => {
+      const event = new Event()
+      const target = {}
+      const currentTarget = {}
+      modifyEvent(event).target = target
+      modifyEvent(event).currentTarget = currentTarget
+      modifyEvent(event).phase = 'bubble'
+      expect(event.target).equal(target)
+      expect(event.currentTarget).equal(currentTarget)
+      expect(event.phase).equal('bubble')
+    })
+  })
+
+  describe('#stopPropagation', () => {
+    it('sets properties', () => {
+      const event = new Event()
+      event.stopPropagation()
+      expect(event.propagationStopped).equal(true)
+      expect(event.immediatePropagationStopped).equal(false)
+    })
+  })
+
+  describe('#stopImmediatePropagation', () => {
+    it('sets properties', () => {
+      const event = new Event()
+      event.stopImmediatePropagation()
+      expect(event.propagationStopped).equal(true)
+      expect(event.immediatePropagationStopped).equal(true)
+    })
+  })
+})

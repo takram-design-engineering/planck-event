@@ -25,8 +25,8 @@
 import CustomEvent from '../event/CustomEvent'
 
 export default class GenericEvent extends CustomEvent {
-  init({ type, target, ...rest } = {}) {
-    super.init({ type, target, captures: false, bubbles: false })
+  init({ type, target, captures = false, bubbles = false, ...rest } = {}) {
+    super.init({ type, target, captures, bubbles })
     Object.entries(rest).forEach(entry => {
       const [property, value] = entry
       if (!{}.hasOwnProperty.call(this, property)) {

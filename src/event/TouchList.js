@@ -22,22 +22,34 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export default class TouchList extends Array {
+import { Namespace } from '@takram/planck-core'
+
+const internal = Namespace('TouchList')
+
+export default class TouchList {
   constructor(...args) {
-    super()
+    const scope = internal(this)
+    scope.array = []
     this.init(...args)
   }
 
   init(first, ...rest) {
-    this.length = 0
-    if (first instanceof TouchList) {
-      this.push(...first)
-    } else {
-      this.push(first, ...rest)
+    const scope = internal(this)
+    scope.array.length = 0
+    if (Array.isArray(first)) {
+      scope.array.push(...first)
+    } else if (first) {
+      scope.array.push(first, ...rest)
     }
   }
 
+  get length() {
+    const scope = internal(this)
+    return scope.array.length
+  }
+
   item(index) {
-    return this[index]
+    const scope = internal(this)
+    return scope.array[index]
   }
 }

@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from 'planck-core'
+import { Namespace } from '@takram/planck-core'
 
 import EventBundle from '../event/EventBundle'
 

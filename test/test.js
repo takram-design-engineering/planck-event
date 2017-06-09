@@ -22,15 +22,16 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { default as CustomEvent } from './event/CustomEvent'
-export { default as Event, modifyEvent } from './event/Event'
-export { default as EventBundle } from './event/EventBundle'
-export { default as EventDispatcher } from './event/EventDispatcher'
-export { default as EventTarget } from './event/EventTarget'
-export { default as GenericEvent } from './event/GenericEvent'
-export { default as KeyboardEvent } from './event/KeyboardEvent'
-export { default as MouseEvent } from './event/MouseEvent'
-export { default as Touch } from './event/Touch'
-export { default as TouchEvent } from './event/TouchEvent'
-export { default as TouchList } from './event/TouchList'
-export { default as WheelEvent } from './event/WheelEvent'
+import './runner'
+
+import './event/CustomEvent.js'
+import './event/Event.js'
+import './event/EventBundle.js'
+import './event/EventDispatcher.js'
+import './event/EventTarget.js'
+import './event/GenericEvent.js'
+import './event/KeyboardEvent.js'
+import './event/MouseEvent.js'
+import './event/Touch.js'
+import './event/TouchList.js'
+import './event/WheelEvent.js'

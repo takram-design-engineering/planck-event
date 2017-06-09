@@ -22,15 +22,50 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { default as CustomEvent } from './event/CustomEvent'
-export { default as Event, modifyEvent } from './event/Event'
-export { default as EventBundle } from './event/EventBundle'
-export { default as EventDispatcher } from './event/EventDispatcher'
-export { default as EventTarget } from './event/EventTarget'
-export { default as GenericEvent } from './event/GenericEvent'
-export { default as KeyboardEvent } from './event/KeyboardEvent'
-export { default as MouseEvent } from './event/MouseEvent'
-export { default as Touch } from './event/Touch'
-export { default as TouchEvent } from './event/TouchEvent'
-export { default as TouchList } from './event/TouchList'
-export { default as WheelEvent } from './event/WheelEvent'
+import path from 'path'
+import babel from 'rollup-plugin-babel'
+import commonjs from 'rollup-plugin-commonjs'
+import nodeResolve from 'rollup-plugin-node-resolve'
+
+const pkg = require('./package.json')
+
+export default {
+  entry: './test/test.js',
+  sourceMap: true,
+  plugins: [
+    nodeResolve({ main: true, module: true, browser: true }),
+    commonjs(),
+    babel({
+      presets: [
+        ['es2015', { modules: false }],
+        'es2016',
+        'es2017',
+        'stage-3',
+      ],
+      plugins: [
+        'external-helpers',
+      ],
+      babelrc: false,
+    }),
+  ],
+  external: [
+    path.resolve(pkg.module),
+    'mocha',
+    'chai',
+    'sinon',
+    'nock',
+  ],
+  globals: {
+    [path.resolve(pkg.module)]: 'Planck',
+    'mocha': 'mocha',
+    'chai': 'chai',
+    'sinon': 'sinon',
+    'nock': 'nock',
+  },
+  targets: [
+    {
+      format: 'iife',
+      dest: './build/test.js',
+    },
+  ],
+}

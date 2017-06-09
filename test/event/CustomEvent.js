@@ -22,37 +22,46 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import chai from 'chai'
 
-import Event from '../event/Event'
+import { Event, CustomEvent } from '../..'
 
-export const internal = Namespace('EventBundle')
+const expect = chai.expect
 
-export default class EventBundle extends Event {
-  init({ originalEvent, ...rest } = {}) {
-    super.init({ ...rest })
-    const scope = internal(this)
-    scope.originalEvent = originalEvent || null
-    return this
-  }
+describe('CustomEvent', () => {
+  it('supports instanceof', () => {
+    const event = new CustomEvent()
+    expect(event).instanceof(CustomEvent)
+    expect(event).instanceof(Event)
+  })
 
-  preventDefault() {
-    const scope = internal(this)
-    if (scope.originalEvent !== null) {
-      scope.originalEvent.preventDefault()
-    }
-  }
+  it('initializes properties', () => {
+    const event = new CustomEvent()
+    expect(event.type).equal(null)
+    expect(event.target).equal(null)
+    expect(event.currentTarget).equal(null)
+    expect(event.phase).equal(null)
+    expect(event.captures).equal(true)
+    expect(event.bubbles).equal(false)
+    expect(event.timestamp).a('number')
+    expect(event.propagationStopped).equal(false)
+    expect(event.immediatePropagationStopped).equal(false)
+  })
 
-  get defaultPrevented() {
-    const scope = internal(this)
-    if (scope.originalEvent === null) {
-      return false
-    }
-    return scope.originalEvent.defaultPrevented
-  }
+  it('takes target as a parameter', () => {
+    const target = {}
+    const event = new CustomEvent({ target })
+    expect(event.target).equal(target)
+  })
 
-  get originalEvent() {
-    const scope = internal(this)
-    return scope.originalEvent
-  }
-}
+  it('initializes parent class', () => {
+    const event = new CustomEvent({
+      type: 'test',
+      captures: false,
+      bubbles: true,
+    })
+    expect(event.type).equal('test')
+    expect(event.captures).equal(false)
+    expect(event.bubbles).equal(true)
+  })
+})

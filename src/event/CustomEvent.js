@@ -26,7 +26,7 @@ import Event, { modifyEvent } from '../event/Event'
 
 export default class CustomEvent extends Event {
   init({ type, target, ...rest } = {}) {
-    super.init({ ...rest, type })
+    super.init({ type, ...rest })
     modifyEvent(this).target = target
     return this
   }

@@ -22,15 +22,54 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { default as CustomEvent } from './event/CustomEvent'
-export { default as Event, modifyEvent } from './event/Event'
-export { default as EventBundle } from './event/EventBundle'
-export { default as EventDispatcher } from './event/EventDispatcher'
-export { default as EventTarget } from './event/EventTarget'
-export { default as GenericEvent } from './event/GenericEvent'
-export { default as KeyboardEvent } from './event/KeyboardEvent'
-export { default as MouseEvent } from './event/MouseEvent'
-export { default as Touch } from './event/Touch'
-export { default as TouchEvent } from './event/TouchEvent'
-export { default as TouchList } from './event/TouchList'
-export { default as WheelEvent } from './event/WheelEvent'
+import chai from 'chai'
+
+import { Environment } from '@takram/planck-core'
+
+import { Touch } from '../..'
+
+const expect = chai.expect
+
+describe('Touch', () => {
+  if (Environment.type === 'node') {
+    Environment.self.Touch = class {}
+  }
+
+  it('supports instanceof', () => {
+    const touch = new Touch()
+    expect(touch).instanceof(Touch)
+  })
+
+  it('initializes properties', () => {
+    const touch = new Touch()
+    expect(touch.x).equal(0)
+    expect(touch.y).equal(0)
+    expect(touch.target).equal(null)
+    expect(touch.originalTouch).equal(null)
+  })
+
+  describe('#init', () => {
+    it('allows call without arguments', () => {
+      const touch = new Touch()
+      expect(() => {
+        touch.init()
+      }).not.throws()
+    })
+
+    it('applies parameters', () => {
+      const target = {}
+      const originalTouch = {}
+      const touch = new Touch()
+      touch.init({
+        x: 1,
+        y: 2,
+        target,
+        originalTouch,
+      })
+      expect(touch.x).equal(1)
+      expect(touch.y).equal(2)
+      expect(touch.target).equal(target)
+      expect(touch.originalTouch).equal(originalTouch)
+    })
+  })
+})

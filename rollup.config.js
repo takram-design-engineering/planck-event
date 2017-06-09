@@ -22,15 +22,33 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { default as CustomEvent } from './event/CustomEvent'
-export { default as Event, modifyEvent } from './event/Event'
-export { default as EventBundle } from './event/EventBundle'
-export { default as EventDispatcher } from './event/EventDispatcher'
-export { default as EventTarget } from './event/EventTarget'
-export { default as GenericEvent } from './event/GenericEvent'
-export { default as KeyboardEvent } from './event/KeyboardEvent'
-export { default as MouseEvent } from './event/MouseEvent'
-export { default as Touch } from './event/Touch'
-export { default as TouchEvent } from './event/TouchEvent'
-export { default as TouchList } from './event/TouchList'
-export { default as WheelEvent } from './event/WheelEvent'
+import babel from 'rollup-plugin-babel'
+import commonjs from 'rollup-plugin-commonjs'
+import nodeResolve from 'rollup-plugin-node-resolve'
+
+export default {
+  entry: './src/main.js',
+  sourceMap: true,
+  plugins: [
+    nodeResolve({ main: true, module: true, browser: true }),
+    commonjs(),
+    babel({
+      presets: [
+        ['es2015', { modules: false }],
+        'es2016',
+        'es2017',
+        'stage-3',
+      ],
+      plugins: [
+        'external-helpers',
+      ],
+    }),
+  ],
+  targets: [
+    {
+      format: 'umd',
+      moduleName: 'Planck',
+      dest: './build/planck-event.js',
+    },
+  ],
+}

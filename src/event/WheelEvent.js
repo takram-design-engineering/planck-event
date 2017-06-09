@@ -25,11 +25,6 @@
 import MouseEvent from '../event/MouseEvent'
 
 export default class WheelEvent extends MouseEvent {
-  init({ ...rest } = {}) {
-    super.init({ ...rest, type: 'wheel' })
-    return this
-  }
-
   get deltaX() {
     return this.originalEvent.deltaX
   }

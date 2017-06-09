@@ -25,11 +25,6 @@
 import EventBundle from '../event/EventBundle'
 
 export default class KeyboardEvent extends EventBundle {
-  init({ ...rest } = {}) {
-    super.init({ ...rest })
-    return this
-  }
-
   get key() {
     return this.originalEvent.key
   }

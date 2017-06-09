@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from 'planck-core'
+import { Namespace } from '@takram/planck-core'
 
 import Event, { modifyEvent } from '../event/Event'
 import EventDispatcher from '../event/EventDispatcher'
@@ -65,12 +65,18 @@ export default class EventTarget extends EventDispatcher {
       while (ancestor !== null && ancestor !== undefined) {
         path.unshift(ancestor)
         ancestor = ancestor.ancestorEventTarget
+        if (path.includes(ancestor)) {
+          break
+        }
       }
     } else {
       let descendant = this
       while (descendant !== null && descendant !== undefined) {
         path.push(descendant)
         descendant = descendant.descendantEventTarget
+        if (path.includes(descendant)) {
+          break
+        }
       }
     }
     return path
@@ -85,6 +91,7 @@ export default class EventTarget extends EventDispatcher {
     if (!(event instanceof Event)) {
       event = new GenericEvent(object)
     }
+    const modifier = modifyEvent(event)
 
     // Just dispatch the event if it doesn't capture nor bubble
     if (!event.captures && !event.bubbles) {
@@ -94,14 +101,13 @@ export default class EventTarget extends EventDispatcher {
 
     // Determine the capturing path of this event
     let capturingPath
-    if (propagationPath !== null && propagationPath !== undefined) {
+    if (Array.isArray(propagationPath)) {
       capturingPath = [...propagationPath]
-    } else if (event.target) {
-      capturingPath = this.determinePropagationPath(event.target)
+    } else {
+      capturingPath = this.determinePropagationPath(event.target || this)
     }
 
     // The last item in the propagation path must always be the event target
-    const modifier = modifyEvent(event)
     if (event.target === null) {
       modifier.target = capturingPath.pop()
     } else {
