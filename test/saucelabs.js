@@ -29,10 +29,12 @@ import express from 'express'
 import localtunnel from 'localtunnel'
 import Saucelabs from 'saucelabs'
 
-import config from '../saucelabs.json'
 import pkg from '../package.json'
 
-const saucelabs = new Saucelabs(config)
+const saucelabs = new Saucelabs({
+  username: process.env.SAUCE_USERNAME,
+  password: process.env.SAUCE_ACCESS_KEY,
+})
 
 let terminated = false
 process.on('SIGTERM', () => {
