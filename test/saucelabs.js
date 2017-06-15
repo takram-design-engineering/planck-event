@@ -28,6 +28,7 @@ import chalk from 'chalk'
 import express from 'express'
 import localtunnel from 'localtunnel'
 import Saucelabs from 'saucelabs'
+import SauceConnectLauncher from 'sauce-connect-launcher'
 
 import pkg from '../package.json'
 
@@ -58,9 +59,14 @@ function startServer(port) {
   })
 }
 
-function createTunnel(port) {
+function createTunnel() {
   return new Promise((resolve, reject) => {
-    localtunnel(port, (error, tunnel) => {
+    SauceConnectLauncher({
+      username: process.env.SAUCE_USERNAME,
+      accessKey: process.env.SAUCE_ACCESS_KEY,
+      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+      logger: console.log,
+    }, (error, tunnel) => {
       if (error) {
         reject(error)
         return
@@ -150,7 +156,7 @@ describe('', function () {
   before(async () => {
     try {
       server = await startServer(8080)
-      tunnel = await createTunnel(8080)
+      tunnel = await createTunnel()
     } catch (error) {
       console.error(error)
       process.exit(1)
@@ -159,8 +165,8 @@ describe('', function () {
       platforms,
       framework,
       name: pkg.name,
-      build: `${pkg.version} (${Date.now()})`,
-      url: `${tunnel.url}/test/`,
+      build: `${pkg.version} (${process.env.TRAVIS_JOB_NUMBER})`,
+      url: `http://localhost:8080/test/`,
       idleTimeout: 30,
     })
   })
@@ -187,14 +193,13 @@ describe('', function () {
         })
         if (!test) {
           done(new Error('could not retrieve test result'))
-        }
-        if (!test.result) {
+        } else if (!test.result) {
           done(new Error('error before or while testing'))
-        }
-        if (test.result.failures !== 0) {
+        } else if (test.result.failures !== 0) {
           done(new Error(test.result.failures, 'test failures'))
+        } else {
+          done()
         }
-        done()
       })
     })
   })
