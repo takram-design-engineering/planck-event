@@ -26,22 +26,32 @@
 
 import chalk from 'chalk'
 import express from 'express'
+import fs from 'fs'
 import localtunnel from 'localtunnel'
 import Saucelabs from 'saucelabs'
 
 import pkg from '../package.json'
 
+let config = {}
+if (fs.existsSync('./saucelabs.json')) {
+  config = JSON.parse(fs.readFileSync('./saucelabs.json', 'utf-8'))
+}
 const saucelabs = new Saucelabs({
-  username: process.env.SAUCE_USERNAME,
-  password: process.env.SAUCE_ACCESS_KEY,
+  username: process.env.SAUCE_USERNAME || config.username,
+  password: process.env.SAUCE_ACCESS_KEY || config.accessKey,
 })
 
-let terminated = false
-process.on('SIGTERM', () => {
-  if (terminated) {
-    process.exit(1)
+let interrupted = false
+process.stdin.setRawMode(true)
+process.stdin.resume()
+process.stdin.on('data', data => {
+  if (data.toString().match(/q/)) {
+    if (interrupted) {
+      process.exit(1)
+    }
+    interrupted = true
+    console.log('Interrupted')
   }
-  terminated = true
 })
 
 function startServer(port) {
@@ -127,7 +137,7 @@ function stopTests(tests) {
       saucelabs.stopJob(id, {}, (error, response) => {
         if (response) {
           const platform = test.platform.join(' ')
-          console.error(chalk.red(`${platform}: terminated`))
+          console.error(chalk.red(`${platform}: interrupted`))
         }
         resolve(response)
       })
@@ -170,7 +180,7 @@ describe('', function () {
     const poll = async () => {
       tests = await updateTestsStatus(tests)
       const completed = tests.every(test => test.completed)
-      if (completed || terminated) {
+      if (completed || interrupted) {
         done()
       } else {
         setTimeout(() => poll(), 5000)
@@ -222,7 +232,7 @@ describe('', function () {
     if (server) {
       server.close()
     }
-    if (terminated) {
+    if (interrupted) {
       process.exit(1)
     }
   })
