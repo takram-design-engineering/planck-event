@@ -22,6 +22,8 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+export { default as Binder } from './event/Binder'
+export { default as Binding } from './event/Binding'
 export { default as CustomEvent } from './event/CustomEvent'
 export { default as Event, modifyEvent } from './event/Event'
 export { default as EventBundle } from './event/EventBundle'
