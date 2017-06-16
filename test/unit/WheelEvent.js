@@ -23,15 +23,12 @@
 //
 
 import chai from 'chai'
-import sinon from 'sinon'
-import sinonChai from 'sinon-chai'
 
 import { Environment } from '@takram/planck-core'
 
 import { EventBundle, WheelEvent } from '../..'
 
 const expect = chai.expect
-chai.use(sinonChai)
 
 describe('WheelEvent', () => {
   if (Environment.type === 'node') {

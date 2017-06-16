@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import { default as Event, modifyEvent } from '../event/Event'
+import Event, { modifyEvent } from '../event/Event'
 import GenericEvent from '../event/GenericEvent'
 
 export const internal = Namespace('EventDispatcher')
