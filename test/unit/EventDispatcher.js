@@ -42,9 +42,13 @@ describe('EventDispatcher', () => {
     const event = new Event({ type: 'test' })
     const listener1 = sinon.spy(arg => {
       expect(arg).equal(event)
+      expect(arg.target).equal(dispatcher)
+      expect(arg.currentTarget).equal(dispatcher)
     })
     const listener2 = sinon.spy(arg => {
       expect(arg).equal(event)
+      expect(arg.target).equal(dispatcher)
+      expect(arg.currentTarget).equal(dispatcher)
     })
     const listener3 = sinon.spy()
     dispatcher.addEventListener('test', listener1)
@@ -63,11 +67,15 @@ describe('EventDispatcher', () => {
     const listener1 = {
       handleEvent: sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(dispatcher)
+        expect(arg.currentTarget).equal(dispatcher)
       }),
     }
     const listener2 = {
       handleEvent: sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(dispatcher)
+        expect(arg.currentTarget).equal(dispatcher)
       }),
     }
     const listener3 = {
@@ -94,6 +102,8 @@ describe('EventDispatcher', () => {
       const dispatcher = new EventDispatcher()
       const listener = sinon.spy(arg => {
         expect(arg).instanceof(Event)
+        expect(arg.target).equal(dispatcher)
+        expect(arg.currentTarget).equal(dispatcher)
         expect(arg.type).equal('test')
         expect(arg.custom).equal(1)
       })
@@ -104,14 +114,26 @@ describe('EventDispatcher', () => {
 
     it('handles capture event phase', () => {
       const dispatcher = new EventDispatcher()
-      const listener = sinon.spy()
-      const captureListener = sinon.spy()
+      const listener = sinon.spy(arg => {
+        expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(dispatcher)
+        expect(arg.type).equal('test')
+      })
+      const captureListener = sinon.spy(arg => {
+        expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(dispatcher)
+        expect(arg.type).equal('test')
+      })
       const bubbleListener = sinon.spy()
       dispatcher.addEventListener('test', listener, true)
       dispatcher.addEventListener('test', listener, false)
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
+      const target = {}
+      modifyEvent(event).target = target
       modifyEvent(event).phase = 'capture'
       dispatcher.dispatchEvent(event)
       expect(listener).calledOnce
@@ -121,14 +143,26 @@ describe('EventDispatcher', () => {
 
     it('handles bubble event phase', () => {
       const dispatcher = new EventDispatcher()
-      const listener = sinon.spy()
+      const listener = sinon.spy(arg => {
+        expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(dispatcher)
+        expect(arg.type).equal('test')
+      })
       const captureListener = sinon.spy()
-      const bubbleListener = sinon.spy()
+      const bubbleListener = sinon.spy(arg => {
+        expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(dispatcher)
+        expect(arg.type).equal('test')
+      })
       dispatcher.addEventListener('test', listener, true)
       dispatcher.addEventListener('test', listener, false)
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
+      const target = {}
+      modifyEvent(event).target = target
       modifyEvent(event).phase = 'bubble'
       dispatcher.dispatchEvent(event)
       expect(listener).calledOnce
@@ -138,7 +172,12 @@ describe('EventDispatcher', () => {
 
     it('handles target event phase', () => {
       const dispatcher = new EventDispatcher()
-      const listener = sinon.spy()
+      const listener = sinon.spy(arg => {
+        expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(dispatcher)
+        expect(arg.type).equal('test')
+      })
       const captureListener = sinon.spy()
       const bubbleListener = sinon.spy()
       dispatcher.addEventListener('test', listener, true)
@@ -146,6 +185,8 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
+      const target = {}
+      modifyEvent(event).target = target
       modifyEvent(event).phase = 'target'
       dispatcher.dispatchEvent(event)
       expect(listener).calledTwice
@@ -155,7 +196,12 @@ describe('EventDispatcher', () => {
 
     it('handles null phase like target event phase', () => {
       const dispatcher = new EventDispatcher()
-      const listener = sinon.spy()
+      const listener = sinon.spy(arg => {
+        expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(dispatcher)
+        expect(arg.type).equal('test')
+      })
       const captureListener = sinon.spy()
       const bubbleListener = sinon.spy()
       dispatcher.addEventListener('test', listener, true)
@@ -163,6 +209,8 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
+      const target = {}
+      modifyEvent(event).target = target
       modifyEvent(event).phase = null
       dispatcher.dispatchEvent(event)
       expect(listener).calledTwice
@@ -181,6 +229,8 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', listener2)
       dispatcher.addEventListener('test', listener3)
       const event = new Event({ type: 'test' })
+      const target = {}
+      modifyEvent(event).target = target
       dispatcher.dispatchEvent(event)
       expect(listener1).calledOnce
       expect(listener2).calledOnce
