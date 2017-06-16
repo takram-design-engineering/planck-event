@@ -42,17 +42,6 @@ const saucelabs = new Saucelabs({
 })
 
 let interrupted = false
-process.stdin.setRawMode(true)
-process.stdin.resume()
-process.stdin.on('data', data => {
-  if (data.toString() === 'q') {
-    if (interrupted) {
-      process.exit(1)
-    }
-    interrupted = true
-    console.log('Interrupted')
-  }
-})
 
 function startServer(port) {
   return new Promise((resolve, reject) => {
