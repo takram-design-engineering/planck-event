@@ -14,7 +14,7 @@ Planck Event
 ### Installing
 
 ```sh
-npm install --save @takram/planck-event
+npm install @takram/planck-event
 ```
 
 ## License
