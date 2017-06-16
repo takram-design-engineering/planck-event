@@ -41,11 +41,11 @@ describe('GenericEvent', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(false)  // false!
+    expect(event.captures).false
+    expect(event.bubbles).false  // false!
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
   })
 
   describe('#init', () => {
@@ -66,8 +66,8 @@ describe('GenericEvent', () => {
         target,
       })
       expect(event.type).equal('test')
-      expect(event.captures).equal(true)
-      expect(event.bubbles).equal(true)
+      expect(event.captures).true
+      expect(event.bubbles).true
       expect(event.target).equal(target)
     })
 

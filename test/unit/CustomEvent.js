@@ -41,11 +41,11 @@ describe('CustomEvent', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(true)
+    expect(event.captures).false
+    expect(event.bubbles).true
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
   })
 
   it('takes target as a parameter', () => {
@@ -61,7 +61,7 @@ describe('CustomEvent', () => {
       bubbles: true,
     })
     expect(event.type).equal('test')
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(true)
+    expect(event.captures).false
+    expect(event.bubbles).true
   })
 })

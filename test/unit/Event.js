@@ -39,11 +39,11 @@ describe('Event', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(true)
+    expect(event.captures).false
+    expect(event.bubbles).true
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
   })
 
   describe('#init', () => {
@@ -74,11 +74,11 @@ describe('Event', () => {
         expect(event.target).equal(null)
         expect(event.currentTarget).equal(null)
         expect(event.phase).equal(null)
-        expect(event.captures).equal(false)
-        expect(event.bubbles).equal(true)
+        expect(event.captures).false
+        expect(event.bubbles).true
         expect(event.timestamp).not.equal(timestamp)
-        expect(event.propagationStopped).equal(false)
-        expect(event.immediatePropagationStopped).equal(false)
+        expect(event.propagationStopped).false
+        expect(event.immediatePropagationStopped).false
         done()
       }, 10)
     })
@@ -102,8 +102,8 @@ describe('Event', () => {
     it('sets properties', () => {
       const event = new Event()
       event.stopPropagation()
-      expect(event.propagationStopped).equal(true)
-      expect(event.immediatePropagationStopped).equal(false)
+      expect(event.propagationStopped).true
+      expect(event.immediatePropagationStopped).false
     })
   })
 
@@ -111,8 +111,8 @@ describe('Event', () => {
     it('sets properties', () => {
       const event = new Event()
       event.stopImmediatePropagation()
-      expect(event.propagationStopped).equal(true)
-      expect(event.immediatePropagationStopped).equal(true)
+      expect(event.propagationStopped).true
+      expect(event.immediatePropagationStopped).true
     })
   })
 })

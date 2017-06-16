@@ -58,11 +58,11 @@ describe('KeyboardEvent', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(true)
+    expect(event.captures).false
+    expect(event.bubbles).true
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
     expect(event.originalEvent).equal(null)
   })
 
@@ -84,8 +84,8 @@ describe('KeyboardEvent', () => {
         originalEvent,
       })
       expect(event.type).equal('test')
-      expect(event.captures).equal(true)
-      expect(event.bubbles).equal(false)
+      expect(event.captures).true
+      expect(event.bubbles).false
       expect(event.originalEvent).equal(originalEvent)
     })
   })

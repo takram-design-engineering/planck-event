@@ -41,11 +41,11 @@ describe('StateEvent', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(true)
+    expect(event.captures).false
+    expect(event.bubbles).true
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
   })
 
   it('takes target as a parameter', () => {
@@ -68,7 +68,7 @@ describe('StateEvent', () => {
       bubbles: false,
     })
     expect(event.type).equal(StateEvent.type())  // type should not propagate
-    expect(event.captures).equal(true)
-    expect(event.bubbles).equal(false)
+    expect(event.captures).true
+    expect(event.bubbles).false
   })
 })
