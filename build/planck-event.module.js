@@ -1109,8 +1109,9 @@ class CustomEvent extends Event {
     let { type, target } = _ref,
         rest = objectWithoutProperties(_ref, ['type', 'target']);
 
-    super.init(_extends({ type }, rest));
-    modifyEvent(this).target = target;
+    super.init(_extends({ type }, rest)
+    // Support target as a parameter
+    );modifyEvent(this).target = target || null;
     return this;
   }
 }
@@ -1241,6 +1242,16 @@ class GenericEvent extends CustomEvent {
 
 const internal$2 = Namespace('EventDispatcher');
 
+function handleEvent(event, listener) {
+  if (typeof listener === 'function') {
+    listener(event);
+  } else if (typeof listener.handleEvent === 'function') {
+    listener.handleEvent(event);
+  } else {
+    throw new Error('Listener is neither function nor event listener');
+  }
+}
+
 class EventDispatcher {
   constructor() {
     const scope = internal$2(this);
@@ -1274,6 +1285,25 @@ class EventDispatcher {
     }
   }
 
+  on(...args) {
+    this.addEventListener(...args);
+    return this;
+  }
+
+  off(...args) {
+    this.removeEventListener(...args);
+    return this;
+  }
+
+  once(type, listener, ...rest) {
+    const delegate = event => {
+      handleEvent(event, listener);
+      this.removeEventListener(type, delegate, ...rest);
+    };
+    this.addEventListener(type, delegate, ...rest);
+    return this;
+  }
+
   dispatchEvent(object) {
     let event = object;
     if (!(event instanceof Event)) {
@@ -1287,13 +1317,7 @@ class EventDispatcher {
     const phase = event.phase;
     if (!phase || phase === 'target' || phase === 'capture') {
       [...listeners.capture].some(listener => {
-        if (typeof listener === 'function') {
-          listener.call(this, event);
-        } else if (typeof listener.handleEvent === 'function') {
-          listener.handleEvent(event);
-        } else {
-          throw new Error('Listener is neither function nor event listener');
-        }
+        handleEvent(event, listener);
         return event.immediatePropagationStopped;
       });
     }
@@ -1302,11 +1326,7 @@ class EventDispatcher {
     }
     if (!phase || phase === 'target' || phase === 'bubble') {
       [...listeners.bubble].some(listener => {
-        if (typeof listener === 'function') {
-          listener.call(this, event);
-        } else if (typeof listener.handleEvent === 'function') {
-          listener.handleEvent(event);
-        }
+        handleEvent(event, listener);
         return event.immediatePropagationStopped;
       });
     }
@@ -1620,7 +1640,60 @@ class MouseEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$5 = Namespace('Touch');
+const internal$5 = Namespace('StateEvent');
+
+class StateEvent extends CustomEvent {
+  init(_ref = {}) {
+    let { name, value } = _ref,
+        rest = objectWithoutProperties(_ref, ['name', 'value']);
+
+    super.init(_extends({}, rest, { type: StateEvent.type(name) }));
+    const scope = internal$5(this);
+    scope.name = name;
+    scope.value = value;
+    return this;
+  }
+
+  get name() {
+    const scope = internal$5(this);
+    return scope.name;
+  }
+
+  get value() {
+    const scope = internal$5(this);
+    return scope.value;
+  }
+
+  static type(name) {
+    return `state:${name === null || name === undefined ? '' : name}`;
+  }
+}
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+const internal$6$1 = Namespace('Touch');
 
 class Touch {
   constructor(options = {}) {
@@ -1628,7 +1701,7 @@ class Touch {
   }
 
   init({ x, y, target, originalTouch } = {}) {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     scope.x = x || 0;
     scope.y = y || 0;
     scope.target = target || null;
@@ -1637,22 +1710,22 @@ class Touch {
   }
 
   get x() {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     return scope.x;
   }
 
   get y() {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     return scope.y;
   }
 
   get target() {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     return scope.target;
   }
 
   get originalTouch() {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     return scope.originalTouch;
   }
 
@@ -1685,7 +1758,7 @@ class Touch {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$6$1 = Namespace('TouchEvent');
+const internal$7$1 = Namespace('TouchEvent');
 
 class TouchEvent extends EventBundle {
   init(_ref = {}) {
@@ -1693,19 +1766,19 @@ class TouchEvent extends EventBundle {
         rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
 
     super.init(_extends({}, rest));
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     scope.touches = touches;
     scope.changedTouches = changedTouches;
     return this;
   }
 
   get touches() {
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     return scope.touches;
   }
 
   get changedTouches() {
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     return scope.changedTouches;
   }
 
@@ -1750,17 +1823,17 @@ class TouchEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$7$1 = Namespace('TouchList');
+const internal$8 = Namespace('TouchList');
 
 class TouchList {
   constructor(...args) {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     scope.array = [];
     this.init(...args);
   }
 
   init(first, ...rest) {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     scope.array.length = 0;
     if (Array.isArray(first)) {
       scope.array.push(...first);
@@ -1770,12 +1843,12 @@ class TouchList {
   }
 
   get length() {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     return scope.array.length;
   }
 
   item(index) {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     return scope.array[index];
   }
 }
@@ -1842,4 +1915,4 @@ class WheelEvent extends MouseEvent {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { CustomEvent, Event, modifyEvent, EventBundle, EventDispatcher, EventTarget, GenericEvent, KeyboardEvent, MouseEvent, Touch, TouchEvent, TouchList, WheelEvent };
+export { CustomEvent, Event, modifyEvent, EventBundle, EventDispatcher, EventTarget, GenericEvent, KeyboardEvent, MouseEvent, StateEvent, Touch, TouchEvent, TouchList, WheelEvent };

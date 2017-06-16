@@ -2587,8 +2587,9 @@ var CustomEvent = function (_Event) {
           target = _ref.target,
           rest = objectWithoutProperties(_ref, ['type', 'target']);
 
-      get(CustomEvent.prototype.__proto__ || Object.getPrototypeOf(CustomEvent.prototype), 'init', this).call(this, _extends({ type: type }, rest));
-      modifyEvent(this).target = target;
+      get(CustomEvent.prototype.__proto__ || Object.getPrototypeOf(CustomEvent.prototype), 'init', this).call(this, _extends({ type: type }, rest)
+      // Support target as a parameter
+      );modifyEvent(this).target = target || null;
       return this;
     }
   }]);
@@ -2760,6 +2761,16 @@ var GenericEvent = function (_CustomEvent) {
 
 var internal$2 = Namespace('EventDispatcher');
 
+function handleEvent(event, listener) {
+  if (typeof listener === 'function') {
+    listener(event);
+  } else if (typeof listener.handleEvent === 'function') {
+    listener.handleEvent(event);
+  } else {
+    throw new Error('Listener is neither function nor event listener');
+  }
+}
+
 var EventDispatcher = function () {
   function EventDispatcher() {
     classCallCheck(this, EventDispatcher);
@@ -2802,10 +2813,36 @@ var EventDispatcher = function () {
       }
     }
   }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(object) {
+    key: 'on',
+    value: function on() {
+      this.addEventListener.apply(this, arguments);
+      return this;
+    }
+  }, {
+    key: 'off',
+    value: function off() {
+      this.removeEventListener.apply(this, arguments);
+      return this;
+    }
+  }, {
+    key: 'once',
+    value: function once(type, listener) {
+      for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        rest[_key - 2] = arguments[_key];
+      }
+
       var _this = this;
 
+      var delegate = function delegate(event) {
+        handleEvent(event, listener);
+        _this.removeEventListener.apply(_this, [type, delegate].concat(rest));
+      };
+      this.addEventListener.apply(this, [type, delegate].concat(rest));
+      return this;
+    }
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(object) {
       var event = object;
       if (!(event instanceof Event)) {
         event = new GenericEvent(object);
@@ -2818,13 +2855,7 @@ var EventDispatcher = function () {
       var phase = event.phase;
       if (!phase || phase === 'target' || phase === 'capture') {
         [].concat(toConsumableArray(listeners.capture)).some(function (listener) {
-          if (typeof listener === 'function') {
-            listener.call(_this, event);
-          } else if (typeof listener.handleEvent === 'function') {
-            listener.handleEvent(event);
-          } else {
-            throw new Error('Listener is neither function nor event listener');
-          }
+          handleEvent(event, listener);
           return event.immediatePropagationStopped;
         });
       }
@@ -2833,11 +2864,7 @@ var EventDispatcher = function () {
       }
       if (!phase || phase === 'target' || phase === 'bubble') {
         [].concat(toConsumableArray(listeners.bubble)).some(function (listener) {
-          if (typeof listener === 'function') {
-            listener.call(_this, event);
-          } else if (typeof listener.handleEvent === 'function') {
-            listener.handleEvent(event);
-          }
+          handleEvent(event, listener);
           return event.immediatePropagationStopped;
         });
       }
@@ -3211,7 +3238,77 @@ var MouseEvent = function (_EventBundle) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var internal$5 = Namespace('Touch');
+var internal$5 = Namespace('StateEvent');
+
+var StateEvent = function (_CustomEvent) {
+  inherits(StateEvent, _CustomEvent);
+
+  function StateEvent() {
+    classCallCheck(this, StateEvent);
+    return possibleConstructorReturn(this, (StateEvent.__proto__ || Object.getPrototypeOf(StateEvent)).apply(this, arguments));
+  }
+
+  createClass(StateEvent, [{
+    key: 'init',
+    value: function init() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      var name = _ref.name,
+          value = _ref.value,
+          rest = objectWithoutProperties(_ref, ['name', 'value']);
+
+      get(StateEvent.prototype.__proto__ || Object.getPrototypeOf(StateEvent.prototype), 'init', this).call(this, _extends({}, rest, { type: StateEvent.type(name) }));
+      var scope = internal$5(this);
+      scope.name = name;
+      scope.value = value;
+      return this;
+    }
+  }, {
+    key: 'name',
+    get: function get$$1() {
+      var scope = internal$5(this);
+      return scope.name;
+    }
+  }, {
+    key: 'value',
+    get: function get$$1() {
+      var scope = internal$5(this);
+      return scope.value;
+    }
+  }], [{
+    key: 'type',
+    value: function type(name) {
+      return 'state:' + (name === null || name === undefined ? '' : name);
+    }
+  }]);
+  return StateEvent;
+}(CustomEvent);
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var internal$6$1 = Namespace('Touch');
 
 var Touch = function () {
   function Touch() {
@@ -3230,7 +3327,7 @@ var Touch = function () {
           target = _ref.target,
           originalTouch = _ref.originalTouch;
 
-      var scope = internal$5(this);
+      var scope = internal$6$1(this);
       scope.x = x || 0;
       scope.y = y || 0;
       scope.target = target || null;
@@ -3240,25 +3337,25 @@ var Touch = function () {
   }, {
     key: 'x',
     get: function get$$1() {
-      var scope = internal$5(this);
+      var scope = internal$6$1(this);
       return scope.x;
     }
   }, {
     key: 'y',
     get: function get$$1() {
-      var scope = internal$5(this);
+      var scope = internal$6$1(this);
       return scope.y;
     }
   }, {
     key: 'target',
     get: function get$$1() {
-      var scope = internal$5(this);
+      var scope = internal$6$1(this);
       return scope.target;
     }
   }, {
     key: 'originalTouch',
     get: function get$$1() {
-      var scope = internal$5(this);
+      var scope = internal$6$1(this);
       return scope.originalTouch;
     }
   }, {
@@ -3294,7 +3391,7 @@ var Touch = function () {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var internal$6$1 = Namespace('TouchEvent');
+var internal$7$1 = Namespace('TouchEvent');
 
 var TouchEvent = function (_EventBundle) {
   inherits(TouchEvent, _EventBundle);
@@ -3314,7 +3411,7 @@ var TouchEvent = function (_EventBundle) {
           rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
 
       get(TouchEvent.prototype.__proto__ || Object.getPrototypeOf(TouchEvent.prototype), 'init', this).call(this, _extends({}, rest));
-      var scope = internal$6$1(this);
+      var scope = internal$7$1(this);
       scope.touches = touches;
       scope.changedTouches = changedTouches;
       return this;
@@ -3322,13 +3419,13 @@ var TouchEvent = function (_EventBundle) {
   }, {
     key: 'touches',
     get: function get$$1() {
-      var scope = internal$6$1(this);
+      var scope = internal$7$1(this);
       return scope.touches;
     }
   }, {
     key: 'changedTouches',
     get: function get$$1() {
-      var scope = internal$6$1(this);
+      var scope = internal$7$1(this);
       return scope.changedTouches;
     }
   }, {
@@ -3379,13 +3476,13 @@ var TouchEvent = function (_EventBundle) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var internal$7$1 = Namespace('TouchList');
+var internal$8 = Namespace('TouchList');
 
 var TouchList = function () {
   function TouchList() {
     classCallCheck(this, TouchList);
 
-    var scope = internal$7$1(this);
+    var scope = internal$8(this);
     scope.array = [];
     this.init.apply(this, arguments);
   }
@@ -3393,7 +3490,7 @@ var TouchList = function () {
   createClass(TouchList, [{
     key: 'init',
     value: function init(first) {
-      var scope = internal$7$1(this);
+      var scope = internal$8(this);
       scope.array.length = 0;
       if (Array.isArray(first)) {
         var _scope$array;
@@ -3412,13 +3509,13 @@ var TouchList = function () {
   }, {
     key: 'item',
     value: function item(index) {
-      var scope = internal$7$1(this);
+      var scope = internal$8(this);
       return scope.array[index];
     }
   }, {
     key: 'length',
     get: function get$$1() {
-      var scope = internal$7$1(this);
+      var scope = internal$8(this);
       return scope.array.length;
     }
   }]);
@@ -3509,6 +3606,7 @@ exports.EventTarget = EventTarget;
 exports.GenericEvent = GenericEvent;
 exports.KeyboardEvent = KeyboardEvent;
 exports.MouseEvent = MouseEvent;
+exports.StateEvent = StateEvent;
 exports.Touch = Touch;
 exports.TouchEvent = TouchEvent;
 exports.TouchList = TouchList;
