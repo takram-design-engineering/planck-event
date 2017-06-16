@@ -45,7 +45,7 @@ let interrupted = false
 process.stdin.setRawMode(true)
 process.stdin.resume()
 process.stdin.on('data', data => {
-  if (data.toString().match(/q/)) {
+  if (data.toString() === 'q') {
     if (interrupted) {
       process.exit(1)
     }
