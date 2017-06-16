@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import Event from '../event/Event'
+import { default as Event, modifyEvent } from '../event/Event'
 import GenericEvent from '../event/GenericEvent'
 
 export const internal = Namespace('EventDispatcher')
@@ -100,6 +100,15 @@ export default class EventDispatcher {
     if (!(event instanceof Event)) {
       event = new GenericEvent(object)
     }
+    const modifier = modifyEvent(event)
+
+    // Set target to this when it's not set
+    if (!event.target) {
+      modifier.target = this
+    }
+    // Current target should be always this
+    modifier.currentTarget = this
+
     const scope = internal(this)
     const listeners = scope.listeners[event.type]
     if (listeners === undefined) {
