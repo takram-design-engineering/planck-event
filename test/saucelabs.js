@@ -42,6 +42,17 @@ const saucelabs = new Saucelabs({
 })
 
 let interrupted = false
+process.stdin.setRawMode(true)
+process.stdin.resume()
+process.stdin.on('data', data => {
+  if (data.toString() === 'q') {
+    if (interrupted) {
+      process.exit(1)
+    }
+    interrupted = true
+    console.log('Interrupted')
+  }
+})
 
 function startServer(port) {
   return new Promise((resolve, reject) => {
@@ -138,7 +149,7 @@ function stopTests(tests) {
 
 // eslint-disable-next-line func-names
 describe('', function () {
-  this.timeout(300000)
+  this.timeout(600000)
 
   const { framework, platforms } = pkg.saucelabs
 
