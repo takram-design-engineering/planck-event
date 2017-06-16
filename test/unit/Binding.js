@@ -24,13 +24,13 @@
 
 import chai from 'chai'
 
-import { Binding, StateEvent, EventDispatcher, EventTarget } from '../..'
+import { Binding, StateEvent, EventDispatcher } from '../..'
 
 const expect = chai.expect
 
 describe('Binding', () => {
   function createObject(name, value) {
-    return new class extends EventDispatcher {
+    return new (class extends EventDispatcher {
       constructor() {
         super()
         this.states = { [name]: value }
@@ -46,7 +46,7 @@ describe('Binding', () => {
           this.dispatchEvent(new StateEvent({ name, value }))
         }
       }
-    }
+    })()
   }
 
   it('defaults to two-ways binding for single target', () => {
@@ -293,7 +293,7 @@ describe('Binding', () => {
       Binding.bind(source, 'value',
         target1, 'a',
         target2, 'b', {
-          oneWay: true
+          oneWay: true,
         })
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
@@ -307,7 +307,7 @@ describe('Binding', () => {
       Binding.unbind(source, 'value',
         target1, 'a',
         target2, 'b', {
-          oneWay: true
+          oneWay: true,
         })
       source.value = 5
       expect(target1.a).equal(3)

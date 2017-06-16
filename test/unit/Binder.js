@@ -140,6 +140,7 @@ describe('Binder', () => {
       { object: object1, name: 'a' },
       { object: object2, name: 'b' },
     ]
+    // eslint-disable-next-line no-unused-vars
     const binder = new Binder(target2, name, targets)
     target3.dispatchEvent(new StateEvent({ name, value: 1, bubbles: true }))
     expect(object1.a).equal(0)

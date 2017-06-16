@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace, Stride } from '@takram/planck-core'
+import { Namespace } from '@takram/planck-core'
 
 import Binder from '../event/Binder'
 
