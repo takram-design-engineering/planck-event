@@ -29,6 +29,16 @@ import GenericEvent from '../event/GenericEvent'
 
 export const internal = Namespace('EventDispatcher')
 
+function handleEvent(event, listener) {
+  if (typeof listener === 'function') {
+    listener(event)
+  } else if (typeof listener.handleEvent === 'function') {
+    listener.handleEvent(event)
+  } else {
+    throw new Error('Listener is neither function nor event listener')
+  }
+}
+
 export default class EventDispatcher {
   constructor() {
     const scope = internal(this)
@@ -66,6 +76,22 @@ export default class EventDispatcher {
     }
   }
 
+  on(...args) {
+    this.addEventListener(...args)
+  }
+
+  off(...args) {
+    this.removeEventListener(...args)
+  }
+
+  once(type, listener, ...rest) {
+    const delegate = event => {
+      handleEvent(event, listener)
+      this.removeEventListener(type, delegate, ...rest)
+    }
+    this.addEventListener(type, delegate, ...rest)
+  }
+
   dispatchEvent(object) {
     let event = object
     if (!(event instanceof Event)) {
@@ -79,13 +105,7 @@ export default class EventDispatcher {
     const phase = event.phase
     if (!phase || phase === 'target' || phase === 'capture') {
       [...listeners.capture].some(listener => {
-        if (typeof listener === 'function') {
-          listener.call(this, event)
-        } else if (typeof listener.handleEvent === 'function') {
-          listener.handleEvent(event)
-        } else {
-          throw new Error('Listener is neither function nor event listener')
-        }
+        handleEvent(event, listener)
         return event.immediatePropagationStopped
       })
     }
@@ -94,11 +114,7 @@ export default class EventDispatcher {
     }
     if (!phase || phase === 'target' || phase === 'bubble') {
       [...listeners.bubble].some(listener => {
-        if (typeof listener === 'function') {
-          listener.call(this, event)
-        } else if (typeof listener.handleEvent === 'function') {
-          listener.handleEvent(event)
-        }
+        handleEvent(event, listener)
         return event.immediatePropagationStopped
       })
     }
