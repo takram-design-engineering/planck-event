@@ -197,14 +197,13 @@ describe('', function () {
         })
         if (!test) {
           done(new Error('could not retrieve test result'))
-        }
-        if (!test.result) {
+        } else if (!test.result) {
           done(new Error('error before or while testing'))
-        }
-        if (test.result.failures !== 0) {
+        } else if (test.result.failures !== 0) {
           done(new Error(test.result.failures, 'test failures'))
+        } else {
+          done()
         }
-        done()
       })
     })
   })
