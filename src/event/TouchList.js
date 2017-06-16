@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-const internal = Namespace('TouchList')
+export const internal = Namespace('TouchList')
 
 export default class TouchList {
   constructor(...args) {

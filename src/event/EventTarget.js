@@ -120,8 +120,7 @@ export default class EventTarget extends EventDispatcher {
     if (event.captures) {
       modifier.phase = 'capture'
       capturingPath.some(object => {
-        modifier.currentTarget = object
-        event.currentTarget.dispatchImmediateEvent(event)
+        object.dispatchImmediateEvent(event)
         return event.propagationStopped
       })
     }
@@ -133,8 +132,7 @@ export default class EventTarget extends EventDispatcher {
     // multiple identifiers, typically when picking an instanced geometry.
     if (!Number.isInteger(event.target)) {
       modifier.phase = 'target'
-      modifier.currentTarget = event.target
-      event.currentTarget.dispatchImmediateEvent(event)
+      event.target.dispatchImmediateEvent(event)
       if (event.propagationStopped) {
         return
       }
@@ -144,8 +142,7 @@ export default class EventTarget extends EventDispatcher {
     if (event.bubbles) {
       modifier.phase = 'bubble'
       bubblingPath.some(object => {
-        modifier.currentTarget = object
-        event.currentTarget.dispatchImmediateEvent(event)
+        object.dispatchImmediateEvent(event)
         return event.propagationStopped
       })
     }

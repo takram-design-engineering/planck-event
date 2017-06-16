@@ -26,20 +26,32 @@
 
 import chalk from 'chalk'
 import express from 'express'
-import localtunnel from 'localtunnel'
+import fs from 'fs'
 import Saucelabs from 'saucelabs'
+import SauceConnectLauncher from 'sauce-connect-launcher'
 
-import config from '../saucelabs.json'
 import pkg from '../package.json'
 
-const saucelabs = new Saucelabs(config)
+let config = {}
+if (fs.existsSync('./saucelabs.json')) {
+  config = JSON.parse(fs.readFileSync('./saucelabs.json', 'utf-8'))
+}
+const saucelabs = new Saucelabs({
+  username: process.env.SAUCE_USERNAME || config.username,
+  password: process.env.SAUCE_ACCESS_KEY || config.accessKey,
+})
 
-let terminated = false
-process.on('SIGTERM', () => {
-  if (terminated) {
-    process.exit(1)
+let interrupted = false
+process.stdin.setRawMode(true)
+process.stdin.resume()
+process.stdin.on('data', data => {
+  if (data.toString() === 'q') {
+    if (interrupted) {
+      process.exit(1)
+    }
+    interrupted = true
+    console.log('Interrupted')
   }
-  terminated = true
 })
 
 function startServer(port) {
@@ -58,7 +70,11 @@ function startServer(port) {
 
 function createTunnel(port) {
   return new Promise((resolve, reject) => {
-    localtunnel(port, (error, tunnel) => {
+    SauceConnectLauncher({
+      username: process.env.SAUCE_USERNAME || config.username,
+      accessKey: process.env.SAUCE_ACCESS_KEY || config.accessKey,
+      logger: console.log,
+    }, (error, tunnel) => {
       if (error) {
         reject(error)
         return
@@ -125,7 +141,7 @@ function stopTests(tests) {
       saucelabs.stopJob(id, {}, (error, response) => {
         if (response) {
           const platform = test.platform.join(' ')
-          console.error(chalk.red(`${platform}: terminated`))
+          console.error(chalk.red(`${platform}: interrupted`))
         }
         resolve(response)
       })
@@ -137,7 +153,7 @@ function stopTests(tests) {
 
 // eslint-disable-next-line func-names
 describe('', function () {
-  this.timeout(300000)
+  this.timeout(600000)
 
   const { framework, platforms } = pkg.saucelabs
 
@@ -146,9 +162,10 @@ describe('', function () {
   let tests
 
   before(async () => {
+    const port = 8080
     try {
-      server = await startServer(8080)
-      tunnel = await createTunnel(8080)
+      server = await startServer(port)
+      tunnel = await createTunnel()
     } catch (error) {
       console.error(error)
       process.exit(1)
@@ -158,7 +175,7 @@ describe('', function () {
       framework,
       name: pkg.name,
       build: `${pkg.version} (${Date.now()})`,
-      url: `${tunnel.url}/test/`,
+      url: `http://localhost:${port}/test/`,
       idleTimeout: 30,
     })
   })
@@ -168,7 +185,7 @@ describe('', function () {
     const poll = async () => {
       tests = await updateTestsStatus(tests)
       const completed = tests.every(test => test.completed)
-      if (completed || terminated) {
+      if (completed || interrupted) {
         done()
       } else {
         setTimeout(() => poll(), 5000)
@@ -185,14 +202,13 @@ describe('', function () {
         })
         if (!test) {
           done(new Error('could not retrieve test result'))
-        }
-        if (!test.result) {
+        } else if (!test.result) {
           done(new Error('error before or while testing'))
-        }
-        if (test.result.failures !== 0) {
+        } else if (test.result.failures !== 0) {
           done(new Error(test.result.failures, 'test failures'))
+        } else {
+          done()
         }
-        done()
       })
     })
   })
@@ -220,7 +236,7 @@ describe('', function () {
     if (server) {
       server.close()
     }
-    if (terminated) {
+    if (interrupted) {
       process.exit(1)
     }
   })

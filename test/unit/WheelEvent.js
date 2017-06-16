@@ -24,44 +24,66 @@
 
 import chai from 'chai'
 
-import { Event, CustomEvent } from '../..'
+import { Environment } from '@takram/planck-core'
+
+import { EventBundle, WheelEvent } from '../..'
 
 const expect = chai.expect
 
-describe('CustomEvent', () => {
+describe('WheelEvent', () => {
+  if (Environment.type === 'node') {
+    Environment.self.Event = class {
+      constructor(type) {
+        this.defaultPrevented = false
+      }
+
+      preventDefault() {
+        this.defaultPrevented = true
+      }
+    }
+  }
+
   it('supports instanceof', () => {
-    const event = new CustomEvent()
-    expect(event).instanceof(CustomEvent)
-    expect(event).instanceof(Event)
+    const event = new WheelEvent()
+    expect(event).instanceof(WheelEvent)
+    expect(event).instanceof(EventBundle)
   })
 
   it('initializes properties', () => {
-    const event = new CustomEvent()
+    const event = new WheelEvent()
     expect(event.type).equal(null)
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(true)
-    expect(event.bubbles).equal(false)
+    expect(event.captures).false
+    expect(event.bubbles).true
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
+    expect(event.originalEvent).equal(null)
   })
 
-  it('takes target as a parameter', () => {
-    const target = {}
-    const event = new CustomEvent({ target })
-    expect(event.target).equal(target)
-  })
-
-  it('initializes parent class', () => {
-    const event = new CustomEvent({
-      type: 'test',
-      captures: false,
-      bubbles: true,
+  describe('#init', () => {
+    it('allows call without arguments', () => {
+      const event = new WheelEvent()
+      expect(() => {
+        event.init()
+      }).not.throws()
     })
-    expect(event.type).equal('test')
-    expect(event.captures).equal(false)
-    expect(event.bubbles).equal(true)
+
+    it('initializes parent class', () => {
+      const originalEvent = new Environment.self.Event('')
+      const event = new WheelEvent()
+      event.init({
+        type: 'test',
+        captures: true,
+        bubbles: false,
+        originalEvent,
+      })
+      expect(event.type).equal('test')
+      expect(event.captures).true
+      expect(event.bubbles).false
+      expect(event.originalEvent).equal(originalEvent)
+    })
   })
 })

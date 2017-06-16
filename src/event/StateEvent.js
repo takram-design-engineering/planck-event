@@ -22,18 +22,32 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { default as Binder } from './event/Binder'
-export { default as Binding } from './event/Binding'
-export { default as CustomEvent } from './event/CustomEvent'
-export { default as Event, modifyEvent } from './event/Event'
-export { default as EventBundle } from './event/EventBundle'
-export { default as EventDispatcher } from './event/EventDispatcher'
-export { default as EventTarget } from './event/EventTarget'
-export { default as GenericEvent } from './event/GenericEvent'
-export { default as KeyboardEvent } from './event/KeyboardEvent'
-export { default as MouseEvent } from './event/MouseEvent'
-export { default as StateEvent } from './event/StateEvent'
-export { default as Touch } from './event/Touch'
-export { default as TouchEvent } from './event/TouchEvent'
-export { default as TouchList } from './event/TouchList'
-export { default as WheelEvent } from './event/WheelEvent'
+import { Namespace } from '@takram/planck-core'
+
+import CustomEvent from '../event/CustomEvent'
+
+export const internal = Namespace('StateEvent')
+
+export default class StateEvent extends CustomEvent {
+  init({ name, value, ...rest } = {}) {
+    super.init({ ...rest, type: StateEvent.type(name) })
+    const scope = internal(this)
+    scope.name = name
+    scope.value = value
+    return this
+  }
+
+  get name() {
+    const scope = internal(this)
+    return scope.name
+  }
+
+  get value() {
+    const scope = internal(this)
+    return scope.value
+  }
+
+  static type(name) {
+    return `state:${name === null || name === undefined ? '' : name}`
+  }
+}

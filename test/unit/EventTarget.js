@@ -39,20 +39,22 @@ describe('EventTarget', () => {
   })
 
   it('dispatches event to function listeners', () => {
-    const dispatcher = new EventTarget()
+    const target = new EventTarget()
     const event = new Event({ type: 'test' })
     const listener1 = sinon.spy(arg => {
       expect(arg).equal(event)
+      expect(arg.target).equal(target)
+      expect(arg.currentTarget).equal(target)
     })
     const listener2 = sinon.spy(arg => {
       expect(arg).equal(event)
     })
     const listener3 = sinon.spy()
-    dispatcher.addEventListener('test', listener1)
-    dispatcher.addEventListener('test', listener2)
-    dispatcher.addEventListener('other', listener3)
+    target.addEventListener('test', listener1)
+    target.addEventListener('test', listener2)
+    target.addEventListener('other', listener3)
 
-    dispatcher.dispatchEvent(event)
+    target.dispatchEvent(event)
     expect(listener1).calledOnce
     expect(listener1).calledBefore(listener2)
     expect(listener2).calledOnce
@@ -60,26 +62,30 @@ describe('EventTarget', () => {
   })
 
   it('dispatches event to object listeners', () => {
-    const dispatcher = new EventTarget()
+    const target = new EventTarget()
     const event = new Event({ type: 'test' })
     const listener1 = {
       handleEvent: sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(target)
       }),
     }
     const listener2 = {
       handleEvent: sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(target)
       }),
     }
     const listener3 = {
       handleEvent: sinon.spy(),
     }
-    dispatcher.addEventListener('test', listener1)
-    dispatcher.addEventListener('test', listener2)
-    dispatcher.addEventListener('other', listener3)
+    target.addEventListener('test', listener1)
+    target.addEventListener('test', listener2)
+    target.addEventListener('other', listener3)
 
-    dispatcher.dispatchEvent(event)
+    target.dispatchEvent(event)
     expect(listener1.handleEvent).calledOnce
     expect(listener1.handleEvent).calledBefore(listener2.handleEvent)
     expect(listener2.handleEvent).calledOnce
@@ -147,6 +153,8 @@ describe('EventTarget', () => {
       const target = new EventTarget()
       const listener = sinon.spy(arg => {
         expect(arg).instanceof(Event)
+        expect(arg.target).equal(target)
+        expect(arg.currentTarget).equal(target)
         expect(arg.type).equal('test')
         expect(arg.custom).equal(1)
       })
@@ -163,14 +171,20 @@ describe('EventTarget', () => {
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target3)
+        expect(arg.currentTarget).equal(target1)
         expect(arg.phase).equal('bubble')
       })
       const listener2 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target3)
+        expect(arg.currentTarget).equal(target2)
         expect(arg.phase).equal('bubble')
       })
       const listener3 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target3)
+        expect(arg.currentTarget).equal(target3)
         expect(arg.phase).equal('target')
       })
       target1.addEventListener('test', listener1, false)
@@ -193,14 +207,20 @@ describe('EventTarget', () => {
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target1)
+        expect(arg.currentTarget).equal(target1)
         expect(arg.phase).equal('target')
       })
       const listener2 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target1)
+        expect(arg.currentTarget).equal(target2)
         expect(arg.phase).equal('bubble')
       })
       const listener3 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target1)
+        expect(arg.currentTarget).equal(target3)
         expect(arg.phase).equal('bubble')
       })
       target1.addEventListener('test', listener1, false)
@@ -223,14 +243,20 @@ describe('EventTarget', () => {
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target3)
+        expect(arg.currentTarget).equal(target1)
         expect(arg.phase).equal('capture')
       })
       const listener2 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target3)
+        expect(arg.currentTarget).equal(target2)
         expect(arg.phase).equal('capture')
       })
       const listener3 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target3)
+        expect(arg.currentTarget).equal(target3)
         expect(arg.phase).equal('target')
       })
       target1.addEventListener('test', listener1, true)
@@ -253,14 +279,20 @@ describe('EventTarget', () => {
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target1)
+        expect(arg.currentTarget).equal(target1)
         expect(arg.phase).equal('target')
       })
       const listener2 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target1)
+        expect(arg.currentTarget).equal(target2)
         expect(arg.phase).equal('capture')
       })
       const listener3 = sinon.spy(arg => {
         expect(arg).equal(event)
+        expect(arg.target).equal(target1)
+        expect(arg.currentTarget).equal(target3)
         expect(arg.phase).equal('capture')
       })
       target1.addEventListener('test', listener1, true)

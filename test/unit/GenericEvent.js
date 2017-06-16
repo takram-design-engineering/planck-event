@@ -23,83 +23,59 @@
 //
 
 import chai from 'chai'
-import sinon from 'sinon'
-import sinonChai from 'sinon-chai'
 
-import { Environment } from '@takram/planck-core'
-
-import { EventBundle, MouseEvent } from '../..'
+import { CustomEvent, GenericEvent } from '../..'
 
 const expect = chai.expect
-chai.use(sinonChai)
 
-describe('MouseEvent', () => {
-  if (Environment.type === 'node') {
-    Environment.self.Event = class {
-      constructor(type) {
-        this.defaultPrevented = false
-      }
-
-      preventDefault() {
-        this.defaultPrevented = true
-      }
-    }
-  }
-
+describe('GenericEvent', () => {
   it('supports instanceof', () => {
-    const event = new MouseEvent()
-    expect(event).instanceof(MouseEvent)
-    expect(event).instanceof(EventBundle)
+    const event = new GenericEvent()
+    expect(event).instanceof(GenericEvent)
+    expect(event).instanceof(CustomEvent)
   })
 
   it('initializes properties', () => {
-    const event = new MouseEvent()
+    const event = new GenericEvent()
     expect(event.type).equal(null)
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(true)
-    expect(event.bubbles).equal(false)
+    expect(event.captures).false
+    expect(event.bubbles).false  // false!
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
-    expect(event.originalEvent).equal(null)
-    expect(event.x).equal(0)
-    expect(event.y).equal(0)
-    expect(event.movementX).equal(0)
-    expect(event.movementY).equal(0)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
   })
 
   describe('#init', () => {
     it('allows call without arguments', () => {
-      const event = new MouseEvent()
+      const event = new GenericEvent()
       expect(() => {
         event.init()
       }).not.throws()
     })
 
-    it('takes mouse parameters', () => {
-      const event = new MouseEvent()
-      event.init({ x: 1, y: 2, movementX: 3, movementY: 4})
-      expect(event.x).equal(1)
-      expect(event.y).equal(2)
-      expect(event.movementX).equal(3)
-      expect(event.movementY).equal(4)
-    })
-
     it('initializes parent class', () => {
-      const originalEvent = new Environment.self.Event('')
-      const event = new MouseEvent()
+      const target = {}
+      const event = new GenericEvent()
       event.init({
         type: 'test',
-        captures: false,
+        captures: true,
         bubbles: true,
-        originalEvent,
+        target,
       })
       expect(event.type).equal('test')
-      expect(event.captures).equal(false)
-      expect(event.bubbles).equal(true)
-      expect(event.originalEvent).equal(originalEvent)
+      expect(event.captures).true
+      expect(event.bubbles).true
+      expect(event.target).equal(target)
+    })
+
+    it('throws error when reserved parameters are given', () => {
+      const event = new GenericEvent()
+      expect(() => {
+        event.init({ propagationStopped: true })
+      }).throws(Error)
     })
   })
 })

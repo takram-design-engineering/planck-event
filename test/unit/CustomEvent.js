@@ -23,70 +23,45 @@
 //
 
 import chai from 'chai'
-import sinon from 'sinon'
-import sinonChai from 'sinon-chai'
 
-import { Environment } from '@takram/planck-core'
-
-import { EventBundle, KeyboardEvent } from '../..'
+import { Event, CustomEvent } from '../..'
 
 const expect = chai.expect
-chai.use(sinonChai)
 
-describe('KeyboardEvent', () => {
-  if (Environment.type === 'node') {
-    Environment.self.Event = class {
-      constructor(type) {
-        this.defaultPrevented = false
-      }
-
-      preventDefault() {
-        this.defaultPrevented = true
-      }
-    }
-  }
-
+describe('CustomEvent', () => {
   it('supports instanceof', () => {
-    const event = new KeyboardEvent()
-    expect(event).instanceof(KeyboardEvent)
-    expect(event).instanceof(EventBundle)
+    const event = new CustomEvent()
+    expect(event).instanceof(CustomEvent)
+    expect(event).instanceof(Event)
   })
 
   it('initializes properties', () => {
-    const event = new KeyboardEvent()
+    const event = new CustomEvent()
     expect(event.type).equal(null)
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(true)
-    expect(event.bubbles).equal(false)
+    expect(event.captures).false
+    expect(event.bubbles).true
     expect(event.timestamp).a('number')
-    expect(event.propagationStopped).equal(false)
-    expect(event.immediatePropagationStopped).equal(false)
-    expect(event.originalEvent).equal(null)
+    expect(event.propagationStopped).false
+    expect(event.immediatePropagationStopped).false
   })
 
-  describe('#init', () => {
-    it('allows call without arguments', () => {
-      const event = new KeyboardEvent()
-      expect(() => {
-        event.init()
-      }).not.throws()
-    })
+  it('takes target as a parameter', () => {
+    const target = {}
+    const event = new CustomEvent({ target })
+    expect(event.target).equal(target)
+  })
 
-    it('initializes parent class', () => {
-      const originalEvent = new Environment.self.Event('')
-      const event = new KeyboardEvent()
-      event.init({
-        type: 'test',
-        captures: false,
-        bubbles: true,
-        originalEvent,
-      })
-      expect(event.type).equal('test')
-      expect(event.captures).equal(false)
-      expect(event.bubbles).equal(true)
-      expect(event.originalEvent).equal(originalEvent)
+  it('initializes parent class', () => {
+    const event = new CustomEvent({
+      type: 'test',
+      captures: false,
+      bubbles: true,
     })
+    expect(event.type).equal('test')
+    expect(event.captures).false
+    expect(event.bubbles).true
   })
 })

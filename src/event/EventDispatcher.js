@@ -24,10 +24,20 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import Event from '../event/Event'
+import Event, { modifyEvent } from '../event/Event'
 import GenericEvent from '../event/GenericEvent'
 
 export const internal = Namespace('EventDispatcher')
+
+function handleEvent(event, listener) {
+  if (typeof listener === 'function') {
+    listener(event)
+  } else if (typeof listener.handleEvent === 'function') {
+    listener.handleEvent(event)
+  } else {
+    throw new Error('Listener is neither function nor event listener')
+  }
+}
 
 export default class EventDispatcher {
   constructor() {
@@ -66,11 +76,39 @@ export default class EventDispatcher {
     }
   }
 
+  on(...args) {
+    this.addEventListener(...args)
+    return this
+  }
+
+  off(...args) {
+    this.removeEventListener(...args)
+    return this
+  }
+
+  once(type, listener, ...rest) {
+    const delegate = event => {
+      handleEvent(event, listener)
+      this.removeEventListener(type, delegate, ...rest)
+    }
+    this.addEventListener(type, delegate, ...rest)
+    return this
+  }
+
   dispatchEvent(object) {
     let event = object
     if (!(event instanceof Event)) {
       event = new GenericEvent(object)
     }
+    const modifier = modifyEvent(event)
+
+    // Set target to this when it's not set
+    if (!event.target) {
+      modifier.target = this
+    }
+    // Current target should be always this
+    modifier.currentTarget = this
+
     const scope = internal(this)
     const listeners = scope.listeners[event.type]
     if (listeners === undefined) {
@@ -79,13 +117,7 @@ export default class EventDispatcher {
     const phase = event.phase
     if (!phase || phase === 'target' || phase === 'capture') {
       [...listeners.capture].some(listener => {
-        if (typeof listener === 'function') {
-          listener.call(this, event)
-        } else if (typeof listener.handleEvent === 'function') {
-          listener.handleEvent(event)
-        } else {
-          throw new Error('Listener is neither function nor event listener')
-        }
+        handleEvent(event, listener)
         return event.immediatePropagationStopped
       })
     }
@@ -94,11 +126,7 @@ export default class EventDispatcher {
     }
     if (!phase || phase === 'target' || phase === 'bubble') {
       [...listeners.bubble].some(listener => {
-        if (typeof listener === 'function') {
-          listener.call(this, event)
-        } else if (typeof listener.handleEvent === 'function') {
-          listener.handleEvent(event)
-        }
+        handleEvent(event, listener)
         return event.immediatePropagationStopped
       })
     }
