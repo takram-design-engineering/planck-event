@@ -41,8 +41,8 @@ describe('GenericEvent', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(false)  // false!
-    expect(event.bubbles).equal(false)
+    expect(event.captures).equal(false)
+    expect(event.bubbles).equal(false)  // false!
     expect(event.timestamp).a('number')
     expect(event.propagationStopped).equal(false)
     expect(event.immediatePropagationStopped).equal(false)

@@ -2442,9 +2442,9 @@ var Event = function () {
       var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
           type = _ref.type,
           _ref$captures = _ref.captures,
-          captures = _ref$captures === undefined ? true : _ref$captures,
+          captures = _ref$captures === undefined ? false : _ref$captures,
           _ref$bubbles = _ref.bubbles,
-          bubbles = _ref$bubbles === undefined ? false : _ref$bubbles;
+          bubbles = _ref$bubbles === undefined ? true : _ref$bubbles;
 
       var scope = internal(this);
       scope.type = type || null;

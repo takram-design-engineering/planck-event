@@ -58,8 +58,8 @@ describe('MouseEvent', () => {
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
-    expect(event.captures).equal(true)
-    expect(event.bubbles).equal(false)
+    expect(event.captures).equal(false)
+    expect(event.bubbles).equal(true)
     expect(event.timestamp).a('number')
     expect(event.propagationStopped).equal(false)
     expect(event.immediatePropagationStopped).equal(false)
@@ -92,13 +92,13 @@ describe('MouseEvent', () => {
       const event = new MouseEvent()
       event.init({
         type: 'test',
-        captures: false,
-        bubbles: true,
+        captures: true,
+        bubbles: false,
         originalEvent,
       })
       expect(event.type).equal('test')
-      expect(event.captures).equal(false)
-      expect(event.bubbles).equal(true)
+      expect(event.captures).equal(true)
+      expect(event.bubbles).equal(false)
       expect(event.originalEvent).equal(originalEvent)
     })
   })

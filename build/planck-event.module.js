@@ -954,7 +954,7 @@ class Event {
     this.init(options);
   }
 
-  init({ type, captures = true, bubbles = false } = {}) {
+  init({ type, captures = false, bubbles = true } = {}) {
     const scope = internal(this);
     scope.type = type || null;
     scope.captures = !!captures;
