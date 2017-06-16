@@ -17,14 +17,14 @@
     "src"
   ],
   "scripts": {
-    "build": "npm run build:main & npm run build:module",
+    "build": "npm run compress & npm run build:module; wait",
     "build:main": "rollup -c",
     "build:module": "rollup -c rollup.config.module.js",
     "build:test": "rollup -c rollup.config.test.js",
-    "precompress": "npm run build",
+    "precompress": "npm run build:main",
     "compress": "uglifyjs build/planck-event.js -cm > build/planck-event.min.js",
     "lint": "eslint src test",
-    "pretest": "npm run build && npm run build:test",
+    "pretest": "npm run build; npm run build:test",
     "test": "mocha --recursive test/unit test/saucelabs.js",
     "pretest:local": "npm run build",
     "test:local": "mocha --recursive test/unit"
