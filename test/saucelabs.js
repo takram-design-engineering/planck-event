@@ -164,10 +164,10 @@ describe('', function () {
   let tests
 
   before(async () => {
-    const port = 8080
+    const port = 80
     try {
       server = await startServer(port)
-      tunnel = await createTunnel()
+      // tunnel = await createTunnel()
     } catch (error) {
       console.error(error)
       process.exit(1)
