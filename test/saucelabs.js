@@ -73,9 +73,7 @@ function createTunnel(port) {
     SauceConnectLauncher({
       username: process.env.SAUCE_USERNAME || config.username,
       accessKey: process.env.SAUCE_ACCESS_KEY || config.accessKey,
-      startConnect: false,
-      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
-      logger: (...args) => console.log(args.map(arg => chalk.gray(arg))),
+      logger: console.log,
     }, (error, tunnel) => {
       if (error) {
         reject(error)
@@ -167,7 +165,7 @@ describe('', function () {
     const port = 8080
     try {
       server = await startServer(port)
-      // tunnel = await createTunnel()
+      tunnel = await createTunnel()
     } catch (error) {
       console.error(error)
       process.exit(1)
