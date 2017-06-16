@@ -27,8 +27,8 @@
 import chalk from 'chalk'
 import express from 'express'
 import fs from 'fs'
-import localtunnel from 'localtunnel'
 import Saucelabs from 'saucelabs'
+import SauceConnectLauncher from 'sauce-connect-launcher'
 
 import pkg from '../package.json'
 
@@ -70,7 +70,13 @@ function startServer(port) {
 
 function createTunnel(port) {
   return new Promise((resolve, reject) => {
-    localtunnel(port, (error, tunnel) => {
+    SauceConnectLauncher({
+      username: process.env.SAUCE_USERNAME || config.username,
+      accessKey: process.env.SAUCE_ACCESS_KEY || config.accessKey,
+      startConnect: false,
+      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+      logger: (...args) => console.log(args.map(arg => chalk.gray(arg))),
+    }, (error, tunnel) => {
       if (error) {
         reject(error)
         return
@@ -158,9 +164,10 @@ describe('', function () {
   let tests
 
   before(async () => {
+    const port = 8080
     try {
-      server = await startServer(8080)
-      tunnel = await createTunnel(8080)
+      server = await startServer(port)
+      tunnel = await createTunnel()
     } catch (error) {
       console.error(error)
       process.exit(1)
@@ -170,7 +177,7 @@ describe('', function () {
       framework,
       name: pkg.name,
       build: `${pkg.version} (${Date.now()})`,
-      url: `${tunnel.url}/test/`,
+      url: `http://localhost:${port}/test/`,
       idleTimeout: 30,
     })
   })
