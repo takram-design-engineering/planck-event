@@ -26,19 +26,14 @@
 
 import chalk from 'chalk'
 import express from 'express'
-import fs from 'fs'
-import Saucelabs from 'saucelabs'
 import SauceConnectLauncher from 'sauce-connect-launcher'
+import Saucelabs from 'saucelabs'
 
 import pkg from '../package.json'
 
-let config = {}
-if (fs.existsSync('./saucelabs.json')) {
-  config = JSON.parse(fs.readFileSync('./saucelabs.json', 'utf-8'))
-}
 const saucelabs = new Saucelabs({
-  username: process.env.SAUCE_USERNAME || config.username,
-  password: process.env.SAUCE_ACCESS_KEY || config.accessKey,
+  username: process.env.SAUCE_USERNAME,
+  password: process.env.SAUCE_ACCESS_KEY,
 })
 
 let interrupted = false
@@ -71,8 +66,8 @@ function startServer(port) {
 function createTunnel(port) {
   return new Promise((resolve, reject) => {
     SauceConnectLauncher({
-      username: process.env.SAUCE_USERNAME || config.username,
-      accessKey: process.env.SAUCE_ACCESS_KEY || config.accessKey,
+      username: process.env.SAUCE_USERNAME,
+      accessKey: process.env.SAUCE_ACCESS_KEY,
       logger: console.log,
     }, (error, tunnel) => {
       if (error) {
@@ -153,7 +148,7 @@ function stopTests(tests) {
 
 // eslint-disable-next-line func-names
 describe('', function () {
-  this.timeout(600000)
+  this.timeout(300000)
 
   const { framework, platforms } = pkg.saucelabs
 
