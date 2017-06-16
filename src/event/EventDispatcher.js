@@ -78,10 +78,12 @@ export default class EventDispatcher {
 
   on(...args) {
     this.addEventListener(...args)
+    return this
   }
 
   off(...args) {
     this.removeEventListener(...args)
+    return this
   }
 
   once(type, listener, ...rest) {
@@ -90,6 +92,7 @@ export default class EventDispatcher {
       this.removeEventListener(type, delegate, ...rest)
     }
     this.addEventListener(type, delegate, ...rest)
+    return this
   }
 
   dispatchEvent(object) {
