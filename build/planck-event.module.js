@@ -178,6 +178,8 @@ class FilePath {
 
 internal$3(FilePath).self = FilePath.current;
 
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
 function createCommonjsModule(fn, module) {
   return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
@@ -923,6 +925,75 @@ if (Environment.type === 'node') {
   }
 }
 
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+var rng;
+
+var crypto = commonjsGlobal.crypto || commonjsGlobal.msCrypto; // for IE 11
+if (crypto && crypto.getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+  rng = function whatwgRNG() {
+    crypto.getRandomValues(rnds8);
+    return rnds8;
+  };
+}
+
+if (!rng) {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+  rng = function () {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+var rngBrowser = rng;
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  return bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]];
+}
+
+var bytesToUuid_1 = bytesToUuid;
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+
+// random #'s we need to init node and clockseq
+var _seedBytes = rngBrowser();
+
+// Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+var _nodeId = [_seedBytes[0] | 0x01, _seedBytes[1], _seedBytes[2], _seedBytes[3], _seedBytes[4], _seedBytes[5]];
+
+// Per 4.2.2, randomize (14 bit) clockseq
+var _clockseq = (_seedBytes[6] << 8 | _seedBytes[7]) & 0x3fff;
+
+// Previous uuid creation time
+var _lastMSecs = 0;
+var _lastNSecs = 0;
+
 //
 //  The MIT License
 //
@@ -947,7 +1018,7 @@ if (Environment.type === 'node') {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$2 = Namespace('Event');
+const internal$3$1 = Namespace('Event');
 
 class Event {
   constructor(options = {}) {
@@ -955,7 +1026,7 @@ class Event {
   }
 
   init({ type, captures = false, bubbles = true } = {}) {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     scope.type = type || null;
     scope.captures = !!captures;
     scope.bubbles = !!bubbles;
@@ -969,64 +1040,64 @@ class Event {
   }
 
   get type() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.type;
   }
 
   get target() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.target;
   }
 
   get currentTarget() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.currentTarget;
   }
 
   get phase() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.phase;
   }
 
   get captures() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.captures;
   }
 
   get bubbles() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.bubbles;
   }
 
   get timestamp() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.timestamp;
   }
 
   stopPropagation() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     scope.propagationStopped = true;
   }
 
   stopImmediatePropagation() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     scope.propagationStopped = true;
     scope.immediatePropagationStopped = true;
   }
 
   get propagationStopped() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.propagationStopped;
   }
 
   get immediatePropagationStopped() {
-    const scope = internal$2(this);
+    const scope = internal$3$1(this);
     return scope.immediatePropagationStopped;
   }
 }
 
 function modifyEvent(event) {
-  const scope = internal$2(event);
+  const scope = internal$3$1(event);
   return {
     set target(value) {
       scope.target = value || null;
@@ -1140,7 +1211,7 @@ class CustomEvent extends Event {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$1$1 = Namespace('StateEvent');
+const internal$2 = Namespace('StateEvent');
 
 class StateEvent extends CustomEvent {
   init(_ref = {}) {
@@ -1148,19 +1219,19 @@ class StateEvent extends CustomEvent {
         rest = objectWithoutProperties(_ref, ['name', 'value']);
 
     super.init(_extends({}, rest, { type: StateEvent.type(name) }));
-    const scope = internal$1$1(this);
+    const scope = internal$2(this);
     scope.name = name;
     scope.value = value;
     return this;
   }
 
   get name() {
-    const scope = internal$1$1(this);
+    const scope = internal$2(this);
     return scope.name;
   }
 
   get value() {
-    const scope = internal$1$1(this);
+    const scope = internal$2(this);
     return scope.value;
   }
 
@@ -1309,7 +1380,7 @@ class Binder {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$3$1 = Namespace('Binding');
+const internal$4$1 = Namespace('Binding');
 
 function formatTargets(...args) {
   // Flatten arguments
@@ -1336,7 +1407,7 @@ function formatTargets(...args) {
 }
 
 function bind(source, name, targets, options) {
-  const scope = internal$3$1(source);
+  const scope = internal$4$1(source);
   if (scope.bindings === undefined) {
     scope.bindings = {};
   }
@@ -1353,7 +1424,7 @@ function bind(source, name, targets, options) {
 }
 
 function unbind(source, name, targets) {
-  const scope = internal$3$1(source);
+  const scope = internal$4$1(source);
   if (scope.bindings === undefined) {
     return [];
   }
@@ -1370,7 +1441,7 @@ function unbind(source, name, targets) {
 }
 
 function unbindAll(source, name) {
-  const scope = internal$3$1(source);
+  const scope = internal$4$1(source);
   if (scope.bindings === undefined) {
     return [];
   }
@@ -1443,7 +1514,7 @@ class Binding {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$4$1 = Namespace('EventBundle');
+const internal$5 = Namespace('EventBundle');
 
 class EventBundle extends Event {
   init(_ref = {}) {
@@ -1451,20 +1522,20 @@ class EventBundle extends Event {
         rest = objectWithoutProperties(_ref, ['originalEvent']);
 
     super.init(_extends({}, rest));
-    const scope = internal$4$1(this);
+    const scope = internal$5(this);
     scope.originalEvent = originalEvent || null;
     return this;
   }
 
   preventDefault() {
-    const scope = internal$4$1(this);
+    const scope = internal$5(this);
     if (scope.originalEvent !== null) {
       scope.originalEvent.preventDefault();
     }
   }
 
   get defaultPrevented() {
-    const scope = internal$4$1(this);
+    const scope = internal$5(this);
     if (scope.originalEvent === null) {
       return false;
     }
@@ -1472,7 +1543,7 @@ class EventBundle extends Event {
   }
 
   get originalEvent() {
-    const scope = internal$4$1(this);
+    const scope = internal$5(this);
     return scope.originalEvent;
   }
 }
@@ -1543,7 +1614,7 @@ class GenericEvent extends CustomEvent {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$5 = Namespace('EventDispatcher');
+const internal$6$1 = Namespace('EventDispatcher');
 
 function handleEvent(event, listener) {
   if (typeof listener === 'function') {
@@ -1557,7 +1628,7 @@ function handleEvent(event, listener) {
 
 class EventDispatcher {
   constructor() {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     scope.listeners = {};
   }
 
@@ -1565,7 +1636,7 @@ class EventDispatcher {
     if (typeof listener !== 'function' && typeof listener !== 'object') {
       throw new Error('Attempt to add non-function non-object listener');
     }
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     if (scope.listeners[type] === undefined) {
       scope.listeners[type] = { bubble: [], capture: [] };
     }
@@ -1577,7 +1648,7 @@ class EventDispatcher {
   }
 
   removeEventListener(type, listener, capture = false) {
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     if (scope.listeners[type] === undefined) {
       return;
     }
@@ -1621,7 +1692,7 @@ class EventDispatcher {
     // Current target should be always this
     modifier.currentTarget = this;
 
-    const scope = internal$5(this);
+    const scope = internal$6$1(this);
     const listeners = scope.listeners[event.type];
     if (listeners === undefined) {
       return;
@@ -1669,33 +1740,33 @@ class EventDispatcher {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$6$1 = Namespace('EventTarget');
+const internal$7$1 = Namespace('EventTarget');
 
 class EventTarget extends EventDispatcher {
   constructor() {
     super();
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     scope.ancestorEventTarget = null;
     scope.descendantEventTarget = null;
   }
 
   get ancestorEventTarget() {
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     return scope.ancestorEventTarget;
   }
 
   set ancestorEventTarget(value) {
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     scope.ancestorEventTarget = value || null;
   }
 
   get descendantEventTarget() {
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     return scope.descendantEventTarget;
   }
 
   set descendantEventTarget(value) {
-    const scope = internal$6$1(this);
+    const scope = internal$7$1(this);
     scope.descendantEventTarget = value || null;
   }
 
@@ -1868,7 +1939,7 @@ class KeyboardEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$7$1 = Namespace('MouseEvent');
+const internal$8 = Namespace('MouseEvent');
 
 class MouseEvent extends EventBundle {
   init(_ref = {}) {
@@ -1876,7 +1947,7 @@ class MouseEvent extends EventBundle {
         rest = objectWithoutProperties(_ref, ['x', 'y', 'movementX', 'movementY']);
 
     super.init(_extends({}, rest));
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     scope.x = x || 0;
     scope.y = y || 0;
     scope.movementX = movementX || 0;
@@ -1885,22 +1956,22 @@ class MouseEvent extends EventBundle {
   }
 
   get x() {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     return scope.x;
   }
 
   get y() {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     return scope.y;
   }
 
   get movementX() {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     return scope.movementX;
   }
 
   get movementY() {
-    const scope = internal$7$1(this);
+    const scope = internal$8(this);
     return scope.movementY;
   }
 
@@ -1949,7 +2020,7 @@ class MouseEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$8 = Namespace('Touch');
+const internal$9 = Namespace('Touch');
 
 class Touch {
   constructor(options = {}) {
@@ -1957,7 +2028,7 @@ class Touch {
   }
 
   init({ x, y, target, originalTouch } = {}) {
-    const scope = internal$8(this);
+    const scope = internal$9(this);
     scope.x = x || 0;
     scope.y = y || 0;
     scope.target = target || null;
@@ -1966,22 +2037,22 @@ class Touch {
   }
 
   get x() {
-    const scope = internal$8(this);
+    const scope = internal$9(this);
     return scope.x;
   }
 
   get y() {
-    const scope = internal$8(this);
+    const scope = internal$9(this);
     return scope.y;
   }
 
   get target() {
-    const scope = internal$8(this);
+    const scope = internal$9(this);
     return scope.target;
   }
 
   get originalTouch() {
-    const scope = internal$8(this);
+    const scope = internal$9(this);
     return scope.originalTouch;
   }
 
@@ -2014,7 +2085,7 @@ class Touch {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$9 = Namespace('TouchEvent');
+const internal$10 = Namespace('TouchEvent');
 
 class TouchEvent extends EventBundle {
   init(_ref = {}) {
@@ -2022,19 +2093,19 @@ class TouchEvent extends EventBundle {
         rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
 
     super.init(_extends({}, rest));
-    const scope = internal$9(this);
+    const scope = internal$10(this);
     scope.touches = touches;
     scope.changedTouches = changedTouches;
     return this;
   }
 
   get touches() {
-    const scope = internal$9(this);
+    const scope = internal$10(this);
     return scope.touches;
   }
 
   get changedTouches() {
-    const scope = internal$9(this);
+    const scope = internal$10(this);
     return scope.changedTouches;
   }
 
@@ -2079,17 +2150,17 @@ class TouchEvent extends EventBundle {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-const internal$10 = Namespace('TouchList');
+const internal$11 = Namespace('TouchList');
 
 class TouchList {
   constructor(...args) {
-    const scope = internal$10(this);
+    const scope = internal$11(this);
     scope.array = [];
     this.init(...args);
   }
 
   init(first, ...rest) {
-    const scope = internal$10(this);
+    const scope = internal$11(this);
     scope.array.length = 0;
     if (Array.isArray(first)) {
       scope.array.push(...first);
@@ -2099,12 +2170,12 @@ class TouchList {
   }
 
   get length() {
-    const scope = internal$10(this);
+    const scope = internal$11(this);
     return scope.array.length;
   }
 
   item(index) {
-    const scope = internal$10(this);
+    const scope = internal$11(this);
     return scope.array[index];
   }
 }
