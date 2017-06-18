@@ -4,6 +4,7 @@ Planck Event
 [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
 )](http://mit-license.org)
 [![npm version](https://badge.fury.io/js/%40takram%2Fplanck-event.svg)](http://badge.fury.io/js/%40takram%2Fplanck-event)
+[![Build Status](https://travis-ci.org/takram-design-engineering/planck-event.svg?branch=master)](https://travis-ci.org/takram-design-engineering/planck-event)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/planck-event)](https://saucelabs.com/u/planck-event)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/planck-event.svg)](https://saucelabs.com/u/planck-event)
@@ -13,7 +14,7 @@ Planck Event
 ### Installing
 
 ```sh
-npm install --save @takram/planck-event
+npm install @takram/planck-event
 ```
 
 ## License

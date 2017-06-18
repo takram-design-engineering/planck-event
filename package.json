@@ -1,6 +1,6 @@
 {
   "name": "@takram/planck-event",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "repository": "takram-design-engineering/planck-event",
   "main": "build/planck-event.js",
@@ -25,18 +25,18 @@
     "compress": "uglifyjs build/planck-event.js -cm > build/planck-event.min.js",
     "lint": "eslint src test",
     "pretest": "npm run build; npm run build:test",
-    "test": "mocha --recursive test/unit test/saucelabs.js",
+    "test": "npm run lint && mocha --recursive test/unit test/setup.js",
     "pretest:local": "npm run build",
     "test:local": "mocha --recursive test/unit"
   },
   "dependencies": {
-    "@takram/planck-core": "^0.1.10"
+    "@takram/planck-core": "^0.1.11"
   },
   "devDependencies": {
     "@takram/eslint-config-planck": "^0.1.7",
-    "babel-core": "^6.24.1",
+    "babel-core": "^6.25.0",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.5.1",
+    "babel-preset-env": "^1.5.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
@@ -44,7 +44,7 @@
     "chai": "^4.0.2",
     "chai-as-promised": "^7.0.0",
     "chalk": "^1.1.3",
-    "eslint": "^4.0.0",
+    "eslint": "^3.19.0",
     "express": "^4.15.3",
     "mocha": "^3.4.2",
     "rollup": "^0.43.0",
@@ -53,9 +53,9 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "sauce-connect-launcher": "^1.2.2",
     "saucelabs": "^1.4.0",
-    "sinon": "^2.3.2",
-    "sinon-chai": "^2.10.0",
-    "uglify-js": "^3.0.17"
+    "sinon": "^2.3.4",
+    "sinon-chai": "^2.11.0",
+    "uglify-js": "^3.0.18"
   },
   "saucelabs": {
     "framework": "mocha",
