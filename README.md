@@ -244,179 +244,148 @@ console.log(target2.state)  // 'finished'
 
 ### EventDispatcher
 
-<a name="eventdispatcher-addeventlistener"></a>
-[#](#eventdispatcher-addeventlistener)
+<a id="eventdispatcher-addeventlistener" href="#eventdispatcher-addeventlistener">#</a>
 *eventDispatcher*.**addEventListener**(*type*, *listener* [, *capture*])<br>
-<a name="eventdispatcher-on"></a>
-[#](#eventdispatcher-on)
+<a id="eventdispatcher-on" href="#eventdispatcher-on">#</a>
 *eventDispatcher*.**on**(*type*, *listener* [, *capture*])
 
-<a name="eventdispatcher-removeeventlistener"></a>
-[#](#eventdispatcher-removeeventlistener)
+<a id="eventdispatcher-removeeventlistener" href="#eventdispatcher-removeeventlistener">#</a>
 *eventDispatcher*.**removeEventListener**(*type*, *listener* [, *capture*])<br>
-<a name="eventdispatcher-off"></a>
-[#](#eventdispatcher-off)
+<a id="eventdispatcher-off" href="#eventdispatcher-off">#</a>
 *eventDispatcher*.**off**(*type*, *listener* [, *capture*])
 
-<a name="eventdispatcher-once"></a>
-[#](#eventdispatcher-once)
+<a id="eventdispatcher-once" href="#eventdispatcher-once">#</a>
 *eventDispatcher*.**once**(*type*, *listener* [, *capture*])
 
-<a name="eventdispatcher-dispatchevent"></a>
-[#](#eventdispatcher-dispatchevent)
+<a id="eventdispatcher-dispatchevent" href="#eventdispatcher-dispatchevent">#</a>
 *eventDispatcher*.**dispatchEvent**(*event*)
 
 ### EventTarget
 
 Ihnerits from [Event](#eventdispatcher)
 
-<a name="eventtarget-dispatchevent"></a>
-[#](#eventtarget-dispatchevent)
+<a id="eventtarget-dispatchevent" href="#eventtarget-dispatchevent">#</a>
 *eventTarget*.**dispatchEvent**(*event* [, *propagationPath*])
 
-<a name="eventtarget-dispatchimmediateevent"></a>
-[#](#eventtarget-dispatchimmediateevent)
+<a id="eventtarget-dispatchimmediateevent" href="#eventtarget-dispatchimmediateevent">#</a>
 *eventTarget*.**dispatchImmediateEvent**(*event*)
 
-<a name="eventtarget-determinepropagationpath"></a>
-[#](#eventtarget-determinepropagationpath)
+<a id="eventtarget-determinepropagationpath" href="#eventtarget-determinepropagationpath">#</a>
 *eventTarget*.**determinePropagationPath**([*target*])
 
-<a name="eventtarget-ancestoreventtarget"></a>
-[#](#eventtarget-ancestoreventtarget)
+<a id="eventtarget-ancestoreventtarget" href="#eventtarget-ancestoreventtarget">#</a>
 *eventTarget*.**ancestorEventTarget**
 
-<a name="eventtarget-descendanteventtarget"></a>
-[#](#eventtarget-descendanteventtarget)
+<a id="eventtarget-descendanteventtarget" href="#eventtarget-descendanteventtarget">#</a>
 *eventTarget*.**descendantEventTarget**
 
 ### Binding
 
-<a name="binding-bind"></a>
-[#](#binding-bind)
+<a id="binding-bind" href="#binding-bind">#</a>
 Binding.**bind**(*source*, *sourceState*, *targets*)<br>
-<a name="binding-bind"></a>
-[#](#binding-bind)
+<a id="binding-bind" href="#binding-bind">#</a>
 Binding.**bind**(*source*, *sourceState*, *target1*, *targetState1* [, *target2*, *targetState2*, ...])
 
-<a name="binding-unbind"></a>
-[#](#binding-unbind)
+<a id="binding-unbind" href="#binding-unbind">#</a>
 Binding.**unbind**(*source*, *sourceState*, *targets*)<br>
-<a name="binding-unbind"></a>
-[#](#binding-unbind)
+<a id="binding-unbind" href="#binding-unbind">#</a>
 Binding.**unbind**(*source*, *sourceState*, *target1*, *targetState1* [, *target2*, *targetState2*, ...])
 
-<a name="binding-unbindall"></a>
-[#](#binding-unbindall)
+<a id="binding-unbindall" href="#binding-unbindall">#</a>
 Binding.**unbindAll**(*source*, *sourceState*)
 
 ### Event
 
-[#]() new **Event**(*options*)<br>
-<a name="event-init"></a>
-[#](#event-init)
+<a id="new-event" href="#new-event">#</a>
+new **Event**(*options*)<br>
+<a id="event-init" href="#event-init">#</a>
 *event*.**init**(*options*)
 
 - `type`
 - `captures`
 - `bubbles`
 
-<a name="event-stoppropagation"></a>
-[#](#event-stoppropagation)
+<a id="event-stoppropagation" href="#event-stoppropagation">#</a>
 *event*.**stopPropagation**()
 
-<a name="event-stopimmediatepropagation"></a>
-[#](#event-stopimmediatepropagation)
+<a id="event-stopimmediatepropagation" href="#event-stopimmediatepropagation">#</a>
 *event*.**stopImmediatePropagation**()
 
-<a name="event-type"></a>
-[#](#event-type)
+<a id="event-type" href="#event-type">#</a>
 *event*.**type**
 
-<a name="event-target"></a>
-[#](#event-target)
+<a id="event-target" href="#event-target">#</a>
 *event*.**target**
 
-<a name="event-currenttarget"></a>
-[#](#event-currenttarget)
+<a id="event-currenttarget" href="#event-currenttarget">#</a>
 *event*.**currentTarget**
 
-<a name="event-phase"></a>
-[#](#event-phase)
+<a id="event-phase" href="#event-phase">#</a>
 *event*.**phase**
 
-<a name="event-captures"></a>
-[#](#event-captures)
+<a id="event-captures" href="#event-captures">#</a>
 *event*.**captures**
 
-<a name="event-bubbles"></a>
-[#](#event-bubbles)
+<a id="event-bubbles" href="#event-bubbles">#</a>
 *event*.**bubbles**
 
-<a name="event-timestamp"></a>
-[#](#event-timestamp)
+<a id="event-timestamp" href="#event-timestamp">#</a>
 *event*.**timestamp**
 
-<a name="event-propagationstopped"></a>
-[#](#event-propagationstopped)
+<a id="event-propagationstopped" href="#event-propagationstopped">#</a>
 *event*.**propagationStopped**
 
-<a name="event-immediatepropagationstopped"></a>
-[#](#event-immediatepropagationstopped)
+<a id="event-immediatepropagationstopped" href="#event-immediatepropagationstopped">#</a>
 *event*.**immediatePropagationStopped**
 
 ### StateEvent
 
 Ihnerits from [Event](#event)
 
-[#]() new **StateEvent**(*options*)<br>
-<a name="stateevent-init"></a>
-[#](#stateevent-init)
+<a id="new-stateevent" href="#new-stateevent">#</a>
+new **StateEvent**(*options*)<br>
+<a id="stateevent-init" href="#stateevent-init">#</a>
 *stateEvent*.**init**(*options*)
 
 - `name`
 - `value`
 
-<a name="stateevent-name"></a>
-[#](#stateevent-name)
+<a id="stateevent-name" href="#stateevent-name">#</a>
 *stateEvent*.**name**
 
-<a name="stateevent-value"></a>
-[#](#stateevent-value)
+<a id="stateevent-value" href="#stateevent-value">#</a>
 *stateEvent*.**value**
 
-[#]() StateEvent.**type**(*name*)
+<a id="stateevent-class-type" href="#stateevent-class-type">#</a>
+StateEvent.**type**(*name*)
 
 ### EventBundle
 
 Ihnerits from [Event](#event)
 
-[#]() new **EventBundle**(*options*)<br>
-<a name="eventbundle-init"></a>
-[#](#eventbundle-init)
+<a id="new-eventbundle" href="#new-eventbundle">#</a>
+new **EventBundle**(*options*)<br>
+<a id="eventbundle-init" href="#eventbundle-init">#</a>
 *eventBundle*.**init**(*options*)
 
 - `originalEvent`
 
-<a name="eventbundle-preventdefault"></a>
-[#](#eventbundle-preventdefault)
+<a id="eventbundle-preventdefault" href="#eventbundle-preventdefault">#</a>
 *eventBundle*.**preventDefault**()
 
-<a name="eventbundle-defaultprevented"></a>
-[#](#eventbundle-defaultprevented)
+<a id="eventbundle-defaultprevented" href="#eventbundle-defaultprevented">#</a>
 *eventBundle*.**defaultPrevented**
 
-<a name="eventbundle-originalevent"></a>
-[#](#eventbundle-originalevent)
+<a id="eventbundle-originalevent" href="#eventbundle-originalevent">#</a>
 *eventBundle*.**originalEvent**
 
 ### MouseEvent
 
 Ihnerits from [EventBundle](#eventbundle)
 
-[#]() new **MouseEvent**(*options*)<br>
-<a name="mouseevent-init"></a>
-[#](#mouseevent-init)
+<a id="new-mouseevent" href="#new-mouseevent">#</a>
+new **MouseEvent**(*options*)<br>
+<a id="mouseevent-init" href="#mouseevent-init">#</a>
 *mouseEvent*.**init**(*options*)
 
 - `x`
@@ -424,134 +393,109 @@ Ihnerits from [EventBundle](#eventbundle)
 - `movementX`
 - `movementY`
 
-<a name="mouseevent-x"></a>
-[#](#mouseevent-x)
+<a id="mouseevent-x" href="#mouseevent-x">#</a>
 *mouseEvent*.**x**
 
-<a name="mouseevent-y"></a>
-[#](#mouseevent-y)
+<a id="mouseevent-y" href="#mouseevent-y">#</a>
 *mouseEvent*.**y**
 
-<a name="mouseevent-movementx"></a>
-[#](#mouseevent-movementx)
+<a id="mouseevent-movementx" href="#mouseevent-movementx">#</a>
 *mouseEvent*.**movementX**
 
-<a name="mouseevent-movementy"></a>
-[#](#mouseevent-movementy)
+<a id="mouseevent-movementy" href="#mouseevent-movementy">#</a>
 *mouseEvent*.**movementY**
 
-<a name="mouseevent-button"></a>
-[#](#mouseevent-button)
+<a id="mouseevent-button" href="#mouseevent-button">#</a>
 *mouseEvent*.**button**
 
-<a name="mouseevent-ctrlkey"></a>
-[#](#mouseevent-ctrlkey)
+<a id="mouseevent-ctrlkey" href="#mouseevent-ctrlkey">#</a>
 *mouseEvent*.**ctrlKey**
 
-<a name="mouseevent-shiftkey"></a>
-[#](#mouseevent-shiftkey)
+<a id="mouseevent-shiftkey" href="#mouseevent-shiftkey">#</a>
 *mouseEvent*.**shiftKey**
 
-<a name="mouseevent-altkey"></a>
-[#](#mouseevent-altkey)
+<a id="mouseevent-altkey" href="#mouseevent-altkey">#</a>
 *mouseEvent*.**altKey**
 
-<a name="mouseevent-metakey"></a>
-[#](#mouseevent-metakey)
+<a id="mouseevent-metakey" href="#mouseevent-metakey">#</a>
 *mouseEvent*.**metaKey**
 
 ### KeyboardEvent
 
 Ihnerits from [EventBundle](#eventbundle)
 
-[#]() new **KeyboardEvent**(*options*)<br>
-<a name="keyboardevent-init"></a>
-[#](#keyboardevent-init)
+<a id="new-keyboardevent" href="#new-keyboardevent">#</a>
+new **KeyboardEvent**(*options*)<br>
+<a id="keyboardevent-init" href="#keyboardevent-init">#</a>
 *keyboardEvent*.**init**(*options*)
 
-<a name="keyboardevent-key"></a>
-[#](#keyboardevent-key)
+<a id="keyboardevent-key" href="#keyboardevent-key">#</a>
 *keyboardEvent*.**key**
 
-<a name="keyboardevent-code"></a>
-[#](#keyboardevent-code)
+<a id="keyboardevent-code" href="#keyboardevent-code">#</a>
 *keyboardEvent*.**code**
 
-<a name="keyboardevent-ctrlkey"></a>
-[#](#keyboardevent-ctrlkey)
+<a id="keyboardevent-ctrlkey" href="#keyboardevent-ctrlkey">#</a>
 *keyboardEvent*.**ctrlKey**
 
-<a name="keyboardevent-shiftkey"></a>
-[#](#keyboardevent-shiftkey)
+<a id="keyboardevent-shiftkey" href="#keyboardevent-shiftkey">#</a>
 *keyboardEvent*.**shiftKey**
 
-<a name="keyboardevent-altkey"></a>
-[#](#keyboardevent-altkey)
+<a id="keyboardevent-altkey" href="#keyboardevent-altkey">#</a>
 *keyboardEvent*.**altKey**
 
-<a name="keyboardevent-metakey"></a>
-[#](#keyboardevent-metakey)
+<a id="keyboardevent-metakey" href="#keyboardevent-metakey">#</a>
 *keyboardEvent*.**metaKey**
 
-<a name="keyboardevent-repeat"></a>
-[#](#keyboardevent-repeat)
+<a id="keyboardevent-repeat" href="#keyboardevent-repeat">#</a>
 *keyboardEvent*.**repeat**
 
 ### TouchEvent
 
 Ihnerits from [EventBundle](#eventbundle)
 
-[#]() new **TouchEvent**(*options*)<br>
-<a name="touchevent-init"></a>
-[#](#touchevent-init)
+<a id="new-touchevent" href="#new-touchevent">#</a>
+new **TouchEvent**(*options*)<br>
+<a id="touchevent-init" href="#touchevent-init">#</a>
 *touchEvent*.**init**(*options*)
 
 - `touches`
 - `changedTouches`
 
-<a name="touchevent-touches"></a>
-[#](#touchevent-touches)
+<a id="touchevent-touches" href="#touchevent-touches">#</a>
 *touchEvent*.**touches**
 
-<a name="touchevent-changedtouches"></a>
-[#](#touchevent-changedtouches)
+<a id="touchevent-changedtouches" href="#touchevent-changedtouches">#</a>
 *touchEvent*.**changedTouches**
 
-<a name="touchevent-ctrlkey"></a>
-[#](#touchevent-ctrlkey)
+<a id="touchevent-ctrlkey" href="#touchevent-ctrlkey">#</a>
 *touchEvent*.**ctrlKey**
 
-<a name="touchevent-shiftkey"></a>
-[#](#touchevent-shiftkey)
+<a id="touchevent-shiftkey" href="#touchevent-shiftkey">#</a>
 *touchEvent*.**shiftKey**
 
-<a name="touchevent-altkey"></a>
-[#](#touchevent-altkey)
+<a id="touchevent-altkey" href="#touchevent-altkey">#</a>
 *touchEvent*.**altKey**
 
-<a name="touchevent-metakey"></a>
-[#](#touchevent-metakey)
+<a id="touchevent-metakey" href="#touchevent-metakey">#</a>
 *touchEvent*.**metaKey**
 
 ### WheelEvent
 
 Ihnerits from [EventBundle](#eventbundle)
 
-[#]() new **WheelEvent**(*options*)<br>
-<a name="wheelevent-init"></a>
-[#](#wheelevent-init)
+<a id="new-wheelevent" href="#new-wheelevent">#</a>
+new **WheelEvent**(*options*)<br>
+<a id="wheelevent-init" href="#wheelevent-init">#</a>
 *wheelEvent*.**init**(*options*)
 
-<a name="wheelevent-deltax"></a>
-[#](#wheelevent-deltax)
+<a id="wheelevent-deltax" href="#wheelevent-deltax">#</a>
 *wheelEvent*.**deltaX**
 
-<a name="wheelevent-deltay"></a>
-[#](#wheelevent-deltay)
+<a id="wheelevent-deltay" href="#wheelevent-deltay">#</a>
 *wheelEvent*.**deltaY**
 
-<a name="wheelevent-deltaz"></a>
-[#](#wheelevent-deltaz)
+<a id="wheelevent-deltaz" href="#wheelevent-deltaz">#</a>
 *wheelEvent*.**deltaZ**
 
 ## License
