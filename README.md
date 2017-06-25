@@ -195,7 +195,7 @@ const source = new EventDispatcher()
 const target1 = {}
 const target2 = {}
 
-// 1 to multiple binding defaults to one-ways binding
+// 1 to multiple binding defaults to one-way binding
 Binding.bind(source, 'state', [
   target1, 'state',
   target2, 'state',
