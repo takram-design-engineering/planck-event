@@ -262,7 +262,7 @@ console.log(target2.state)  // 'finished'
 
 ### EventTarget
 
-Ihnerits from [Event](#eventdispatcher)
+Inherits from [Event](#eventdispatcher)
 
 <a id="eventtarget-dispatchevent" href="#eventtarget-dispatchevent">#</a>
 *eventTarget*.**dispatchEvent**(*event* [, *propagationPath*])
@@ -281,14 +281,14 @@ Ihnerits from [Event](#eventdispatcher)
 
 ### Binding
 
-<a id="binding-bind" href="#binding-bind">#</a>
+<a id="binding-bind-1" href="#binding-bind-1">#</a>
 Binding.**bind**(*source*, *sourceState*, *targets*)<br>
-<a id="binding-bind" href="#binding-bind">#</a>
+<a id="binding-bind-2" href="#binding-bind-2">#</a>
 Binding.**bind**(*source*, *sourceState*, *target1*, *targetState1* [, *target2*, *targetState2*, ...])
 
-<a id="binding-unbind" href="#binding-unbind">#</a>
+<a id="binding-unbind-1" href="#binding-unbind-1">#</a>
 Binding.**unbind**(*source*, *sourceState*, *targets*)<br>
-<a id="binding-unbind" href="#binding-unbind">#</a>
+<a id="binding-unbind-2" href="#binding-unbind-2">#</a>
 Binding.**unbind**(*source*, *sourceState*, *target1*, *targetState1* [, *target2*, *targetState2*, ...])
 
 <a id="binding-unbindall" href="#binding-unbindall">#</a>
@@ -340,7 +340,7 @@ new **Event**(*options*)<br>
 
 ### StateEvent
 
-Ihnerits from [Event](#event)
+Inherits from [Event](#event)
 
 <a id="new-stateevent" href="#new-stateevent">#</a>
 new **StateEvent**(*options*)<br>
@@ -361,7 +361,7 @@ StateEvent.**type**(*name*)
 
 ### EventBundle
 
-Ihnerits from [Event](#event)
+Inherits from [Event](#event)
 
 <a id="new-eventbundle" href="#new-eventbundle">#</a>
 new **EventBundle**(*options*)<br>
@@ -381,7 +381,7 @@ new **EventBundle**(*options*)<br>
 
 ### MouseEvent
 
-Ihnerits from [EventBundle](#eventbundle)
+Inherits from [EventBundle](#eventbundle)
 
 <a id="new-mouseevent" href="#new-mouseevent">#</a>
 new **MouseEvent**(*options*)<br>
@@ -422,7 +422,7 @@ new **MouseEvent**(*options*)<br>
 
 ### KeyboardEvent
 
-Ihnerits from [EventBundle](#eventbundle)
+Inherits from [EventBundle](#eventbundle)
 
 <a id="new-keyboardevent" href="#new-keyboardevent">#</a>
 new **KeyboardEvent**(*options*)<br>
@@ -452,7 +452,7 @@ new **KeyboardEvent**(*options*)<br>
 
 ### TouchEvent
 
-Ihnerits from [EventBundle](#eventbundle)
+Inherits from [EventBundle](#eventbundle)
 
 <a id="new-touchevent" href="#new-touchevent">#</a>
 new **TouchEvent**(*options*)<br>
@@ -482,7 +482,7 @@ new **TouchEvent**(*options*)<br>
 
 ### WheelEvent
 
-Ihnerits from [EventBundle](#eventbundle)
+Inherits from [EventBundle](#eventbundle)
 
 <a id="new-wheelevent" href="#new-wheelevent">#</a>
 new **WheelEvent**(*options*)<br>
