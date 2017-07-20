@@ -876,7 +876,7 @@ var escapee = {
   t: '\t'
 };
 var text;
-var error$1 = function error$1(m) {
+var error = function error(m) {
   // Call error when something is wrong.
   throw {
     name: 'SyntaxError',
@@ -888,7 +888,7 @@ var error$1 = function error$1(m) {
 var next = function next(c) {
   // If a c parameter is provided, verify that it matches the current character.
   if (c && c !== ch) {
-    error$1("Expected '" + c + "' instead of '" + ch + "'");
+    error("Expected '" + c + "' instead of '" + ch + "'");
   }
 
   // Get the next character. When there are no more characters,
@@ -931,7 +931,7 @@ var number = function number() {
   }
   number = +string;
   if (!isFinite(number)) {
-    error$1("Bad number");
+    error("Bad number");
   } else {
     return number;
   }
@@ -971,7 +971,7 @@ var string = function string() {
       }
     }
   }
-  error$1("Bad string");
+  error("Bad string");
 };
 var white = function white() {
 
@@ -1006,7 +1006,7 @@ var word = function word() {
       next('l');
       return null;
   }
-  error$1("Unexpected '" + ch + "'");
+  error("Unexpected '" + ch + "'");
 };
 var value;
 var array = function array() {
@@ -1033,7 +1033,7 @@ var array = function array() {
       white();
     }
   }
-  error$1("Bad array");
+  error("Bad array");
 };
 var object = function object() {
 
@@ -1054,7 +1054,7 @@ var object = function object() {
       white();
       next(':');
       if (Object.hasOwnProperty.call(object, key)) {
-        error$1('Duplicate key "' + key + '"');
+        error('Duplicate key "' + key + '"');
       }
       object[key] = value();
       white();
@@ -1066,7 +1066,7 @@ var object = function object() {
       white();
     }
   }
-  error$1("Bad object");
+  error("Bad object");
 };
 
 value = function value() {
@@ -1184,18 +1184,9 @@ var Multiton = function () {
         args[_key5 - 1] = arguments[_key5];
       }
 
-      var instance = this.new.apply(this, [coercedKey].concat(args));
+      var instance = new (Function.prototype.bind.apply(this, [null].concat([coercedKey], args)))();
       scope.instances.set(coercedKey, instance);
       return instance;
-    }
-  }, {
-    key: 'new',
-    value: function _new() {
-      for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        args[_key6] = arguments[_key6];
-      }
-
-      return new (Function.prototype.bind.apply(this, [null].concat(args)))();
     }
   }, {
     key: 'coerceMultitonKey',
@@ -1806,7 +1797,7 @@ function browserRequest(url, options) {
     }
     request.responseType = options.type;
     request.addEventListener('loadend', function (event) {
-      if (request.status !== 200) {
+      if (request.status < 200 || request.status >= 300) {
         reject(request.status);
         return;
       }
@@ -1843,7 +1834,7 @@ function nodeRequest(url, options) {
         reject(error);
         return;
       }
-      if (response.statusCode !== 200) {
+      if (response.statusCode < 200 || response.statusCode >= 300) {
         reject(response.statusCode);
       }
       resolve(response.body);
@@ -1881,8 +1872,8 @@ function performRequest(url, options) {
 }
 
 function parseArguments() {
-  for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-    args[_key7] = arguments[_key7];
+  for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+    args[_key6] = arguments[_key6];
   }
 
   var url = args[0],
@@ -2110,18 +2101,13 @@ var Singleton = function () {
     value: function get$$1() {
       var scope = internal$7(this);
       if (scope.instance === undefined) {
-        scope.instance = this.new.apply(this, arguments);
+        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+          args[_key7] = arguments[_key7];
+        }
+
+        scope.instance = new (Function.prototype.bind.apply(this, [null].concat(args)))();
       }
       return scope.instance;
-    }
-  }, {
-    key: 'new',
-    value: function _new() {
-      for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-        args[_key8] = arguments[_key8];
-      }
-
-      return new (Function.prototype.bind.apply(this, [null].concat(args)))();
     }
   }]);
   return Singleton;
