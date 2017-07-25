@@ -4,562 +4,14 @@
 	(factory((global.Planck = {})));
 }(this, (function (exports) { 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var get = function get(object, property, receiver) {
-  if (object === null) object = Function.prototype;
-  var desc = Object.getOwnPropertyDescriptor(object, property);
-
-  if (desc === undefined) {
-    var parent = Object.getPrototypeOf(object);
-
-    if (parent === null) {
-      return undefined;
-    } else {
-      return get(parent, property, receiver);
-    }
-  } else if ("value" in desc) {
-    return desc.value;
-  } else {
-    var getter = desc.get;
-
-    if (getter === undefined) {
-      return undefined;
-    }
-
-    return getter.call(receiver);
-  }
-};
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-
-
-
-
-
-
-
-
-var objectWithoutProperties = function (obj, keys) {
-  var target = {};
-
-  for (var i in obj) {
-    if (keys.indexOf(i) >= 0) continue;
-    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-    target[i] = obj[i];
-  }
-
-  return target;
-};
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
-};
-
-
-
-
-
-var slicedToArray = function () {
-  function sliceIterator(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"]) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  return function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      return sliceIterator(arr, i);
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-}();
-
-
-
-
-
-
-
-
-
-
-
-
-
-var toConsumableArray = function (arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  } else {
-    return Array.from(arr);
-  }
-};
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-function Namespace() {
-  var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-
-  var symbol = Symbol(name);
-  return function namespace(object) {
-    var init = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (data) {
-      return data;
-    };
-
-    if (object[symbol] === undefined) {
-      object[symbol] = init({});
-    }
-    return object[symbol];
-  };
-}
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-var internal$1 = Namespace('AggregateFunction');
-
-var AggregateFunction = function () {
-  // This constructor provides for inheritance only
-  function AggregateFunction(namespace) {
-    classCallCheck(this, AggregateFunction);
-
-    if (namespace !== internal$1) {
-      throw new Error();
-    }
-    var scope = internal$1(this);
-
-    for (var _len = arguments.length, targets = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      targets[_key - 1] = arguments[_key];
-    }
-
-    scope.targets = targets;
-  }
-
-  createClass(AggregateFunction, [{
-    key: 'apply',
-    value: function apply(target, bound, args) {
-      var scope = internal$1(this);
-      return scope.targets.map(function (target) {
-        return Reflect.apply(target, bound, args);
-      });
-    }
-  }, {
-    key: 'getPrototypeOf',
-    value: function getPrototypeOf(target) {
-      return this.constructor.prototype;
-    }
-  }], [{
-    key: 'new',
-    value: function _new() {
-      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-
-      var instance = new (Function.prototype.bind.apply(this, [null].concat([internal$1], args)))();
-      return new Proxy(function () {}, instance);
-    }
-  }]);
-  return AggregateFunction;
-}();
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-var internal$1$1 = Namespace('Aggregate');
-
-var Aggregate = function () {
-  // This constructor provides for inheritance only
-  function Aggregate(namespace) {
-    classCallCheck(this, Aggregate);
-
-    if (namespace !== internal$1$1) {
-      throw new Error();
-    }
-    var scope = internal$1$1(this);
-
-    for (var _len3 = arguments.length, targets = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-      targets[_key3 - 1] = arguments[_key3];
-    }
-
-    scope.targets = targets;
-  }
-
-  createClass(Aggregate, [{
-    key: 'set',
-    value: function set(target, property, value, receiver) {
-      var scope = internal$1$1(this);
-      scope.targets.forEach(function (target) {
-        Reflect.set(target, property, value);
-      });
-      return Reflect.set(target, property, value, receiver);
-    }
-  }, {
-    key: 'get',
-    value: function get$$1(target, property, receiver) {
-      var scope = internal$1$1(this);
-      var aggregative = scope.targets.every(function (target) {
-        return typeof Reflect.get(target, property) === 'function';
-      });
-      if (aggregative) {
-        return AggregateFunction.new.apply(AggregateFunction, toConsumableArray(scope.targets.map(function (target) {
-          return Reflect.get(target, property).bind(target);
-        })));
-      }
-      return Reflect.get(scope.targets[0], property, receiver);
-    }
-  }, {
-    key: 'getPrototypeOf',
-    value: function getPrototypeOf(target) {
-      return this.constructor.prototype;
-    }
-  }], [{
-    key: 'new',
-    value: function _new() {
-      for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
-      }
-
-      var instance = new (Function.prototype.bind.apply(this, [null].concat([internal$1$1], args)))();
-      return new Proxy({}, instance);
-    }
-  }]);
-  return Aggregate;
-}();
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-function AssertionError(message) {
-  this.message = message;
-}
-
-Object.setPrototypeOf(AssertionError, Error);
-AssertionError.prototype = Object.create(Error.prototype);
-AssertionError.prototype.name = 'AssertionError';
-AssertionError.prototype.message = '';
-AssertionError.prototype.constructor = AssertionError;
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-
-var Environment = function () {
-  function Environment() {
-    classCallCheck(this, Environment);
-  }
-
-  createClass(Environment, null, [{
-    key: 'type',
-    get: function get$$1() {
-      try {
-        // eslint-disable-next-line no-new-func
-        if (new Function('return this === window')()) {
-          return 'browser';
-        }
-      } catch (error) {}
-      try {
-        // eslint-disable-next-line no-new-func
-        if (new Function('return this === self')()) {
-          return 'worker';
-        }
-      } catch (error) {}
-      try {
-        // eslint-disable-next-line no-new-func
-        if (new Function('return this === global')()) {
-          return 'node';
-        }
-      } catch (error) {}
-      throw new Error();
-    }
-  }, {
-    key: 'self',
-    get: function get$$1() {
-      switch (this.type) {
-        case 'browser':
-          return window;
-        case 'worker':
-          return self;
-        case 'node':
-          return global;
-        default:
-          break;
-      }
-      throw new Error();
-    }
-  }]);
-  return Environment;
-}();
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-var internal$3 = Namespace('FilePath');
-
-var FilePath = function () {
-  function FilePath() {
-    classCallCheck(this, FilePath);
-  }
-
-  createClass(FilePath, null, [{
-    key: 'self',
-    get: function get$$1() {
-      var scope = internal$3(this);
-      return scope.self;
-    }
-  }, {
-    key: 'current',
-    get: function get$$1() {
-      switch (Environment.type) {
-        case 'browser':
-          return window.location.href;
-        case 'worker':
-          return self.location.href;
-        case 'node':
-          return process.cwd();
-        default:
-          break;
-      }
-      throw new Error();
-    }
-  }]);
-  return FilePath;
-}();
-
-internal$3(FilePath).self = FilePath.current;
-
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
+
+
+
+
 function createCommonjsModule(fn, module) {
-  return module = { exports: {} }, fn(module, module.exports), module.exports;
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
 var crypt = createCommonjsModule(function (module) {
@@ -863,339 +315,424 @@ var md5 = createCommonjsModule(function (module) {
   })();
 });
 
-var at;
-var ch;
-var escapee = {
-  '"': '"',
-  '\\': '\\',
-  '/': '/',
-  b: '\b',
-  f: '\f',
-  n: '\n',
-  r: '\r',
-  t: '\t'
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
-var text;
-var error = function error(m) {
-  // Call error when something is wrong.
-  throw {
-    name: 'SyntaxError',
-    message: m,
-    at: at,
-    text: text
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
   };
-};
-var next = function next(c) {
-  // If a c parameter is provided, verify that it matches the current character.
-  if (c && c !== ch) {
-    error("Expected '" + c + "' instead of '" + ch + "'");
-  }
+}();
 
-  // Get the next character. When there are no more characters,
-  // return the empty string.
 
-  ch = text.charAt(at);
-  at += 1;
-  return ch;
-};
-var number = function number() {
-  // Parse a number value.
-  var number,
-      string = '';
 
-  if (ch === '-') {
-    string = '-';
-    next('-');
-  }
-  while (ch >= '0' && ch <= '9') {
-    string += ch;
-    next();
-  }
-  if (ch === '.') {
-    string += '.';
-    while (next() && ch >= '0' && ch <= '9') {
-      string += ch;
-    }
-  }
-  if (ch === 'e' || ch === 'E') {
-    string += ch;
-    next();
-    if (ch === '-' || ch === '+') {
-      string += ch;
-      next();
-    }
-    while (ch >= '0' && ch <= '9') {
-      string += ch;
-      next();
-    }
-  }
-  number = +string;
-  if (!isFinite(number)) {
-    error("Bad number");
-  } else {
-    return number;
-  }
-};
-var string = function string() {
-  // Parse a string value.
-  var hex,
-      i,
-      string = '',
-      uffff;
 
-  // When parsing for string values, we must look for " and \ characters.
-  if (ch === '"') {
-    while (next()) {
-      if (ch === '"') {
-        next();
-        return string;
-      } else if (ch === '\\') {
-        next();
-        if (ch === 'u') {
-          uffff = 0;
-          for (i = 0; i < 4; i += 1) {
-            hex = parseInt(next(), 16);
-            if (!isFinite(hex)) {
-              break;
-            }
-            uffff = uffff * 16 + hex;
-          }
-          string += String.fromCharCode(uffff);
-        } else if (typeof escapee[ch] === 'string') {
-          string += escapee[ch];
-        } else {
-          break;
-        }
-      } else {
-        string += ch;
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
       }
     }
   }
-  error("Bad string");
+
+  return target;
+};
+
+var get = function get(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
+    }
+
+    return getter.call(receiver);
+  }
+};
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+var objectWithoutProperties = function (obj, keys) {
+  var target = {};
+
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+
+  return target;
+};
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+
+
+
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
+
+
+
+
+
+
+
+
+
+
+
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+var at;
+var ch;
+var escapee = {
+    '"': '"',
+    '\\': '\\',
+    '/': '/',
+    b: '\b',
+    f: '\f',
+    n: '\n',
+    r: '\r',
+    t: '\t'
+};
+var text;
+var error = function error(m) {
+    // Call error when something is wrong.
+    throw {
+        name: 'SyntaxError',
+        message: m,
+        at: at,
+        text: text
+    };
+};
+var next = function next(c) {
+    // If a c parameter is provided, verify that it matches the current character.
+    if (c && c !== ch) {
+        error("Expected '" + c + "' instead of '" + ch + "'");
+    }
+
+    // Get the next character. When there are no more characters,
+    // return the empty string.
+
+    ch = text.charAt(at);
+    at += 1;
+    return ch;
+};
+var number = function number() {
+    // Parse a number value.
+    var number,
+        string = '';
+
+    if (ch === '-') {
+        string = '-';
+        next('-');
+    }
+    while (ch >= '0' && ch <= '9') {
+        string += ch;
+        next();
+    }
+    if (ch === '.') {
+        string += '.';
+        while (next() && ch >= '0' && ch <= '9') {
+            string += ch;
+        }
+    }
+    if (ch === 'e' || ch === 'E') {
+        string += ch;
+        next();
+        if (ch === '-' || ch === '+') {
+            string += ch;
+            next();
+        }
+        while (ch >= '0' && ch <= '9') {
+            string += ch;
+            next();
+        }
+    }
+    number = +string;
+    if (!isFinite(number)) {
+        error("Bad number");
+    } else {
+        return number;
+    }
+};
+var string = function string() {
+    // Parse a string value.
+    var hex,
+        i,
+        string = '',
+        uffff;
+
+    // When parsing for string values, we must look for " and \ characters.
+    if (ch === '"') {
+        while (next()) {
+            if (ch === '"') {
+                next();
+                return string;
+            } else if (ch === '\\') {
+                next();
+                if (ch === 'u') {
+                    uffff = 0;
+                    for (i = 0; i < 4; i += 1) {
+                        hex = parseInt(next(), 16);
+                        if (!isFinite(hex)) {
+                            break;
+                        }
+                        uffff = uffff * 16 + hex;
+                    }
+                    string += String.fromCharCode(uffff);
+                } else if (typeof escapee[ch] === 'string') {
+                    string += escapee[ch];
+                } else {
+                    break;
+                }
+            } else {
+                string += ch;
+            }
+        }
+    }
+    error("Bad string");
 };
 var white = function white() {
 
-  // Skip whitespace.
+    // Skip whitespace.
 
-  while (ch && ch <= ' ') {
-    next();
-  }
+    while (ch && ch <= ' ') {
+        next();
+    }
 };
 var word = function word() {
 
-  // true, false, or null.
+    // true, false, or null.
 
-  switch (ch) {
-    case 't':
-      next('t');
-      next('r');
-      next('u');
-      next('e');
-      return true;
-    case 'f':
-      next('f');
-      next('a');
-      next('l');
-      next('s');
-      next('e');
-      return false;
-    case 'n':
-      next('n');
-      next('u');
-      next('l');
-      next('l');
-      return null;
-  }
-  error("Unexpected '" + ch + "'");
+    switch (ch) {
+        case 't':
+            next('t');
+            next('r');
+            next('u');
+            next('e');
+            return true;
+        case 'f':
+            next('f');
+            next('a');
+            next('l');
+            next('s');
+            next('e');
+            return false;
+        case 'n':
+            next('n');
+            next('u');
+            next('l');
+            next('l');
+            return null;
+    }
+    error("Unexpected '" + ch + "'");
 };
 var value;
 var array = function array() {
 
-  // Parse an array value.
+    // Parse an array value.
 
-  var array = [];
+    var array = [];
 
-  if (ch === '[') {
-    next('[');
-    white();
-    if (ch === ']') {
-      next(']');
-      return array; // empty array
+    if (ch === '[') {
+        next('[');
+        white();
+        if (ch === ']') {
+            next(']');
+            return array; // empty array
+        }
+        while (ch) {
+            array.push(value());
+            white();
+            if (ch === ']') {
+                next(']');
+                return array;
+            }
+            next(',');
+            white();
+        }
     }
-    while (ch) {
-      array.push(value());
-      white();
-      if (ch === ']') {
-        next(']');
-        return array;
-      }
-      next(',');
-      white();
-    }
-  }
-  error("Bad array");
+    error("Bad array");
 };
 var object = function object() {
 
-  // Parse an object value.
+    // Parse an object value.
 
-  var key,
-      object = {};
+    var key,
+        object = {};
 
-  if (ch === '{') {
-    next('{');
-    white();
-    if (ch === '}') {
-      next('}');
-      return object; // empty object
+    if (ch === '{') {
+        next('{');
+        white();
+        if (ch === '}') {
+            next('}');
+            return object; // empty object
+        }
+        while (ch) {
+            key = string();
+            white();
+            next(':');
+            if (Object.hasOwnProperty.call(object, key)) {
+                error('Duplicate key "' + key + '"');
+            }
+            object[key] = value();
+            white();
+            if (ch === '}') {
+                next('}');
+                return object;
+            }
+            next(',');
+            white();
+        }
     }
-    while (ch) {
-      key = string();
-      white();
-      next(':');
-      if (Object.hasOwnProperty.call(object, key)) {
-        error('Duplicate key "' + key + '"');
-      }
-      object[key] = value();
-      white();
-      if (ch === '}') {
-        next('}');
-        return object;
-      }
-      next(',');
-      white();
-    }
-  }
-  error("Bad object");
+    error("Bad object");
 };
 
 value = function value() {
 
-  // Parse a JSON value. It could be an object, an array, a string, a number,
-  // or a word.
+    // Parse a JSON value. It could be an object, an array, a string, a number,
+    // or a word.
 
-  white();
-  switch (ch) {
-    case '{':
-      return object();
-    case '[':
-      return array();
-    case '"':
-      return string();
-    case '-':
-      return number();
-    default:
-      return ch >= '0' && ch <= '9' ? number() : word();
-  }
+    white();
+    switch (ch) {
+        case '{':
+            return object();
+        case '[':
+            return array();
+        case '"':
+            return string();
+        case '-':
+            return number();
+        default:
+            return ch >= '0' && ch <= '9' ? number() : word();
+    }
 };
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-function ImplementationError(message) {
-  this.message = message;
-}
-
-Object.setPrototypeOf(ImplementationError, Error);
-ImplementationError.prototype = Object.create(Error.prototype);
-ImplementationError.prototype.name = 'ImplementationError';
-ImplementationError.prototype.message = '';
-ImplementationError.prototype.constructor = ImplementationError;
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-var internal$4 = Namespace('Multiton');
-
-var Multiton = function () {
-  function Multiton(key) {
-    classCallCheck(this, Multiton);
-
-    if (this.constructor.has(key)) {
-      throw new Error('Attempt to create multiple instances for key "' + key + '"');
-    }
-  }
-
-  createClass(Multiton, null, [{
-    key: 'has',
-    value: function has(key) {
-      var scope = internal$4(this);
-      if (scope.instances === undefined) {
-        return false;
-      }
-      var coercedKey = this.coerceMultitonKey(key);
-      return scope.instances[coercedKey] !== undefined;
-    }
-  }, {
-    key: 'for',
-    value: function _for(key) {
-      var scope = internal$4(this);
-      if (!scope.instances) {
-        scope.instances = new Map();
-      }
-      var coercedKey = this.coerceMultitonKey(key);
-      if (scope.instances.has(coercedKey)) {
-        return scope.instances.get(coercedKey);
-      }
-
-      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
-        args[_key5 - 1] = arguments[_key5];
-      }
-
-      var instance = new (Function.prototype.bind.apply(this, [null].concat([coercedKey], args)))();
-      scope.instances.set(coercedKey, instance);
-      return instance;
-    }
-  }, {
-    key: 'coerceMultitonKey',
-    value: function coerceMultitonKey(key) {
-      return key;
-    }
-  }]);
-  return Multiton;
-}();
 
 /**
  * Check if we're required to add a port number.
@@ -1589,7 +1126,7 @@ function URL$1(address, location, parser) {
  * @returns {URL}
  * @api public
  */
-function set(part, value, fn) {
+function set$1(part, value, fn) {
   var url = this;
 
   switch (part) {
@@ -1695,7 +1232,7 @@ function toString(stringify) {
   return result;
 }
 
-URL$1.prototype = { set: set, toString: toString };
+URL$1.prototype = { set: set$1, toString: toString };
 
 //
 // Expose the URL parser and some additional properties that might be useful for
@@ -1706,6 +1243,628 @@ URL$1.location = lolcation;
 URL$1.qs = index$8;
 
 var index$5 = URL$1;
+
+var base64Arraybuffer = createCommonjsModule(function (module, exports) {
+  /*
+   * base64-arraybuffer
+   * https://github.com/niklasvh/base64-arraybuffer
+   *
+   * Copyright (c) 2012 Niklas von Hertzen
+   * Licensed under the MIT license.
+   */
+  (function () {
+    "use strict";
+
+    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    // Use a lookup table to find the index.
+    var lookup = new Uint8Array(256);
+    for (var i = 0; i < chars.length; i++) {
+      lookup[chars.charCodeAt(i)] = i;
+    }
+
+    exports.encode = function (arraybuffer) {
+      var bytes = new Uint8Array(arraybuffer),
+          i,
+          len = bytes.length,
+          base64 = "";
+
+      for (i = 0; i < len; i += 3) {
+        base64 += chars[bytes[i] >> 2];
+        base64 += chars[(bytes[i] & 3) << 4 | bytes[i + 1] >> 4];
+        base64 += chars[(bytes[i + 1] & 15) << 2 | bytes[i + 2] >> 6];
+        base64 += chars[bytes[i + 2] & 63];
+      }
+
+      if (len % 3 === 2) {
+        base64 = base64.substring(0, base64.length - 1) + "=";
+      } else if (len % 3 === 1) {
+        base64 = base64.substring(0, base64.length - 2) + "==";
+      }
+
+      return base64;
+    };
+
+    exports.decode = function (base64) {
+      var bufferLength = base64.length * 0.75,
+          len = base64.length,
+          i,
+          p = 0,
+          encoded1,
+          encoded2,
+          encoded3,
+          encoded4;
+
+      if (base64[base64.length - 1] === "=") {
+        bufferLength--;
+        if (base64[base64.length - 2] === "=") {
+          bufferLength--;
+        }
+      }
+
+      var arraybuffer = new ArrayBuffer(bufferLength),
+          bytes = new Uint8Array(arraybuffer);
+
+      for (i = 0; i < len; i += 4) {
+        encoded1 = lookup[base64.charCodeAt(i)];
+        encoded2 = lookup[base64.charCodeAt(i + 1)];
+        encoded3 = lookup[base64.charCodeAt(i + 2)];
+        encoded4 = lookup[base64.charCodeAt(i + 3)];
+
+        bytes[p++] = encoded1 << 2 | encoded2 >> 4;
+        bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
+        bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
+      }
+
+      return arraybuffer;
+    };
+  })();
+});
+
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+var rng;
+
+var crypto = commonjsGlobal.crypto || commonjsGlobal.msCrypto; // for IE 11
+if (crypto && crypto.getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+  rng = function whatwgRNG() {
+    crypto.getRandomValues(rnds8);
+    return rnds8;
+  };
+}
+
+if (!rng) {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+  rng = function rng() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+var rngBrowser = rng;
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  return bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]];
+}
+
+var bytesToUuid_1 = bytesToUuid;
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+
+// random #'s we need to init node and clockseq
+var _seedBytes = rngBrowser();
+
+// Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+var _nodeId = [_seedBytes[0] | 0x01, _seedBytes[1], _seedBytes[2], _seedBytes[3], _seedBytes[4], _seedBytes[5]];
+
+// Per 4.2.2, randomize (14 bit) clockseq
+var _clockseq = (_seedBytes[6] << 8 | _seedBytes[7]) & 0x3fff;
+
+// Previous uuid creation time
+var _lastMSecs = 0;
+var _lastNSecs = 0;
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+function Namespace() {
+  var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+
+  var symbol = Symbol(name);
+  return function namespace(object) {
+    var init = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (data) {
+      return data;
+    };
+
+    if (object[symbol] === undefined) {
+      object[symbol] = init({});
+    }
+    return object[symbol];
+  };
+}
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var internal$1 = Namespace('AggregateFunction');
+
+var AggregateFunction = function () {
+  // This constructor provides for inheritance only
+  function AggregateFunction(namespace) {
+    classCallCheck(this, AggregateFunction);
+
+    if (namespace !== internal$1) {
+      throw new Error();
+    }
+    var scope = internal$1(this);
+
+    for (var _len = arguments.length, targets = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      targets[_key - 1] = arguments[_key];
+    }
+
+    scope.targets = targets;
+  }
+
+  createClass(AggregateFunction, [{
+    key: 'apply',
+    value: function apply(target, bound, args) {
+      var scope = internal$1(this);
+      return scope.targets.map(function (target) {
+        return Reflect.apply(target, bound, args);
+      });
+    }
+  }, {
+    key: 'getPrototypeOf',
+    value: function getPrototypeOf(target) {
+      return this.constructor.prototype;
+    }
+  }], [{
+    key: 'new',
+    value: function _new() {
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      var instance = new (Function.prototype.bind.apply(this, [null].concat([internal$1], args)))();
+      return new Proxy(function () {}, instance);
+    }
+  }]);
+  return AggregateFunction;
+}();
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var internal$1$1 = Namespace('Aggregate');
+
+var Aggregate = function () {
+  // This constructor provides for inheritance only
+  function Aggregate(namespace) {
+    classCallCheck(this, Aggregate);
+
+    if (namespace !== internal$1$1) {
+      throw new Error();
+    }
+    var scope = internal$1$1(this);
+
+    for (var _len3 = arguments.length, targets = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      targets[_key3 - 1] = arguments[_key3];
+    }
+
+    scope.targets = targets;
+  }
+
+  createClass(Aggregate, [{
+    key: 'set',
+    value: function set$$1(target, property, value, receiver) {
+      var scope = internal$1$1(this);
+      scope.targets.forEach(function (target) {
+        Reflect.set(target, property, value);
+      });
+      return Reflect.set(target, property, value, receiver);
+    }
+  }, {
+    key: 'get',
+    value: function get$$1(target, property, receiver) {
+      var scope = internal$1$1(this);
+      var aggregative = scope.targets.every(function (target) {
+        return typeof Reflect.get(target, property) === 'function';
+      });
+      if (aggregative) {
+        return AggregateFunction.new.apply(AggregateFunction, toConsumableArray(scope.targets.map(function (target) {
+          return Reflect.get(target, property).bind(target);
+        })));
+      }
+      return Reflect.get(scope.targets[0], property, receiver);
+    }
+  }, {
+    key: 'getPrototypeOf',
+    value: function getPrototypeOf(target) {
+      return this.constructor.prototype;
+    }
+  }], [{
+    key: 'new',
+    value: function _new() {
+      for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
+      }
+
+      var instance = new (Function.prototype.bind.apply(this, [null].concat([internal$1$1], args)))();
+      return new Proxy({}, instance);
+    }
+  }]);
+  return Aggregate;
+}();
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+function AssertionError(message) {
+  this.message = message;
+}
+
+Object.setPrototypeOf(AssertionError, Error);
+AssertionError.prototype = Object.create(Error.prototype);
+AssertionError.prototype.name = 'AssertionError';
+AssertionError.prototype.message = '';
+AssertionError.prototype.constructor = AssertionError;
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+
+var Environment = function () {
+  function Environment() {
+    classCallCheck(this, Environment);
+  }
+
+  createClass(Environment, null, [{
+    key: 'type',
+    get: function get$$1() {
+      try {
+        // eslint-disable-next-line no-new-func
+        if (new Function('return this === window')()) {
+          return 'browser';
+        }
+      } catch (error) {}
+      try {
+        // eslint-disable-next-line no-new-func
+        if (new Function('return this === self')()) {
+          return 'worker';
+        }
+      } catch (error) {}
+      try {
+        // eslint-disable-next-line no-new-func
+        if (new Function('return this === global')()) {
+          return 'node';
+        }
+      } catch (error) {}
+      throw new Error();
+    }
+  }, {
+    key: 'self',
+    get: function get$$1() {
+      switch (this.type) {
+        case 'browser':
+          return window;
+        case 'worker':
+          return self;
+        case 'node':
+          return global;
+        default:
+          break;
+      }
+      throw new Error();
+    }
+  }]);
+  return Environment;
+}();
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var internal$3 = Namespace('FilePath');
+
+var FilePath = function () {
+  function FilePath() {
+    classCallCheck(this, FilePath);
+  }
+
+  createClass(FilePath, null, [{
+    key: 'self',
+    get: function get$$1() {
+      var scope = internal$3(this);
+      return scope.self;
+    }
+  }, {
+    key: 'current',
+    get: function get$$1() {
+      switch (Environment.type) {
+        case 'browser':
+          return window.location.href;
+        case 'worker':
+          return self.location.href;
+        case 'node':
+          return process.cwd();
+        default:
+          break;
+      }
+      throw new Error();
+    }
+  }]);
+  return FilePath;
+}();
+
+internal$3(FilePath).self = FilePath.current;
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+function ImplementationError(message) {
+  this.message = message;
+}
+
+Object.setPrototypeOf(ImplementationError, Error);
+ImplementationError.prototype = Object.create(Error.prototype);
+ImplementationError.prototype.name = 'ImplementationError';
+ImplementationError.prototype.message = '';
+ImplementationError.prototype.constructor = ImplementationError;
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var internal$4 = Namespace('Multiton');
+
+var Multiton = function () {
+  function Multiton(key) {
+    classCallCheck(this, Multiton);
+
+    if (this.constructor.has(key)) {
+      throw new Error('Attempt to create multiple instances for key "' + key + '"');
+    }
+  }
+
+  createClass(Multiton, null, [{
+    key: 'has',
+    value: function has(key) {
+      var scope = internal$4(this);
+      if (scope.instances === undefined) {
+        return false;
+      }
+      var coercedKey = this.coerceKey(key);
+      return scope.instances[coercedKey] !== undefined;
+    }
+  }, {
+    key: 'for',
+    value: function _for(key) {
+      var scope = internal$4(this);
+      if (!scope.instances) {
+        scope.instances = new Map();
+      }
+      var coercedKey = this.coerceKey(key);
+      if (scope.instances.has(coercedKey)) {
+        return scope.instances.get(coercedKey);
+      }
+
+      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+        args[_key5 - 1] = arguments[_key5];
+      }
+
+      var instance = this.new.apply(this, [coercedKey].concat(args));
+      scope.instances.set(coercedKey, instance);
+      return instance;
+    }
+  }, {
+    key: 'new',
+    value: function _new(key) {
+      for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+        args[_key6 - 1] = arguments[_key6];
+      }
+
+      return new (Function.prototype.bind.apply(this, [null].concat([key], args)))();
+    }
+  }, {
+    key: 'coerceKey',
+    value: function coerceKey(key) {
+      return key;
+    }
+  }]);
+  return Multiton;
+}();
 
 //
 //  The MIT License
@@ -1733,8 +1892,9 @@ var index$5 = URL$1;
 
 // Just use url-parse for now
 
-var URL = function (_index$) {
-  inherits(URL, _index$);
+
+var URL = function (_urlParse) {
+  inherits(URL, _urlParse);
 
   function URL() {
     classCallCheck(this, URL);
@@ -1860,8 +2020,8 @@ function performRequest(url, options) {
         }
         var buffer = new ArrayBuffer(response.length);
         var view = new Uint8Array(buffer);
-        for (var _i = 0; _i < response.length; ++_i) {
-          view[_i] = response[_i];
+        for (var i = 0; i < response.length; ++i) {
+          view[i] = response[i];
         }
         return buffer;
       });
@@ -1872,8 +2032,8 @@ function performRequest(url, options) {
 }
 
 function parseArguments() {
-  for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-    args[_key6] = arguments[_key6];
+  for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+    args[_key7] = arguments[_key7];
   }
 
   var url = args[0],
@@ -2101,13 +2261,18 @@ var Singleton = function () {
     value: function get$$1() {
       var scope = internal$7(this);
       if (scope.instance === undefined) {
-        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-          args[_key7] = arguments[_key7];
-        }
-
-        scope.instance = new (Function.prototype.bind.apply(this, [null].concat(args)))();
+        scope.instance = this.new.apply(this, arguments);
       }
       return scope.instance;
+    }
+  }, {
+    key: 'new',
+    value: function _new() {
+      for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+        args[_key8] = arguments[_key8];
+      }
+
+      return new (Function.prototype.bind.apply(this, [null].concat(args)))();
     }
   }]);
   return Singleton;
@@ -2213,83 +2378,6 @@ var Stride = function () {
   return Stride;
 }();
 
-var base64Arraybuffer = createCommonjsModule(function (module, exports) {
-  /*
-   * base64-arraybuffer
-   * https://github.com/niklasvh/base64-arraybuffer
-   *
-   * Copyright (c) 2012 Niklas von Hertzen
-   * Licensed under the MIT license.
-   */
-  (function () {
-    "use strict";
-
-    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-    // Use a lookup table to find the index.
-    var lookup = new Uint8Array(256);
-    for (var i = 0; i < chars.length; i++) {
-      lookup[chars.charCodeAt(i)] = i;
-    }
-
-    exports.encode = function (arraybuffer) {
-      var bytes = new Uint8Array(arraybuffer),
-          i,
-          len = bytes.length,
-          base64 = "";
-
-      for (i = 0; i < len; i += 3) {
-        base64 += chars[bytes[i] >> 2];
-        base64 += chars[(bytes[i] & 3) << 4 | bytes[i + 1] >> 4];
-        base64 += chars[(bytes[i + 1] & 15) << 2 | bytes[i + 2] >> 6];
-        base64 += chars[bytes[i + 2] & 63];
-      }
-
-      if (len % 3 === 2) {
-        base64 = base64.substring(0, base64.length - 1) + "=";
-      } else if (len % 3 === 1) {
-        base64 = base64.substring(0, base64.length - 2) + "==";
-      }
-
-      return base64;
-    };
-
-    exports.decode = function (base64) {
-      var bufferLength = base64.length * 0.75,
-          len = base64.length,
-          i,
-          p = 0,
-          encoded1,
-          encoded2,
-          encoded3,
-          encoded4;
-
-      if (base64[base64.length - 1] === "=") {
-        bufferLength--;
-        if (base64[base64.length - 2] === "=") {
-          bufferLength--;
-        }
-      }
-
-      var arraybuffer = new ArrayBuffer(bufferLength),
-          bytes = new Uint8Array(arraybuffer);
-
-      for (i = 0; i < len; i += 4) {
-        encoded1 = lookup[base64.charCodeAt(i)];
-        encoded2 = lookup[base64.charCodeAt(i + 1)];
-        encoded3 = lookup[base64.charCodeAt(i + 2)];
-        encoded4 = lookup[base64.charCodeAt(i + 3)];
-
-        bytes[p++] = encoded1 << 2 | encoded2 >> 4;
-        bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
-        bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
-      }
-
-      return arraybuffer;
-    };
-  })();
-});
-
 //
 //  The MIT License
 //
@@ -2387,77 +2475,6 @@ var Transferral = function () {
   }]);
   return Transferral;
 }();
-
-// Unique ID creation requires a high quality random # generator.  In the
-// browser this is a little complicated due to unknown quality of Math.random()
-// and inconsistent support for the `crypto` API.  We do the best we can via
-// feature-detection
-
-
-var rng;
-
-var crypto = commonjsGlobal.crypto || commonjsGlobal.msCrypto; // for IE 11
-if (crypto && crypto.getRandomValues) {
-  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
-  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
-  rng = function whatwgRNG() {
-    crypto.getRandomValues(rnds8);
-    return rnds8;
-  };
-}
-
-if (!rng) {
-  // Math.random()-based (RNG)
-  //
-  // If all else fails, use Math.random().  It's fast, but is of unspecified
-  // quality.
-  var rnds = new Array(16);
-  rng = function rng() {
-    for (var i = 0, r; i < 16; i++) {
-      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
-      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
-    }
-
-    return rnds;
-  };
-}
-
-var rngBrowser = rng;
-
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex[i] = (i + 0x100).toString(16).substr(1);
-}
-
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex;
-  return bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + '-' + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]] + bth[buf[i++]];
-}
-
-var bytesToUuid_1 = bytesToUuid;
-
-// **`v1()` - Generate time-based UUID**
-//
-// Inspired by https://github.com/LiosK/UUID.js
-// and http://docs.python.org/library/uuid.html
-
-// random #'s we need to init node and clockseq
-var _seedBytes = rngBrowser();
-
-// Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
-var _nodeId = [_seedBytes[0] | 0x01, _seedBytes[1], _seedBytes[2], _seedBytes[3], _seedBytes[4], _seedBytes[5]];
-
-// Per 4.2.2, randomize (14 bit) clockseq
-var _clockseq = (_seedBytes[6] << 8 | _seedBytes[7]) & 0x3fff;
-
-// Previous uuid creation time
-var _lastMSecs = 0;
-var _lastNSecs = 0;
 
 //
 //  The MIT License
@@ -3450,7 +3467,7 @@ var EventTarget = function (_EventDispatcher) {
       var scope = internal$7$1(this);
       return scope.ancestorEventTarget;
     },
-    set: function set(value) {
+    set: function set$$1(value) {
       var scope = internal$7$1(this);
       scope.ancestorEventTarget = value || null;
     }
@@ -3460,7 +3477,7 @@ var EventTarget = function (_EventDispatcher) {
       var scope = internal$7$1(this);
       return scope.descendantEventTarget;
     },
-    set: function set(value) {
+    set: function set$$1(value) {
       var scope = internal$7$1(this);
       scope.descendantEventTarget = value || null;
     }
