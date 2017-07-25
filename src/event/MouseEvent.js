@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import EventBundle from '../event/EventBundle'
+import EventBundle from './EventBundle'
 
 export const internal = Namespace('MouseEvent')
 

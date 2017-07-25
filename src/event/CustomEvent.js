@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import Event, { modifyEvent } from '../event/Event'
+import Event, { modifyEvent } from './Event'
 
 export default class CustomEvent extends Event {
   init({ type, target, ...rest } = {}) {

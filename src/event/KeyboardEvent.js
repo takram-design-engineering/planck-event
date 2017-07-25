@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import EventBundle from '../event/EventBundle'
+import EventBundle from './EventBundle'
 
 export default class KeyboardEvent extends EventBundle {
   get key() {

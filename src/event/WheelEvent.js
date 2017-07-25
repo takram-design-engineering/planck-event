@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import MouseEvent from '../event/MouseEvent'
+import MouseEvent from './MouseEvent'
 
 export default class WheelEvent extends MouseEvent {
   get deltaX() {

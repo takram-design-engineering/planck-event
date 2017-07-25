@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import Event from '../event/Event'
+import Event from './Event'
 
 export const internal = Namespace('EventBundle')
 

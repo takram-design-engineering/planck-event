@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import CustomEvent from '../event/CustomEvent'
+import CustomEvent from './CustomEvent'
 
 export const internal = Namespace('StateEvent')
 

@@ -24,7 +24,7 @@
 
 import { Namespace } from '@takram/planck-core'
 
-import Binder from '../event/Binder'
+import Binder from './Binder'
 
 export const internal = Namespace('Binding')
 

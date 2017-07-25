@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import CustomEvent from '../event/CustomEvent'
+import CustomEvent from './CustomEvent'
 
 export default class GenericEvent extends CustomEvent {
   init({ type, target, captures = false, bubbles = false, ...rest } = {}) {
