@@ -20,7 +20,6 @@
     "build": "npm-run-all main:compile main:uglify",
     "main:compile": "rollup -c",
     "main:uglify": "uglifyjs --compress --mangle --output dist/planck-event.min.js dist/planck-event.js",
-    "module:compile": "rollup -c rollup.config.module.js",
     "test": "npm-run-all lint test:compile test:local test:cloud",
     "test:compile": "rollup -c rollup.config.unit.js",
     "test:local": "mocha --recursive test/unit",
