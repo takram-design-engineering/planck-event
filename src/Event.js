@@ -22,7 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import Namespace from '@takram/planck-core/src/Namespace'
 
 export const internal = Namespace('Event')
 
