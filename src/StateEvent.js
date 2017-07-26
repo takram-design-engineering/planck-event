@@ -22,34 +22,32 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import Namespace from '@takram/planck-core/src/Namespace'
 
-export const internal = Namespace('TouchList')
+import CustomEvent from './CustomEvent'
 
-export default class TouchList {
-  constructor(...args) {
+export const internal = Namespace('StateEvent')
+
+export default class StateEvent extends CustomEvent {
+  init({ name, value, ...rest } = {}) {
+    super.init({ ...rest, type: StateEvent.type(name) })
     const scope = internal(this)
-    scope.array = []
-    this.init(...args)
+    scope.name = name
+    scope.value = value
+    return this
   }
 
-  init(first, ...rest) {
+  get name() {
     const scope = internal(this)
-    scope.array.length = 0
-    if (Array.isArray(first)) {
-      scope.array.push(...first)
-    } else if (first) {
-      scope.array.push(first, ...rest)
-    }
+    return scope.name
   }
 
-  get length() {
+  get value() {
     const scope = internal(this)
-    return scope.array.length
+    return scope.value
   }
 
-  item(index) {
-    const scope = internal(this)
-    return scope.array[index]
+  static type(name) {
+    return `state:${name === null || name === undefined ? '' : name}`
   }
 }

@@ -22,19 +22,44 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import CustomEvent from '../event/CustomEvent'
+import Namespace from '@takram/planck-core/src/Namespace'
 
-export default class GenericEvent extends CustomEvent {
-  init({ type, target, captures = false, bubbles = false, ...rest } = {}) {
-    super.init({ type, target, captures, bubbles })
-    Object.entries(rest).forEach(entry => {
-      const [property, value] = entry
-      if (!{}.hasOwnProperty.call(this, property)) {
-        this[property] = value
-      } else {
-        throw new Error(`Name "${property}" cannot be used for event property`)
-      }
-    })
+import EventBundle from './EventBundle'
+
+export const internal = Namespace('TouchEvent')
+
+export default class TouchEvent extends EventBundle {
+  init({ touches, changedTouches, ...rest } = {}) {
+    super.init({ ...rest })
+    const scope = internal(this)
+    scope.touches = touches
+    scope.changedTouches = changedTouches
     return this
+  }
+
+  get touches() {
+    const scope = internal(this)
+    return scope.touches
+  }
+
+  get changedTouches() {
+    const scope = internal(this)
+    return scope.changedTouches
+  }
+
+  get ctrlKey() {
+    return this.originalEvent.ctrlKey
+  }
+
+  get shiftKey() {
+    return this.originalEvent.shiftKey
+  }
+
+  get altKey() {
+    return this.originalEvent.altKey
+  }
+
+  get metaKey() {
+    return this.originalEvent.metaKey
   }
 }

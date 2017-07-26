@@ -22,13 +22,18 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import Event, { modifyEvent } from '../event/Event'
+import MouseEvent from './MouseEvent'
 
-export default class CustomEvent extends Event {
-  init({ type, target, ...rest } = {}) {
-    super.init({ type, ...rest })
-    // Support target as a parameter
-    modifyEvent(this).target = target || null
-    return this
+export default class WheelEvent extends MouseEvent {
+  get deltaX() {
+    return this.originalEvent.deltaX
+  }
+
+  get deltaY() {
+    return this.originalEvent.deltaY
+  }
+
+  get deltaZ() {
+    return this.originalEvent.deltaZ
   }
 }

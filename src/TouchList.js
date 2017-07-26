@@ -22,44 +22,34 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import Namespace from '@takram/planck-core/src/Namespace'
 
-import EventBundle from '../event/EventBundle'
+export const internal = Namespace('TouchList')
 
-export const internal = Namespace('TouchEvent')
-
-export default class TouchEvent extends EventBundle {
-  init({ touches, changedTouches, ...rest } = {}) {
-    super.init({ ...rest })
+export default class TouchList {
+  constructor(...args) {
     const scope = internal(this)
-    scope.touches = touches
-    scope.changedTouches = changedTouches
-    return this
+    scope.array = []
+    this.init(...args)
   }
 
-  get touches() {
+  init(first, ...rest) {
     const scope = internal(this)
-    return scope.touches
+    scope.array.length = 0
+    if (Array.isArray(first)) {
+      scope.array.push(...first)
+    } else if (first) {
+      scope.array.push(first, ...rest)
+    }
   }
 
-  get changedTouches() {
+  get length() {
     const scope = internal(this)
-    return scope.changedTouches
+    return scope.array.length
   }
 
-  get ctrlKey() {
-    return this.originalEvent.ctrlKey
-  }
-
-  get shiftKey() {
-    return this.originalEvent.shiftKey
-  }
-
-  get altKey() {
-    return this.originalEvent.altKey
-  }
-
-  get metaKey() {
-    return this.originalEvent.metaKey
+  item(index) {
+    const scope = internal(this)
+    return scope.array[index]
   }
 }

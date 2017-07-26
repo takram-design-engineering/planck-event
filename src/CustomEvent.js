@@ -22,32 +22,13 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import Event, { modifyEvent } from './Event'
 
-import CustomEvent from '../event/CustomEvent'
-
-export const internal = Namespace('StateEvent')
-
-export default class StateEvent extends CustomEvent {
-  init({ name, value, ...rest } = {}) {
-    super.init({ ...rest, type: StateEvent.type(name) })
-    const scope = internal(this)
-    scope.name = name
-    scope.value = value
+export default class CustomEvent extends Event {
+  init({ type, target, ...rest } = {}) {
+    super.init({ type, ...rest })
+    // Support target as a parameter
+    modifyEvent(this).target = target || null
     return this
-  }
-
-  get name() {
-    const scope = internal(this)
-    return scope.name
-  }
-
-  get value() {
-    const scope = internal(this)
-    return scope.value
-  }
-
-  static type(name) {
-    return `state:${name === null || name === undefined ? '' : name}`
   }
 }

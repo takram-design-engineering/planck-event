@@ -22,9 +22,9 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import Namespace from '@takram/planck-core/src/Namespace'
 
-import StateEvent from '../event/StateEvent'
+import StateEvent from './StateEvent'
 
 export const internal = Namespace('Binder')
 

@@ -22,45 +22,19 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import CustomEvent from './CustomEvent'
 
-export const internal = Namespace('Touch')
-
-export default class Touch {
-  constructor(options = {}) {
-    this.init(options)
-  }
-
-  init({ x, y, target, originalTouch } = {}) {
-    const scope = internal(this)
-    scope.x = x || 0
-    scope.y = y || 0
-    scope.target = target || null
-    scope.originalTouch = originalTouch || null
+export default class GenericEvent extends CustomEvent {
+  init({ type, target, captures = false, bubbles = false, ...rest } = {}) {
+    super.init({ type, target, captures, bubbles })
+    Object.entries(rest).forEach(entry => {
+      const [property, value] = entry
+      if (!{}.hasOwnProperty.call(this, property)) {
+        this[property] = value
+      } else {
+        throw new Error(`Name "${property}" cannot be used for event property`)
+      }
+    })
     return this
-  }
-
-  get x() {
-    const scope = internal(this)
-    return scope.x
-  }
-
-  get y() {
-    const scope = internal(this)
-    return scope.y
-  }
-
-  get target() {
-    const scope = internal(this)
-    return scope.target
-  }
-
-  get originalTouch() {
-    const scope = internal(this)
-    return scope.originalTouch
-  }
-
-  get identifier() {
-    return this.originalTouch.identifier
   }
 }

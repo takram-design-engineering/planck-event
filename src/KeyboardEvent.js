@@ -22,33 +22,34 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import babel from 'rollup-plugin-babel'
-import builtins from 'builtin-modules'
+import EventBundle from './EventBundle'
 
-const dependencies = Object.keys(require('./package.json').dependencies)
+export default class KeyboardEvent extends EventBundle {
+  get key() {
+    return this.originalEvent.key
+  }
 
-export default {
-  entry: './src/main.js',
-  sourceMap: true,
-  plugins: [
-    babel({
-      presets: [
-        'es2017',
-        'stage-3',
-      ],
-      plugins: [
-        'external-helpers',
-      ],
-    }),
-  ],
-  external: [
-    ...builtins,
-    ...dependencies,
-  ],
-  targets: [
-    {
-      format: 'es',
-      dest: './dist/planck-event.module.js',
-    },
-  ],
+  get code() {
+    return this.originalEvent.code
+  }
+
+  get ctrlKey() {
+    return this.originalEvent.ctrlKey
+  }
+
+  get shiftKey() {
+    return this.originalEvent.shiftKey
+  }
+
+  get altKey() {
+    return this.originalEvent.altKey
+  }
+
+  get metaKey() {
+    return this.originalEvent.metaKey
+  }
+
+  get repeat() {
+    return this.originalEvent.repeat
+  }
 }

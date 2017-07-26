@@ -22,11 +22,11 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import { Namespace } from '@takram/planck-core'
+import Namespace from '@takram/planck-core/src/Namespace'
 
-import Event, { modifyEvent } from '../event/Event'
-import EventDispatcher from '../event/EventDispatcher'
-import GenericEvent from '../event/GenericEvent'
+import Event, { modifyEvent } from './Event'
+import EventDispatcher from './EventDispatcher'
+import GenericEvent from './GenericEvent'
 
 export const internal = Namespace('EventTarget')
 

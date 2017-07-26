@@ -22,18 +22,60 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-export { default as Binder } from './event/Binder'
-export { default as Binding } from './event/Binding'
-export { default as CustomEvent } from './event/CustomEvent'
-export { default as Event, modifyEvent } from './event/Event'
-export { default as EventBundle } from './event/EventBundle'
-export { default as EventDispatcher } from './event/EventDispatcher'
-export { default as EventTarget } from './event/EventTarget'
-export { default as GenericEvent } from './event/GenericEvent'
-export { default as KeyboardEvent } from './event/KeyboardEvent'
-export { default as MouseEvent } from './event/MouseEvent'
-export { default as StateEvent } from './event/StateEvent'
-export { default as Touch } from './event/Touch'
-export { default as TouchEvent } from './event/TouchEvent'
-export { default as TouchList } from './event/TouchList'
-export { default as WheelEvent } from './event/WheelEvent'
+import Namespace from '@takram/planck-core/src/Namespace'
+
+import EventBundle from './EventBundle'
+
+export const internal = Namespace('MouseEvent')
+
+export default class MouseEvent extends EventBundle {
+  init({ x, y, movementX, movementY, ...rest } = {}) {
+    super.init({ ...rest })
+    const scope = internal(this)
+    scope.x = x || 0
+    scope.y = y || 0
+    scope.movementX = movementX || 0
+    scope.movementY = movementY || 0
+    return this
+  }
+
+  get x() {
+    const scope = internal(this)
+    return scope.x
+  }
+
+  get y() {
+    const scope = internal(this)
+    return scope.y
+  }
+
+  get movementX() {
+    const scope = internal(this)
+    return scope.movementX
+  }
+
+  get movementY() {
+    const scope = internal(this)
+    return scope.movementY
+  }
+
+  get button() {
+    return this.originalEvent.button
+  }
+
+  get ctrlKey() {
+    return this.originalEvent.ctrlKey
+  }
+
+  get shiftKey() {
+    return this.originalEvent.shiftKey
+  }
+
+  get altKey() {
+    return this.originalEvent.altKey
+  }
+
+  get metaKey() {
+    return this.originalEvent.metaKey
+  }
+}
