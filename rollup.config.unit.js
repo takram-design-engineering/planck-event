@@ -53,14 +53,12 @@ export default {
     'mocha',
     'chai',
     'sinon',
-    'nock',
   ],
   globals: {
     [path.resolve(pkg.module)]: 'Planck',
     'mocha': 'mocha',
     'chai': 'chai',
     'sinon': 'sinon',
-    'nock': 'nock',
   },
   targets: [
     {
