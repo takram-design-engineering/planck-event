@@ -1,6 +1,6 @@
 {
   "name": "@takram/planck-event",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "",
   "repository": "takram-design-engineering/planck-event",
   "main": "dist/planck-event.js",
@@ -31,7 +31,7 @@
     "serve": "browser-sync start --server . --files dist --startPath test --no-notify"
   },
   "dependencies": {
-    "@takram/planck-core": "^0.1.15"
+    "@takram/planck-core": "^0.1.17"
   },
   "devDependencies": {
     "@takram/eslint-config-planck": "^0.1.7",
