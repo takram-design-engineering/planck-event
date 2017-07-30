@@ -48,15 +48,14 @@ export default {
       babelrc: false,
     }),
   ],
+  intro: 'var BUNDLER = "rollup";',
   external: [
-    '@takram/planck-core',
     path.resolve(pkg.module),
     'chai',
     'mocha',
     'sinon',
   ],
   globals: {
-    '@takram/planck-core': 'Planck',
     [path.resolve(pkg.module)]: 'Planck',
     'chai': 'chai',
     'mocha': 'mocha',
@@ -65,7 +64,7 @@ export default {
   targets: [
     {
       format: 'iife',
-      dest: './dist/test/unit.js',
+      dest: './dist/test/unit/rollup.js',
     },
   ],
 }
