@@ -55,13 +55,13 @@ export default {
     'mocha',
     'sinon',
   ],
-  globals: Object.assign(globals, {
+  globals: {
     '@takram/planck-core': 'Planck',
     [path.resolve(pkg.module)]: 'Planck',
     'chai': 'chai',
     'mocha': 'mocha',
     'sinon': 'sinon',
-  }),
+  },
   targets: [
     {
       format: 'iife',
