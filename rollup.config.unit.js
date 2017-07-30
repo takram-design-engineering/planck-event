@@ -23,16 +23,11 @@
 //
 
 import babel from 'rollup-plugin-babel'
-import builtins from 'builtin-modules'
-import camelcase from 'camelcase'
 import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
 import path from 'path'
 
 const pkg = require('./package.json')
-const globals = builtins.reduce((globals, builtin) => {
-  return Object.assign(globals, { [builtin]: camelcase(builtin) })
-}, {})
 
 export default {
   entry: './test/unit.js',
@@ -54,7 +49,6 @@ export default {
     }),
   ],
   external: [
-    ...builtins,
     '@takram/planck-core',
     path.resolve(pkg.module),
     'chai',
