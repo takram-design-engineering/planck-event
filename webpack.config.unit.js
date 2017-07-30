@@ -40,7 +40,7 @@ module.exports = {
   },
   devtool: 'source-map',
   externals: {
-    './runner': false,
+    './runner': true,
     'chai': 'chai',
     'mocha': 'mocha',
     'sinon': 'sinon',
@@ -49,7 +49,6 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
         use: [
           {
             loader: 'babel-loader',
