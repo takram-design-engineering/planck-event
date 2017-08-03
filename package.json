@@ -1,6 +1,6 @@
 {
   "name": "@takram/planck-event",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "",
   "repository": "takram-design-engineering/planck-event",
   "main": "dist/planck-event.js",
