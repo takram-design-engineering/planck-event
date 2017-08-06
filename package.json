@@ -34,7 +34,7 @@
     "serve": "browser-sync start --server . --files dist --startPath test --no-notify"
   },
   "dependencies": {
-    "@takram/planck-core": "^0.2.0"
+    "@takram/planck-core": "^0.2.1"
   },
   "devDependencies": {
     "@takram/eslint-config-planck": "^0.1.7",
