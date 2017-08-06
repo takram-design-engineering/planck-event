@@ -4,6 +4,7 @@
   "description": "",
   "repository": "takram-design-engineering/planck-event",
   "main": "dist/planck-event.js",
+  "browser": "dist/planck-event.js",
   "module": "dist/planck-event.module.js",
   "author": "Shota Matsuda",
   "license": "MIT",
