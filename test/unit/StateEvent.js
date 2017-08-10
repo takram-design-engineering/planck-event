@@ -69,7 +69,7 @@ describe('StateEvent', () => {
       captures: true,
       bubbles: false,
     })
-    expect(event.type).equal(StateEvent.type())  // type should not propagate
+    expect(event.type).equal(StateEvent.type()) // type should not propagate
     expect(event.captures).true
     expect(event.bubbles).false
   })

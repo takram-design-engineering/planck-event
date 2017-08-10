@@ -116,6 +116,7 @@ describe('EventDispatcher', () => {
 
     it('handles capture event phase', () => {
       const dispatcher = new EventDispatcher()
+      const target = {}
       const listener = sinon.spy(arg => {
         expect(arg).instanceof(Event)
         expect(arg.target).equal(target)
@@ -134,7 +135,6 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
-      const target = {}
       modifyEvent(event).target = target
       modifyEvent(event).phase = 'capture'
       dispatcher.dispatchEvent(event)
@@ -145,6 +145,7 @@ describe('EventDispatcher', () => {
 
     it('handles bubble event phase', () => {
       const dispatcher = new EventDispatcher()
+      const target = {}
       const listener = sinon.spy(arg => {
         expect(arg).instanceof(Event)
         expect(arg.target).equal(target)
@@ -163,7 +164,6 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
-      const target = {}
       modifyEvent(event).target = target
       modifyEvent(event).phase = 'bubble'
       dispatcher.dispatchEvent(event)
@@ -174,6 +174,7 @@ describe('EventDispatcher', () => {
 
     it('handles target event phase', () => {
       const dispatcher = new EventDispatcher()
+      const target = {}
       const listener = sinon.spy(arg => {
         expect(arg).instanceof(Event)
         expect(arg.target).equal(target)
@@ -187,7 +188,6 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
-      const target = {}
       modifyEvent(event).target = target
       modifyEvent(event).phase = 'target'
       dispatcher.dispatchEvent(event)
@@ -198,6 +198,7 @@ describe('EventDispatcher', () => {
 
     it('handles null phase like target event phase', () => {
       const dispatcher = new EventDispatcher()
+      const target = {}
       const listener = sinon.spy(arg => {
         expect(arg).instanceof(Event)
         expect(arg.target).equal(target)
@@ -211,7 +212,6 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', captureListener, true)
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
-      const target = {}
       modifyEvent(event).target = target
       modifyEvent(event).phase = null
       dispatcher.dispatchEvent(event)
@@ -222,6 +222,7 @@ describe('EventDispatcher', () => {
 
     it('stops immediate propagation', () => {
       const dispatcher = new EventDispatcher()
+      const target = {}
       const listener1 = sinon.spy()
       const listener2 = sinon.spy(event => {
         event.stopImmediatePropagation()
@@ -231,7 +232,6 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', listener2)
       dispatcher.addEventListener('test', listener3)
       const event = new Event({ type: 'test' })
-      const target = {}
       modifyEvent(event).target = target
       dispatcher.dispatchEvent(event)
       expect(listener1).calledOnce

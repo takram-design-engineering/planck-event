@@ -37,6 +37,7 @@ function handleChange(transform, event) {
   if (event.target === scope.source && event.name === scope.name) {
     const value = transform(event.value)
     scope.targets.forEach(target => {
+      // eslint-disable-next-line no-param-reassign
       target.object[target.name] = value
     })
   }
@@ -66,6 +67,7 @@ export default class Binder {
     // Initial assignment
     if (assigns) {
       targets.forEach(target => {
+        // eslint-disable-next-line no-param-reassign
         target.object[target.name] = transform(source[name])
       })
     }

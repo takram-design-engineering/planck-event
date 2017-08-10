@@ -536,6 +536,7 @@ function handleChange(transform, event) {
   if (event.target === scope.source && event.name === scope.name) {
     var value = transform(event.value);
     scope.targets.forEach(function (target) {
+      // eslint-disable-next-line no-param-reassign
       target.object[target.name] = value;
     });
   }
@@ -572,6 +573,7 @@ var Binder = function () {
     // Initial assignment
     if (assigns) {
       targets.forEach(function (target) {
+        // eslint-disable-next-line no-param-reassign
         target.object[target.name] = transform(source[name]);
       });
     }
