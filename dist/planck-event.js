@@ -38,6 +38,7 @@ function Namespace() {
     };
 
     if (object[symbol] === undefined) {
+      // eslint-disable-next-line no-param-reassign
       object[symbol] = init({});
     }
     return object[symbol];
