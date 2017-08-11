@@ -50,6 +50,7 @@ export default {
   ],
   intro: 'var BUNDLER = "rollup";',
   external: [
+    'source-map-support/register',
     '@takram/planck-core',
     path.resolve(pkg.browser),
     'chai',

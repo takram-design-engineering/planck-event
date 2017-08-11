@@ -22,6 +22,8 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import 'source-map-support/register'
+
 import chai from 'chai'
 
 import { CustomEvent, GenericEvent } from '../..'
@@ -42,7 +44,7 @@ describe('GenericEvent', () => {
     expect(event.currentTarget).equal(null)
     expect(event.phase).equal(null)
     expect(event.captures).false
-    expect(event.bubbles).false  // false!
+    expect(event.bubbles).false // false!
     expect(event.timestamp).a('number')
     expect(event.propagationStopped).false
     expect(event.immediatePropagationStopped).false
