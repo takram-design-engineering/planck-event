@@ -42,7 +42,7 @@ function handleEvent(event, listener) {
 }
 
 // eslint-disable-next-line arrow-parens
-export default Mixin((superclass) => class extends superclass {
+export default Mixin(S => class extends S {
   constructor(...args) {
     super(...args)
     const scope = internal(this)
