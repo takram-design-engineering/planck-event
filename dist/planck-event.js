@@ -876,6 +876,119 @@ var EventBundle = function (_Event) {
   return EventBundle;
 }(Event);
 
+var _cachedApplicationRef = Symbol('_cachedApplicationRef');
+var _mixinRef = Symbol('_mixinRef');
+var _originalMixin = Symbol('_originalMixin');
+
+/**
+ * Sets the prototype of mixin to wrapper so that properties set on mixin are
+ * inherited by the wrapper.
+ *
+ * This is needed in order to implement @@hasInstance as a decorator function.
+ */
+var wrap = function wrap(mixin, wrapper) {
+  Object.setPrototypeOf(wrapper, mixin);
+  if (!mixin[_originalMixin]) {
+    mixin[_originalMixin] = mixin;
+  }
+  return wrapper;
+};
+
+/**
+ * Decorates mixin so that it caches its applications. When applied multiple
+ * times to the same superclass, mixin will only create one subclass and
+ * memoize it.
+ */
+var Cached = function Cached(mixin) {
+  return wrap(mixin, function (superclass) {
+    // Get or create a symbol used to look up a previous application of mixin
+    // to the class. This symbol is unique per mixin definition, so a class will have N
+    // applicationRefs if it has had N mixins applied to it. A mixin will have
+    // exactly one _cachedApplicationRef used to store its applications.
+    var applicationRef = mixin[_cachedApplicationRef];
+    if (!applicationRef) {
+      applicationRef = mixin[_cachedApplicationRef] = Symbol(mixin.name);
+    }
+    // Look up an existing application of `mixin` to `c`, return it if found.
+    if (superclass.hasOwnProperty(applicationRef)) {
+      return superclass[applicationRef];
+    }
+    // Apply the mixin
+    var application = mixin(superclass);
+    // Cache the mixin application on the superclass
+    superclass[applicationRef] = application;
+    return application;
+  });
+};
+
+/**
+ * Adds @@hasInstance (ES2015 instanceof support) to mixin.
+ * Note: @@hasInstance is not supported in any browsers yet.
+ */
+var HasInstance = function HasInstance(mixin) {
+  if (Symbol.hasInstance && !mixin.hasOwnProperty(Symbol.hasInstance)) {
+    Object.defineProperty(mixin, Symbol.hasInstance, {
+      value: function value(o) {
+        var originalMixin = this[_originalMixin];
+        while (o != null) {
+          if (o.hasOwnProperty(_mixinRef) && o[_mixinRef] === originalMixin) {
+            return true;
+          }
+          o = Object.getPrototypeOf(o);
+        }
+        return false;
+      }
+    });
+  }
+  return mixin;
+};
+
+/**
+ * A basic mixin decorator that sets up a reference from mixin applications
+ * to the mixin defintion for use by other mixin decorators.
+ */
+var BareMixin = function BareMixin(mixin) {
+  return wrap(mixin, function (superclass) {
+    // Apply the mixin
+    var application = mixin(superclass);
+
+    // Attach a reference from mixin applition to wrapped mixin for RTTI
+    // mixin[@@hasInstance] should use this.
+    application.prototype[_mixinRef] = mixin[_originalMixin];
+    return application;
+  });
+};
+
+/**
+ * Decorates a mixin function to add application caching and instanceof
+ * support.
+ */
+var Mixin = function Mixin(mixin) {
+  return Cached(HasInstance(BareMixin(mixin)));
+};
+
+var mix = function mix(superClass) {
+  return new MixinBuilder(superClass);
+};
+
+var MixinBuilder = function () {
+  function MixinBuilder(superclass) {
+    classCallCheck(this, MixinBuilder);
+
+    this.superclass = superclass;
+  }
+
+  createClass(MixinBuilder, [{
+    key: 'with',
+    value: function _with() {
+      return Array.from(arguments).reduce(function (c, m) {
+        return m(c);
+      }, this.superclass);
+    }
+  }]);
+  return MixinBuilder;
+}();
+
 //
 //  The MIT License
 //
@@ -965,7 +1078,7 @@ var GenericEvent = function (_CustomEvent) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var internal$5 = Namespace('EventDispatcher');
+var internal$5 = Namespace('EventDispatcherMixin');
 
 function handleEvent(event, listener) {
   if (typeof listener === 'function') {
@@ -977,116 +1090,130 @@ function handleEvent(event, listener) {
   }
 }
 
-var EventDispatcher = function () {
-  function EventDispatcher() {
-    classCallCheck(this, EventDispatcher);
+// eslint-disable-next-line arrow-parens
+var EventDispatcherMixin = Mixin(function (superclass) {
+  return function (_superclass) {
+    inherits(_class, _superclass);
 
-    var scope = internal$5(this);
-    scope.listeners = {};
-  }
+    function _class() {
+      var _ref;
 
-  createClass(EventDispatcher, [{
-    key: 'addEventListener',
-    value: function addEventListener(type, listener) {
-      var capture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      classCallCheck(this, _class);
 
-      if (typeof listener !== 'function' && (typeof listener === 'undefined' ? 'undefined' : _typeof(listener)) !== 'object') {
-        throw new Error('Attempt to add non-function non-object listener');
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
-      var scope = internal$5(this);
-      if (scope.listeners[type] === undefined) {
-        scope.listeners[type] = { bubble: [], capture: [] };
-      }
-      var listeners = capture ? scope.listeners[type].capture : scope.listeners[type].bubble;
-      if (listeners.includes(listener)) {
-        return;
-      }
-      listeners.push(listener);
+
+      var _this = possibleConstructorReturn(this, (_ref = _class.__proto__ || Object.getPrototypeOf(_class)).call.apply(_ref, [this].concat(args)));
+
+      var scope = internal$5(_this);
+      scope.listeners = {};
+      return _this;
     }
-  }, {
-    key: 'removeEventListener',
-    value: function removeEventListener(type, listener) {
-      var capture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-      var scope = internal$5(this);
-      if (scope.listeners[type] === undefined) {
-        return;
-      }
-      var listeners = capture ? scope.listeners[type].capture : scope.listeners[type].bubble;
-      var index = listeners.indexOf(listener);
-      if (index !== -1) {
-        listeners.splice(index, 1);
-      }
-    }
-  }, {
-    key: 'on',
-    value: function on() {
-      this.addEventListener.apply(this, arguments);
-      return this;
-    }
-  }, {
-    key: 'off',
-    value: function off() {
-      this.removeEventListener.apply(this, arguments);
-      return this;
-    }
-  }, {
-    key: 'once',
-    value: function once(type, listener) {
-      for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-        rest[_key - 2] = arguments[_key];
-      }
+    createClass(_class, [{
+      key: 'addEventListener',
+      value: function addEventListener(type, listener) {
+        var capture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-      var _this = this;
-
-      var delegate = function delegate(event) {
-        handleEvent(event, listener);
-        _this.removeEventListener.apply(_this, [type, delegate].concat(rest));
-      };
-      this.addEventListener.apply(this, [type, delegate].concat(rest));
-      return this;
-    }
-  }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(object) {
-      var event = object;
-      if (!(event instanceof Event)) {
-        event = new GenericEvent(object);
+        if (typeof listener !== 'function' && (typeof listener === 'undefined' ? 'undefined' : _typeof(listener)) !== 'object') {
+          throw new Error('Attempt to add non-function non-object listener');
+        }
+        var scope = internal$5(this);
+        if (scope.listeners[type] === undefined) {
+          scope.listeners[type] = { bubble: [], capture: [] };
+        }
+        var listeners = capture ? scope.listeners[type].capture : scope.listeners[type].bubble;
+        if (listeners.includes(listener)) {
+          return;
+        }
+        listeners.push(listener);
       }
-      var modifier = modifyEvent(event);
+    }, {
+      key: 'removeEventListener',
+      value: function removeEventListener(type, listener) {
+        var capture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-      // Set target to this when it's not set
-      if (!event.target) {
-        modifier.target = this;
+        var scope = internal$5(this);
+        if (scope.listeners[type] === undefined) {
+          return;
+        }
+        var listeners = capture ? scope.listeners[type].capture : scope.listeners[type].bubble;
+        var index = listeners.indexOf(listener);
+        if (index !== -1) {
+          listeners.splice(index, 1);
+        }
       }
-      // Current target should be always this
-      modifier.currentTarget = this;
+    }, {
+      key: 'on',
+      value: function on() {
+        this.addEventListener.apply(this, arguments);
+        return this;
+      }
+    }, {
+      key: 'off',
+      value: function off() {
+        this.removeEventListener.apply(this, arguments);
+        return this;
+      }
+    }, {
+      key: 'once',
+      value: function once(type, listener) {
+        for (var _len2 = arguments.length, rest = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+          rest[_key2 - 2] = arguments[_key2];
+        }
 
-      var scope = internal$5(this);
-      var listeners = scope.listeners[event.type];
-      if (listeners === undefined) {
-        return;
-      }
-      var phase = event.phase;
-      if (!phase || phase === 'target' || phase === 'capture') {
-        [].concat(toConsumableArray(listeners.capture)).some(function (listener) {
+        var _this2 = this;
+
+        var delegate = function delegate(event) {
           handleEvent(event, listener);
-          return event.immediatePropagationStopped;
-        });
+          _this2.removeEventListener.apply(_this2, [type, delegate].concat(rest));
+        };
+        this.addEventListener.apply(this, [type, delegate].concat(rest));
+        return this;
       }
-      if (event.immediatePropagationStopped) {
-        return;
+    }, {
+      key: 'dispatchEvent',
+      value: function dispatchEvent(object) {
+        var event = object;
+        if (!(event instanceof Event)) {
+          event = new GenericEvent(object);
+        }
+        var modifier = modifyEvent(event);
+
+        // Set target to this when it's not set
+        if (!event.target) {
+          modifier.target = this;
+        }
+        // Current target should be always this
+        modifier.currentTarget = this;
+
+        var scope = internal$5(this);
+        var listeners = scope.listeners[event.type];
+        if (listeners === undefined) {
+          return;
+        }
+        var phase = event.phase;
+        if (!phase || phase === 'target' || phase === 'capture') {
+          [].concat(toConsumableArray(listeners.capture)).some(function (listener) {
+            handleEvent(event, listener);
+            return event.immediatePropagationStopped;
+          });
+        }
+        if (event.immediatePropagationStopped) {
+          return;
+        }
+        if (!phase || phase === 'target' || phase === 'bubble') {
+          [].concat(toConsumableArray(listeners.bubble)).some(function (listener) {
+            handleEvent(event, listener);
+            return event.immediatePropagationStopped;
+          });
+        }
       }
-      if (!phase || phase === 'target' || phase === 'bubble') {
-        [].concat(toConsumableArray(listeners.bubble)).some(function (listener) {
-          handleEvent(event, listener);
-          return event.immediatePropagationStopped;
-        });
-      }
-    }
-  }]);
-  return EventDispatcher;
-}();
+    }]);
+    return _class;
+  }(superclass);
+});
 
 //
 //  The MIT License
@@ -1112,142 +1239,233 @@ var EventDispatcher = function () {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var internal$6 = Namespace('EventTarget');
+var EventDispatcher = function (_mix$with) {
+  inherits(EventDispatcher, _mix$with);
 
-var EventTarget = function (_EventDispatcher) {
-  inherits(EventTarget, _EventDispatcher);
-
-  function EventTarget() {
-    classCallCheck(this, EventTarget);
-
-    var _this = possibleConstructorReturn(this, (EventTarget.__proto__ || Object.getPrototypeOf(EventTarget)).call(this));
-
-    var scope = internal$6(_this);
-    scope.ancestorEventTarget = null;
-    scope.descendantEventTarget = null;
-    return _this;
+  function EventDispatcher() {
+    classCallCheck(this, EventDispatcher);
+    return possibleConstructorReturn(this, (EventDispatcher.__proto__ || Object.getPrototypeOf(EventDispatcher)).apply(this, arguments));
   }
 
-  createClass(EventTarget, [{
-    key: 'determinePropagationPath',
-    value: function determinePropagationPath() {
-      var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  return EventDispatcher;
+}(mix(function () {
+  function _class() {
+    classCallCheck(this, _class);
+  }
 
-      var path = [];
-      if (target !== null && target !== undefined) {
-        var ancestor = target;
-        while (ancestor !== null && ancestor !== undefined) {
-          path.unshift(ancestor);
-          ancestor = ancestor.ancestorEventTarget;
-          if (path.includes(ancestor)) {
-            break;
+  return _class;
+}()).with(EventDispatcherMixin));
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var internal$6 = Namespace('EventTargetMixin');
+
+// eslint-disable-next-line arrow-parens
+var EventTargetMixin = Mixin(function (superclass) {
+  return function (_superclass) {
+    inherits(_class, _superclass);
+
+    function _class() {
+      var _ref;
+
+      classCallCheck(this, _class);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var _this = possibleConstructorReturn(this, (_ref = _class.__proto__ || Object.getPrototypeOf(_class)).call.apply(_ref, [this].concat(args)));
+
+      var scope = internal$6(_this);
+      scope.ancestorEventTarget = null;
+      scope.descendantEventTarget = null;
+      return _this;
+    }
+
+    createClass(_class, [{
+      key: 'determinePropagationPath',
+      value: function determinePropagationPath() {
+        var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        var path = [];
+        if (target !== null && target !== undefined) {
+          var ancestor = target;
+          while (ancestor !== null && ancestor !== undefined) {
+            path.unshift(ancestor);
+            ancestor = ancestor.ancestorEventTarget;
+            if (path.includes(ancestor)) {
+              break;
+            }
+          }
+        } else {
+          var descendant = this;
+          while (descendant !== null && descendant !== undefined) {
+            path.push(descendant);
+            descendant = descendant.descendantEventTarget;
+            if (path.includes(descendant)) {
+              break;
+            }
           }
         }
-      } else {
-        var descendant = this;
-        while (descendant !== null && descendant !== undefined) {
-          path.push(descendant);
-          descendant = descendant.descendantEventTarget;
-          if (path.includes(descendant)) {
-            break;
-          }
+        return path;
+      }
+    }, {
+      key: 'dispatchImmediateEvent',
+      value: function dispatchImmediateEvent(event) {
+        get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'dispatchEvent', this).call(this, event);
+      }
+    }, {
+      key: 'dispatchEvent',
+      value: function dispatchEvent(object) {
+        var propagationPath = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+        var event = object;
+        if (!(event instanceof Event)) {
+          event = new GenericEvent(object);
         }
-      }
-      return path;
-    }
-  }, {
-    key: 'dispatchImmediateEvent',
-    value: function dispatchImmediateEvent(event) {
-      get(EventTarget.prototype.__proto__ || Object.getPrototypeOf(EventTarget.prototype), 'dispatchEvent', this).call(this, event);
-    }
-  }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(object) {
-      var propagationPath = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        var modifier = modifyEvent(event);
 
-      var event = object;
-      if (!(event instanceof Event)) {
-        event = new GenericEvent(object);
-      }
-      var modifier = modifyEvent(event);
+        // Just dispatch the event if it doesn't capture nor bubble
+        if (!event.captures && !event.bubbles) {
+          this.dispatchImmediateEvent(event);
+          return;
+        }
 
-      // Just dispatch the event if it doesn't capture nor bubble
-      if (!event.captures && !event.bubbles) {
-        this.dispatchImmediateEvent(event);
-        return;
-      }
+        // Determine the capturing path of this event
+        var capturingPath = void 0;
+        if (Array.isArray(propagationPath)) {
+          capturingPath = [].concat(toConsumableArray(propagationPath));
+        } else {
+          capturingPath = this.determinePropagationPath(event.target || this);
+        }
 
-      // Determine the capturing path of this event
-      var capturingPath = void 0;
-      if (Array.isArray(propagationPath)) {
-        capturingPath = [].concat(toConsumableArray(propagationPath));
-      } else {
-        capturingPath = this.determinePropagationPath(event.target || this);
-      }
+        // The last item in the propagation path must always be the event target
+        if (event.target === null) {
+          modifier.target = capturingPath.pop();
+        } else {
+          capturingPath.pop();
+        }
+        var bubblingPath = [].concat(toConsumableArray(capturingPath));
+        bubblingPath.reverse();
 
-      // The last item in the propagation path must always be the event target
-      if (event.target === null) {
-        modifier.target = capturingPath.pop();
-      } else {
-        capturingPath.pop();
-      }
-      var bubblingPath = [].concat(toConsumableArray(capturingPath));
-      bubblingPath.reverse();
-
-      // Capturing phase
-      if (event.captures) {
-        modifier.phase = 'capture';
-        capturingPath.some(function (object) {
-          object.dispatchImmediateEvent(event);
-          return event.propagationStopped;
-        });
-      }
-      if (event.propagationStopped) {
-        return;
-      }
-
-      // Target phase. The target can be an integer if the parent target has
-      // multiple identifiers, typically when picking an instanced geometry.
-      if (!Number.isInteger(event.target)) {
-        modifier.phase = 'target';
-        event.target.dispatchImmediateEvent(event);
+        // Capturing phase
+        if (event.captures) {
+          modifier.phase = 'capture';
+          capturingPath.some(function (object) {
+            object.dispatchImmediateEvent(event);
+            return event.propagationStopped;
+          });
+        }
         if (event.propagationStopped) {
           return;
         }
-      }
 
-      // Bubbling phase
-      if (event.bubbles) {
-        modifier.phase = 'bubble';
-        bubblingPath.some(function (object) {
-          object.dispatchImmediateEvent(event);
-          return event.propagationStopped;
-        });
+        // Target phase. The target can be an integer if the parent target has
+        // multiple identifiers, typically when picking an instanced geometry.
+        if (!Number.isInteger(event.target)) {
+          modifier.phase = 'target';
+          event.target.dispatchImmediateEvent(event);
+          if (event.propagationStopped) {
+            return;
+          }
+        }
+
+        // Bubbling phase
+        if (event.bubbles) {
+          modifier.phase = 'bubble';
+          bubblingPath.some(function (object) {
+            object.dispatchImmediateEvent(event);
+            return event.propagationStopped;
+          });
+        }
       }
-    }
-  }, {
-    key: 'ancestorEventTarget',
-    get: function get$$1() {
-      var scope = internal$6(this);
-      return scope.ancestorEventTarget;
-    },
-    set: function set$$1(value) {
-      var scope = internal$6(this);
-      scope.ancestorEventTarget = value || null;
-    }
-  }, {
-    key: 'descendantEventTarget',
-    get: function get$$1() {
-      var scope = internal$6(this);
-      return scope.descendantEventTarget;
-    },
-    set: function set$$1(value) {
-      var scope = internal$6(this);
-      scope.descendantEventTarget = value || null;
-    }
-  }]);
+    }, {
+      key: 'ancestorEventTarget',
+      get: function get$$1() {
+        var scope = internal$6(this);
+        return scope.ancestorEventTarget;
+      },
+      set: function set$$1(value) {
+        var scope = internal$6(this);
+        scope.ancestorEventTarget = value || null;
+      }
+    }, {
+      key: 'descendantEventTarget',
+      get: function get$$1() {
+        var scope = internal$6(this);
+        return scope.descendantEventTarget;
+      },
+      set: function set$$1(value) {
+        var scope = internal$6(this);
+        scope.descendantEventTarget = value || null;
+      }
+    }]);
+    return _class;
+  }(superclass);
+});
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var EventTarget = function (_mix$with) {
+  inherits(EventTarget, _mix$with);
+
+  function EventTarget() {
+    classCallCheck(this, EventTarget);
+    return possibleConstructorReturn(this, (EventTarget.__proto__ || Object.getPrototypeOf(EventTarget)).apply(this, arguments));
+  }
+
   return EventTarget;
-}(EventDispatcher);
+}(mix(function () {
+  function _class() {
+    classCallCheck(this, _class);
+  }
+
+  return _class;
+}()).with(EventDispatcherMixin, EventTargetMixin));
 
 //
 //  The MIT License
@@ -1746,7 +1964,9 @@ exports.Event = Event;
 exports.modifyEvent = modifyEvent;
 exports.EventBundle = EventBundle;
 exports.EventDispatcher = EventDispatcher;
+exports.EventDispatcherMixin = EventDispatcherMixin;
 exports.EventTarget = EventTarget;
+exports.EventTargetMixin = EventTargetMixin;
 exports.GenericEvent = GenericEvent;
 exports.KeyboardEvent = KeyboardEvent;
 exports.MouseEvent = MouseEvent;
