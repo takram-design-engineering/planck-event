@@ -28,7 +28,12 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
-import { Event, modifyEvent, EventDispatcher } from '../..'
+import {
+  Event,
+  modifyEvent,
+  EventDispatcher,
+  EventDispatcherMixin,
+} from '../..'
 
 const expect = chai.expect
 chai.use(sinonChai)
@@ -37,6 +42,7 @@ describe('EventDispatcher', () => {
   it('supports instanceof', () => {
     const dispatcher = new EventDispatcher()
     expect(dispatcher).instanceof(EventDispatcher)
+    expect(dispatcher).instanceof(EventDispatcherMixin)
   })
 
   it('dispatches event to function listeners', () => {
