@@ -967,9 +967,7 @@ var Mixin = function Mixin(mixin) {
   return Cached(HasInstance(BareMixin(mixin)));
 };
 
-var mix = function mix(superClass) {
-  return new MixinBuilder(superClass);
-};
+
 
 var MixinBuilder = function () {
   function MixinBuilder(superclass) {
@@ -1091,9 +1089,9 @@ function handleEvent(event, listener) {
 }
 
 // eslint-disable-next-line arrow-parens
-var EventDispatcherMixin = Mixin(function (superclass) {
-  return function (_superclass) {
-    inherits(_class, _superclass);
+var EventDispatcherMixin = Mixin(function (S) {
+  return function (_S) {
+    inherits(_class, _S);
 
     function _class() {
       var _ref;
@@ -1212,7 +1210,7 @@ var EventDispatcherMixin = Mixin(function (superclass) {
       }
     }]);
     return _class;
-  }(superclass);
+  }(S);
 });
 
 //
@@ -1239,8 +1237,8 @@ var EventDispatcherMixin = Mixin(function (superclass) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var EventDispatcher = function (_mix$with) {
-  inherits(EventDispatcher, _mix$with);
+var EventDispatcher = function (_EventDispatcherMixin) {
+  inherits(EventDispatcher, _EventDispatcherMixin);
 
   function EventDispatcher() {
     classCallCheck(this, EventDispatcher);
@@ -1248,13 +1246,13 @@ var EventDispatcher = function (_mix$with) {
   }
 
   return EventDispatcher;
-}(mix(function () {
+}(EventDispatcherMixin(function () {
   function _class() {
     classCallCheck(this, _class);
   }
 
   return _class;
-}()).with(EventDispatcherMixin));
+}()));
 
 //
 //  The MIT License
@@ -1283,9 +1281,9 @@ var EventDispatcher = function (_mix$with) {
 var internal$6 = Namespace('EventTargetMixin');
 
 // eslint-disable-next-line arrow-parens
-var EventTargetMixin = Mixin(function (superclass) {
-  return function (_superclass) {
-    inherits(_class, _superclass);
+var EventTargetMixin = Mixin(function (S) {
+  return function (_EventDispatcherMixin) {
+    inherits(_class, _EventDispatcherMixin);
 
     function _class() {
       var _ref;
@@ -1423,7 +1421,7 @@ var EventTargetMixin = Mixin(function (superclass) {
       }
     }]);
     return _class;
-  }(superclass);
+  }(EventDispatcherMixin(S));
 });
 
 //
@@ -1450,8 +1448,8 @@ var EventTargetMixin = Mixin(function (superclass) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var EventTarget = function (_mix$with) {
-  inherits(EventTarget, _mix$with);
+var EventTarget = function (_EventTargetMixin) {
+  inherits(EventTarget, _EventTargetMixin);
 
   function EventTarget() {
     classCallCheck(this, EventTarget);
@@ -1459,13 +1457,13 @@ var EventTarget = function (_mix$with) {
   }
 
   return EventTarget;
-}(mix(function () {
+}(EventTargetMixin(function () {
   function _class() {
     classCallCheck(this, _class);
   }
 
   return _class;
-}()).with(EventDispatcherMixin, EventTargetMixin));
+}()));
 
 //
 //  The MIT License
