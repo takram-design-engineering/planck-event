@@ -27,12 +27,13 @@ import { Mixin } from 'mixwith/src/mixwith'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 import Event, { modifyEvent } from './Event'
+import EventDispatcherMixin from './EventDispatcherMixin'
 import GenericEvent from './GenericEvent'
 
 export const internal = Namespace('EventTargetMixin')
 
 // eslint-disable-next-line arrow-parens
-export default Mixin((superclass) => class extends superclass {
+export default Mixin(S => class extends EventDispatcherMixin(S) {
   constructor(...args) {
     super(...args)
     const scope = internal(this)
