@@ -32,7 +32,6 @@ import {
   Event,
   modifyEvent,
   EventDispatcher,
-  EventDispatcherMixin,
 } from '../..'
 
 const expect = chai.expect
@@ -42,7 +41,6 @@ describe('EventDispatcher', () => {
   it('supports instanceof', () => {
     const dispatcher = new EventDispatcher()
     expect(dispatcher).instanceof(EventDispatcher)
-    expect(dispatcher).instanceof(EventDispatcherMixin)
   })
 
   it('dispatches event to function listeners', () => {
