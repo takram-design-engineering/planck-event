@@ -36,6 +36,9 @@
     "watch:webpack": "nodemon -C --watch webpack.config.unit.js --exec 'npm run test:compile:webpack'",
     "serve": "browser-sync start --server . --files dist --startPath test --no-open --no-notify"
   },
+  "dependencies": {
+    "mixwith": "^0.1.1"
+  },
   "peerDependencies": {
     "@takram/planck-core": "0.x"
   },
@@ -62,7 +65,7 @@
     "mocha": "^3.5.0",
     "nodemon": "^1.11.0",
     "npm-run-all": "^4.0.2",
-    "rollup": "^0.46.1",
+    "rollup": "^0.47.2",
     "rollup-plugin-babel": "^3.0.1",
     "rollup-plugin-commonjs": "^8.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
@@ -113,8 +116,5 @@
         "49.0"
       ]
     ]
-  },
-  "dependencies": {
-    "mixwith": "^0.1.1"
   }
 }
