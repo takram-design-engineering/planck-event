@@ -22,6 +22,9 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import { mix } from 'mixwith/src/mixwith'
+
 import EventDispatcherMixin from './EventDispatcherMixin'
 
-export default class EventDispatcher extends EventDispatcherMixin(class {}) {}
+export default class EventDispatcher extends mix(class {})
+  .with(EventDispatcherMixin) {}

@@ -42,7 +42,7 @@ function handleEvent(event, listener) {
 }
 
 // eslint-disable-next-line arrow-parens
-export default Mixin(S => class extends S {
+export default Mixin(S => class EventDispatcherMixin extends S {
   constructor(...args) {
     super(...args)
     const scope = internal(this)

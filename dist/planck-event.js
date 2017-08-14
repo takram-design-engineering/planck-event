@@ -967,7 +967,9 @@ var Mixin = function Mixin(mixin) {
   return Cached(HasInstance(BareMixin(mixin)));
 };
 
-
+var mix = function mix(superClass) {
+  return new MixinBuilder(superClass);
+};
 
 var MixinBuilder = function () {
   function MixinBuilder(superclass) {
@@ -1091,25 +1093,25 @@ function handleEvent(event, listener) {
 // eslint-disable-next-line arrow-parens
 var EventDispatcherMixin = Mixin(function (S) {
   return function (_S) {
-    inherits(_class, _S);
+    inherits(EventDispatcherMixin, _S);
 
-    function _class() {
+    function EventDispatcherMixin() {
       var _ref;
 
-      classCallCheck(this, _class);
+      classCallCheck(this, EventDispatcherMixin);
 
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      var _this = possibleConstructorReturn(this, (_ref = _class.__proto__ || Object.getPrototypeOf(_class)).call.apply(_ref, [this].concat(args)));
+      var _this = possibleConstructorReturn(this, (_ref = EventDispatcherMixin.__proto__ || Object.getPrototypeOf(EventDispatcherMixin)).call.apply(_ref, [this].concat(args)));
 
       var scope = internal$5(_this);
       scope.listeners = {};
       return _this;
     }
 
-    createClass(_class, [{
+    createClass(EventDispatcherMixin, [{
       key: 'addEventListener',
       value: function addEventListener(type, listener) {
         var capture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -1209,7 +1211,7 @@ var EventDispatcherMixin = Mixin(function (S) {
         }
       }
     }]);
-    return _class;
+    return EventDispatcherMixin;
   }(S);
 });
 
@@ -1237,8 +1239,8 @@ var EventDispatcherMixin = Mixin(function (S) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var EventDispatcher = function (_EventDispatcherMixin) {
-  inherits(EventDispatcher, _EventDispatcherMixin);
+var EventDispatcher = function (_mix$with) {
+  inherits(EventDispatcher, _mix$with);
 
   function EventDispatcher() {
     classCallCheck(this, EventDispatcher);
@@ -1246,13 +1248,13 @@ var EventDispatcher = function (_EventDispatcherMixin) {
   }
 
   return EventDispatcher;
-}(EventDispatcherMixin(function () {
+}(mix(function () {
   function _class() {
     classCallCheck(this, _class);
   }
 
   return _class;
-}()));
+}()).with(EventDispatcherMixin));
 
 //
 //  The MIT License
@@ -1282,19 +1284,19 @@ var internal$6 = Namespace('EventTargetMixin');
 
 // eslint-disable-next-line arrow-parens
 var EventTargetMixin = Mixin(function (S) {
-  return function (_EventDispatcherMixin) {
-    inherits(_class, _EventDispatcherMixin);
+  return function (_S) {
+    inherits(EventTargetMixin, _S);
 
-    function _class() {
+    function EventTargetMixin() {
       var _ref;
 
-      classCallCheck(this, _class);
+      classCallCheck(this, EventTargetMixin);
 
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      var _this = possibleConstructorReturn(this, (_ref = _class.__proto__ || Object.getPrototypeOf(_class)).call.apply(_ref, [this].concat(args)));
+      var _this = possibleConstructorReturn(this, (_ref = EventTargetMixin.__proto__ || Object.getPrototypeOf(EventTargetMixin)).call.apply(_ref, [this].concat(args)));
 
       var scope = internal$6(_this);
       scope.ancestorEventTarget = null;
@@ -1302,7 +1304,7 @@ var EventTargetMixin = Mixin(function (S) {
       return _this;
     }
 
-    createClass(_class, [{
+    createClass(EventTargetMixin, [{
       key: 'determinePropagationPath',
       value: function determinePropagationPath() {
         var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -1332,7 +1334,7 @@ var EventTargetMixin = Mixin(function (S) {
     }, {
       key: 'dispatchImmediateEvent',
       value: function dispatchImmediateEvent(event) {
-        get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'dispatchEvent', this).call(this, event);
+        get(EventTargetMixin.prototype.__proto__ || Object.getPrototypeOf(EventTargetMixin.prototype), 'dispatchEvent', this).call(this, event);
       }
     }, {
       key: 'dispatchEvent',
@@ -1420,8 +1422,8 @@ var EventTargetMixin = Mixin(function (S) {
         scope.descendantEventTarget = value || null;
       }
     }]);
-    return _class;
-  }(EventDispatcherMixin(S));
+    return EventTargetMixin;
+  }(S);
 });
 
 //
@@ -1448,8 +1450,8 @@ var EventTargetMixin = Mixin(function (S) {
 //  DEALINGS IN THE SOFTWARE.
 //
 
-var EventTarget = function (_EventTargetMixin) {
-  inherits(EventTarget, _EventTargetMixin);
+var EventTarget = function (_mix$with) {
+  inherits(EventTarget, _mix$with);
 
   function EventTarget() {
     classCallCheck(this, EventTarget);
@@ -1457,13 +1459,13 @@ var EventTarget = function (_EventTargetMixin) {
   }
 
   return EventTarget;
-}(EventTargetMixin(function () {
+}(mix(function () {
   function _class() {
     classCallCheck(this, _class);
   }
 
   return _class;
-}()));
+}()).with(EventDispatcherMixin, EventTargetMixin));
 
 //
 //  The MIT License

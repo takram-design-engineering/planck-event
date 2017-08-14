@@ -33,7 +33,7 @@ import GenericEvent from './GenericEvent'
 export const internal = Namespace('EventTargetMixin')
 
 // eslint-disable-next-line arrow-parens
-export default Mixin(S => class extends EventDispatcherMixin(S) {
+export default Mixin(S => class EventTargetMixin extends S {
   constructor(...args) {
     super(...args)
     const scope = internal(this)
