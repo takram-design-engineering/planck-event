@@ -48,6 +48,9 @@ export default class StateEvent extends CustomEvent {
   }
 
   static type(name) {
-    return `state:${name === null || name === undefined ? '' : name}`
+    if (typeof name !== 'string') {
+      throw new Error('Type name must be a string')
+    }
+    return `state:${name}`
   }
 }
