@@ -40,10 +40,10 @@ describe('Event', () => {
     expect(event.type).equal(null)
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
-    expect(event.phase).equal(null)
+    expect(event.eventPhase).equal(null)
     expect(event.captures).false
     expect(event.bubbles).true
-    expect(event.timestamp).a('number')
+    expect(event.timeStamp).a('number')
     expect(event.propagationStopped).false
     expect(event.immediatePropagationStopped).false
   })
@@ -68,17 +68,17 @@ describe('Event', () => {
       const currentTarget = {}
       modifyEvent(event).target = target
       modifyEvent(event).currentTarget = currentTarget
-      modifyEvent(event).phase = 'bubble'
-      const timestamp = event.timestamp
+      modifyEvent(event).eventPhase = 'bubble'
+      const timeStamp = event.timeStamp
       setTimeout(() => {
         event.init({ type: 'init' })
         expect(event.type).equal('init')
         expect(event.target).equal(null)
         expect(event.currentTarget).equal(null)
-        expect(event.phase).equal(null)
+        expect(event.eventPhase).equal(null)
         expect(event.captures).false
         expect(event.bubbles).true
-        expect(event.timestamp).not.equal(timestamp)
+        expect(event.timeStamp).not.equal(timeStamp)
         expect(event.propagationStopped).false
         expect(event.immediatePropagationStopped).false
         done()
@@ -93,10 +93,10 @@ describe('Event', () => {
       const currentTarget = {}
       modifyEvent(event).target = target
       modifyEvent(event).currentTarget = currentTarget
-      modifyEvent(event).phase = 'bubble'
+      modifyEvent(event).eventPhase = 'bubble'
       expect(event.target).equal(target)
       expect(event.currentTarget).equal(currentTarget)
-      expect(event.phase).equal('bubble')
+      expect(event.eventPhase).equal('bubble')
     })
   })
 

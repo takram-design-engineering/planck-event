@@ -32,27 +32,27 @@ const expect = chai.expect
 
 describe('StateEvent', () => {
   it('supports instanceof', () => {
-    const event = new StateEvent()
+    const event = new StateEvent({ name: 'name' })
     expect(event).instanceof(StateEvent)
     expect(event).instanceof(CustomEvent)
   })
 
   it('initializes properties', () => {
-    const event = new StateEvent()
-    expect(event.type).equal(StateEvent.type())
+    const event = new StateEvent({ name: 'name' })
+    expect(event.type).equal(StateEvent.type('name'))
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
-    expect(event.phase).equal(null)
+    expect(event.eventPhase).equal(null)
     expect(event.captures).false
     expect(event.bubbles).true
-    expect(event.timestamp).a('number')
+    expect(event.timeStamp).a('number')
     expect(event.propagationStopped).false
     expect(event.immediatePropagationStopped).false
   })
 
   it('takes target as a parameter', () => {
     const target = {}
-    const event = new StateEvent({ target })
+    const event = new StateEvent({ target, name: 'name' })
     expect(event.target).equal(target)
   })
 
@@ -68,8 +68,9 @@ describe('StateEvent', () => {
       type: 'test',
       captures: true,
       bubbles: false,
+      name: 'name',
     })
-    expect(event.type).equal(StateEvent.type()) // type should not propagate
+    expect(event.type).equal(StateEvent.type('name'))
     expect(event.captures).true
     expect(event.bubbles).false
   })
