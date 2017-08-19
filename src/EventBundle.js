@@ -37,16 +37,14 @@ export default class EventBundle extends Event {
   }
 
   get cancelable() {
-    const scope = internal(this)
-    return super.cancelable && scope.originalEvent.cancelable
+    return super.cancelable && this.originalEvent.cancelable
   }
 
   preventDefault() {
     super.preventDefault()
     if (this.cancelable) {
-      const scope = internal(this)
-      if (scope.originalEvent !== null) {
-        scope.originalEvent.preventDefault()
+      if (this.originalEvent !== null) {
+        this.originalEvent.preventDefault()
       }
     }
   }
