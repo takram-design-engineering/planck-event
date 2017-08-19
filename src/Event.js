@@ -22,6 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import Environment from '@takram/planck-core/src/Environment'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 export const internal = Namespace('Event')
@@ -37,7 +38,10 @@ export default class Event {
     scope.captures = !!captures
     scope.bubbles = !!bubbles
     scope.cancelable = !!cancelable
-    scope.timeStamp = (performance && performance.now()) || Date.now()
+    scope.timeStamp = (
+      Environment.self.performance &&
+      Environment.self.performance.now &&
+      Environment.self.performance.now()) || Date.now()
     scope.propagationStopped = false
     scope.immediatePropagationStopped = false
     scope.defaultPrevented = false
