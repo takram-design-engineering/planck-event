@@ -45,6 +45,72 @@ function Namespace() {
   };
 }
 
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var environmentType = function () {
+  try {
+    // eslint-disable-next-line no-new-func
+    if (new Function('return this === window')()) {
+      return 'browser';
+    }
+  } catch (error) {}
+  try {
+    // eslint-disable-next-line no-new-func
+    if (new Function('return this === self')()) {
+      return 'worker';
+    }
+  } catch (error) {}
+  try {
+    // eslint-disable-next-line no-new-func
+    if (new Function('return this === global')()) {
+      return 'node';
+    }
+  } catch (error) {}
+  return undefined;
+}();
+
+var environmentSelf = void 0;
+switch (environmentType) {
+  case 'browser':
+    environmentSelf = window;
+    break;
+  case 'worker':
+    environmentSelf = self;
+    break;
+  case 'node':
+    environmentSelf = global;
+    break;
+  default:
+    break;
+}
+
+var Environment = {
+  type: environmentType,
+  self: environmentSelf
+};
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
@@ -289,7 +355,7 @@ var Event = function () {
       scope.captures = !!captures;
       scope.bubbles = !!bubbles;
       scope.cancelable = !!cancelable;
-      scope.timeStamp = performance && performance.now() || Date.now();
+      scope.timeStamp = Environment.self.performance && Environment.self.performance.now && Environment.self.performance.now() || Date.now();
       scope.propagationStopped = false;
       scope.immediatePropagationStopped = false;
       scope.defaultPrevented = false;
@@ -881,17 +947,15 @@ var EventBundle = function (_Event) {
     value: function preventDefault() {
       get(EventBundle.prototype.__proto__ || Object.getPrototypeOf(EventBundle.prototype), 'preventDefault', this).call(this);
       if (this.cancelable) {
-        var scope = internal$4(this);
-        if (scope.originalEvent !== null) {
-          scope.originalEvent.preventDefault();
+        if (this.originalEvent !== null) {
+          this.originalEvent.preventDefault();
         }
       }
     }
   }, {
     key: 'cancelable',
     get: function get$$1() {
-      var scope = internal$4(this);
-      return get(EventBundle.prototype.__proto__ || Object.getPrototypeOf(EventBundle.prototype), 'cancelable', this) && scope.originalEvent.cancelable;
+      return get(EventBundle.prototype.__proto__ || Object.getPrototypeOf(EventBundle.prototype), 'cancelable', this) && this.originalEvent.cancelable;
     }
   }, {
     key: 'originalEvent',
