@@ -27,8 +27,8 @@ import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
 
 export default {
-  entry: './dist/planck-event.module.js',
-  sourceMap: true,
+  input: './dist/planck-event.module.js',
+  sourcemap: true,
   plugins: [
     nodeResolve({ browser: true }),
     commonjs(),
@@ -45,12 +45,12 @@ export default {
       babelrc: false,
     }),
   ],
-  targets: [
+  output: [
     {
       format: 'umd',
       extend: true,
-      moduleName: 'Planck',
-      dest: './dist/planck-event.js',
+      name: 'Planck',
+      file: './dist/planck-event.js',
     },
   ],
 }
