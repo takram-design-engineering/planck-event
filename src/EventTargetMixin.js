@@ -47,7 +47,7 @@ export default Mixin(S => class EventTargetMixin extends S {
 
   set ancestorEventTarget(value) {
     const scope = internal(this)
-    scope.ancestorEventTarget = value || null
+    scope.ancestorEventTarget = value !== undefined ? value : null
   }
 
   get descendantEventTarget() {
@@ -57,7 +57,7 @@ export default Mixin(S => class EventTargetMixin extends S {
 
   set descendantEventTarget(value) {
     const scope = internal(this)
-    scope.descendantEventTarget = value || null
+    scope.descendantEventTarget = value !== undefined ? value : null
   }
 
   determinePropagationPath(target = null) {

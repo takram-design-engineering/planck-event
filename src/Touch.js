@@ -35,8 +35,8 @@ export default class Touch {
     const scope = internal(this)
     scope.x = x || 0
     scope.y = y || 0
-    scope.target = target || null
-    scope.originalTouch = originalTouch || null
+    scope.target = target !== undefined ? target : null
+    scope.originalTouch = originalTouch !== undefined ? originalTouch : null
     return this
   }
 

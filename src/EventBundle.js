@@ -32,7 +32,7 @@ export default class EventBundle extends Event {
   init({ originalEvent, ...rest } = {}) {
     super.init({ ...rest })
     const scope = internal(this)
-    scope.originalEvent = originalEvent || null
+    scope.originalEvent = originalEvent !== undefined ? originalEvent : null
     return this
   }
 
