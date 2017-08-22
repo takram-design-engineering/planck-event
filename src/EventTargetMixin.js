@@ -27,7 +27,6 @@ import { Mixin } from 'mixwith/src/mixwith'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 import Event, { modifyEvent } from './Event'
-import EventDispatcherMixin from './EventDispatcherMixin'
 import GenericEvent from './GenericEvent'
 
 export const internal = Namespace('EventTargetMixin')
@@ -119,9 +118,9 @@ export default Mixin(S => class EventTargetMixin extends S {
     const bubblingPath = [...capturingPath]
     bubblingPath.reverse()
 
-    // Capturing phase
+    // Capturing event phase
     if (event.captures) {
-      modifier.phase = 'capture'
+      modifier.eventPhase = 'capture'
       capturingPath.some(object => {
         object.dispatchImmediateEvent(event)
         return event.propagationStopped
@@ -131,19 +130,19 @@ export default Mixin(S => class EventTargetMixin extends S {
       return
     }
 
-    // Target phase. The target can be an integer if the parent target has
+    // Target event phase. The target can be an integer if the parent target has
     // multiple identifiers, typically when picking an instanced geometry.
     if (!Number.isInteger(event.target)) {
-      modifier.phase = 'target'
+      modifier.eventPhase = 'target'
       event.target.dispatchImmediateEvent(event)
       if (event.propagationStopped) {
         return
       }
     }
 
-    // Bubbling phase
+    // Bubbling event phase
     if (event.bubbles) {
-      modifier.phase = 'bubble'
+      modifier.eventPhase = 'bubble'
       bubblingPath.some(object => {
         object.dispatchImmediateEvent(event)
         return event.propagationStopped

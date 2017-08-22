@@ -22,6 +22,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import Environment from '@takram/planck-core/src/Environment'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 export const internal = Namespace('Event')
@@ -31,17 +32,22 @@ export default class Event {
     this.init(options)
   }
 
-  init({ type, captures = false, bubbles = true } = {}) {
+  init({ type, captures = false, bubbles = true, cancelable = true } = {}) {
     const scope = internal(this)
     scope.type = type || null
     scope.captures = !!captures
     scope.bubbles = !!bubbles
-    scope.timestamp = Date.now()
+    scope.cancelable = !!cancelable
+    scope.timeStamp = (
+      Environment.self.performance &&
+      Environment.self.performance.now &&
+      Environment.self.performance.now()) || Date.now()
     scope.propagationStopped = false
     scope.immediatePropagationStopped = false
+    scope.defaultPrevented = false
     scope.target = null
     scope.currentTarget = null
-    scope.phase = null
+    scope.eventPhase = null
     return this
   }
 
@@ -60,9 +66,9 @@ export default class Event {
     return scope.currentTarget
   }
 
-  get phase() {
+  get eventPhase() {
     const scope = internal(this)
-    return scope.phase
+    return scope.eventPhase
   }
 
   get captures() {
@@ -75,9 +81,14 @@ export default class Event {
     return scope.bubbles
   }
 
-  get timestamp() {
+  get cancelable() {
     const scope = internal(this)
-    return scope.timestamp
+    return scope.cancelable
+  }
+
+  get timeStamp() {
+    const scope = internal(this)
+    return scope.timeStamp
   }
 
   stopPropagation() {
@@ -91,6 +102,13 @@ export default class Event {
     scope.immediatePropagationStopped = true
   }
 
+  preventDefault() {
+    if (this.cancelable) {
+      const scope = internal(this)
+      scope.defaultPrevented = true
+    }
+  }
+
   get propagationStopped() {
     const scope = internal(this)
     return scope.propagationStopped
@@ -99,6 +117,11 @@ export default class Event {
   get immediatePropagationStopped() {
     const scope = internal(this)
     return scope.immediatePropagationStopped
+  }
+
+  get defaultPrevented() {
+    const scope = internal(this)
+    return scope.defaultPrevented
   }
 }
 
@@ -113,8 +136,8 @@ export function modifyEvent(event) {
       scope.currentTarget = value || null
     },
 
-    set phase(value) {
-      scope.phase = value || null
+    set eventPhase(value) {
+      scope.eventPhase = value || null
     },
   }
 }

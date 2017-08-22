@@ -72,7 +72,7 @@ const target3 = new EventTarget()
 target3.name = 'target3'
 
 const listener = event => {
-  console.log(event.target.name, event.currentTarget.name, event.phase)
+  console.log(event.target.name, event.currentTarget.name, event.eventPhase)
 }
 
 const propagationPath = [target1, target2, target3]
@@ -90,12 +90,12 @@ target1.dispatchEvent(new Event({
   captures: true,
 }), propagationPath)
 
-// { target: 'target3', currentTarget: 'target1', phase: 'capture' }
-// { target: 'target3', currentTarget: 'target2', phase: 'capture' }
-// { target: 'target3', currentTarget: 'target3', phase: 'target' }
-// { target: 'target3', currentTarget: 'target3', phase: 'target' }
-// { target: 'target3', currentTarget: 'target2', phase: 'bubble' }
-// { target: 'target3', currentTarget: 'target1', phase: 'bubble' }
+// { target: 'target3', currentTarget: 'target1', eventPhase: 'capture' }
+// { target: 'target3', currentTarget: 'target2', eventPhase: 'capture' }
+// { target: 'target3', currentTarget: 'target3', eventPhase: 'target' }
+// { target: 'target3', currentTarget: 'target3', eventPhase: 'target' }
+// { target: 'target3', currentTarget: 'target2', eventPhase: 'bubble' }
+// { target: 'target3', currentTarget: 'target1', eventPhase: 'bubble' }
 
 target1.dispatchEvent(new Event({
   type: 'type',
@@ -103,10 +103,10 @@ target1.dispatchEvent(new Event({
   captures: true,
 }), propagationPath)
 
-// { target: 'target3', currentTarget: 'target1', phase: 'capture' }
-// { target: 'target3', currentTarget: 'target2', phase: 'capture' }
-// { target: 'target3', currentTarget: 'target3', phase: 'target' }
-// { target: 'target3', currentTarget: 'target3', phase: 'target' }
+// { target: 'target3', currentTarget: 'target1', eventPhase: 'capture' }
+// { target: 'target3', currentTarget: 'target2', eventPhase: 'capture' }
+// { target: 'target3', currentTarget: 'target3', eventPhase: 'target' }
+// { target: 'target3', currentTarget: 'target3', eventPhase: 'target' }
 
 target1.dispatchEvent(new Event({
   type: 'type',
@@ -114,10 +114,10 @@ target1.dispatchEvent(new Event({
   captures: false,
 }), propagationPath)
 
-// { target: 'target3', currentTarget: 'target3', phase: 'target' }
-// { target: 'target3', currentTarget: 'target3', phase: 'target' }
-// { target: 'target3', currentTarget: 'target2', phase: 'bubble' }
-// { target: 'target3', currentTarget: 'target1', phase: 'bubble' }
+// { target: 'target3', currentTarget: 'target3', eventPhase: 'target' }
+// { target: 'target3', currentTarget: 'target3', eventPhase: 'target' }
+// { target: 'target3', currentTarget: 'target2', eventPhase: 'bubble' }
+// { target: 'target3', currentTarget: 'target1', eventPhase: 'bubble' }
 ```
 
 ### State Binding
@@ -304,12 +304,16 @@ new **Event**(*options*)<br>
 - `type`
 - `captures`
 - `bubbles`
+- `cancelable`
 
 <a id="event-stoppropagation" href="#event-stoppropagation">#</a>
 *event*.**stopPropagation**()
 
 <a id="event-stopimmediatepropagation" href="#event-stopimmediatepropagation">#</a>
 *event*.**stopImmediatePropagation**()
+
+<a id="event-preventdefault" href="#event-preventdefault">#</a>
+*event*.**preventDefault**()
 
 <a id="event-type" href="#event-type">#</a>
 *event*.**type**
@@ -320,8 +324,8 @@ new **Event**(*options*)<br>
 <a id="event-currenttarget" href="#event-currenttarget">#</a>
 *event*.**currentTarget**
 
-<a id="event-phase" href="#event-phase">#</a>
-*event*.**phase**
+<a id="event-eventphase" href="#event-eventphase">#</a>
+*event*.**eventPhase**
 
 <a id="event-captures" href="#event-captures">#</a>
 *event*.**captures**
@@ -329,14 +333,20 @@ new **Event**(*options*)<br>
 <a id="event-bubbles" href="#event-bubbles">#</a>
 *event*.**bubbles**
 
+<a id="event-bubbles" href="#event-bubbles">#</a>
+*event*.**cancelable**
+
 <a id="event-timestamp" href="#event-timestamp">#</a>
-*event*.**timestamp**
+*event*.**timeStamp**
 
 <a id="event-propagationstopped" href="#event-propagationstopped">#</a>
 *event*.**propagationStopped**
 
 <a id="event-immediatepropagationstopped" href="#event-immediatepropagationstopped">#</a>
 *event*.**immediatePropagationStopped**
+
+<a id="event-defaultprevented" href="#event-defaultprevented">#</a>
+*event*.**defaultPrevented**
 
 ### StateEvent
 
@@ -369,12 +379,6 @@ new **EventBundle**(*options*)<br>
 *eventBundle*.**init**(*options*)
 
 - `originalEvent`
-
-<a id="eventbundle-preventdefault" href="#eventbundle-preventdefault">#</a>
-*eventBundle*.**preventDefault**()
-
-<a id="eventbundle-defaultprevented" href="#eventbundle-defaultprevented">#</a>
-*eventBundle*.**defaultPrevented**
 
 <a id="eventbundle-originalevent" href="#eventbundle-originalevent">#</a>
 *eventBundle*.**originalEvent**
@@ -449,6 +453,9 @@ new **KeyboardEvent**(*options*)<br>
 
 <a id="keyboardevent-repeat" href="#keyboardevent-repeat">#</a>
 *keyboardEvent*.**repeat**
+
+<a id="keyboardevent-location" href="#keyboardevent-location">#</a>
+*keyboardEvent*.**location**
 
 ### TouchEvent
 

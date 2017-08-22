@@ -140,7 +140,7 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
       modifyEvent(event).target = target
-      modifyEvent(event).phase = 'capture'
+      modifyEvent(event).eventPhase = 'capture'
       dispatcher.dispatchEvent(event)
       expect(listener).calledOnce
       expect(captureListener).calledOnce
@@ -169,7 +169,7 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
       modifyEvent(event).target = target
-      modifyEvent(event).phase = 'bubble'
+      modifyEvent(event).eventPhase = 'bubble'
       dispatcher.dispatchEvent(event)
       expect(listener).calledOnce
       expect(captureListener).not.called
@@ -193,7 +193,7 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
       modifyEvent(event).target = target
-      modifyEvent(event).phase = 'target'
+      modifyEvent(event).eventPhase = 'target'
       dispatcher.dispatchEvent(event)
       expect(listener).calledTwice
       expect(captureListener).calledOnce
@@ -217,7 +217,7 @@ describe('EventDispatcher', () => {
       dispatcher.addEventListener('test', bubbleListener, false)
       const event = new Event({ type: 'test' })
       modifyEvent(event).target = target
-      modifyEvent(event).phase = null
+      modifyEvent(event).eventPhase = null
       dispatcher.dispatchEvent(event)
       expect(listener).calledTwice
       expect(captureListener).calledOnce

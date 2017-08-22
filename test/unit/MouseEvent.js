@@ -56,10 +56,10 @@ describe('MouseEvent', () => {
     expect(event.type).equal(null)
     expect(event.target).equal(null)
     expect(event.currentTarget).equal(null)
-    expect(event.phase).equal(null)
+    expect(event.eventPhase).equal(null)
     expect(event.captures).false
     expect(event.bubbles).true
-    expect(event.timestamp).a('number')
+    expect(event.timeStamp).a('number')
     expect(event.propagationStopped).false
     expect(event.immediatePropagationStopped).false
     expect(event.originalEvent).equal(null)

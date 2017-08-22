@@ -52,4 +52,8 @@ export default class KeyboardEvent extends EventBundle {
   get repeat() {
     return this.originalEvent.repeat
   }
+
+  get location() {
+    return this.originalEvent.location
+  }
 }

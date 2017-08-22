@@ -45,6 +45,72 @@ function Namespace() {
   };
 }
 
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var environmentType = function () {
+  try {
+    // eslint-disable-next-line no-new-func
+    if (new Function('return this === window')()) {
+      return 'browser';
+    }
+  } catch (error) {}
+  try {
+    // eslint-disable-next-line no-new-func
+    if (new Function('return this === self')()) {
+      return 'worker';
+    }
+  } catch (error) {}
+  try {
+    // eslint-disable-next-line no-new-func
+    if (new Function('return this === global')()) {
+      return 'node';
+    }
+  } catch (error) {}
+  return undefined;
+}();
+
+var environmentSelf = void 0;
+switch (environmentType) {
+  case 'browser':
+    environmentSelf = window;
+    break;
+  case 'worker':
+    environmentSelf = self;
+    break;
+  case 'node':
+    environmentSelf = global;
+    break;
+  default:
+    break;
+}
+
+var Environment = {
+  type: environmentType,
+  self: environmentSelf
+};
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
@@ -280,18 +346,22 @@ var Event = function () {
           _ref$captures = _ref.captures,
           captures = _ref$captures === undefined ? false : _ref$captures,
           _ref$bubbles = _ref.bubbles,
-          bubbles = _ref$bubbles === undefined ? true : _ref$bubbles;
+          bubbles = _ref$bubbles === undefined ? true : _ref$bubbles,
+          _ref$cancelable = _ref.cancelable,
+          cancelable = _ref$cancelable === undefined ? true : _ref$cancelable;
 
       var scope = internal$2(this);
       scope.type = type || null;
       scope.captures = !!captures;
       scope.bubbles = !!bubbles;
-      scope.timestamp = Date.now();
+      scope.cancelable = !!cancelable;
+      scope.timeStamp = Environment.self.performance && Environment.self.performance.now && Environment.self.performance.now() || Date.now();
       scope.propagationStopped = false;
       scope.immediatePropagationStopped = false;
+      scope.defaultPrevented = false;
       scope.target = null;
       scope.currentTarget = null;
-      scope.phase = null;
+      scope.eventPhase = null;
       return this;
     }
   }, {
@@ -306,6 +376,14 @@ var Event = function () {
       var scope = internal$2(this);
       scope.propagationStopped = true;
       scope.immediatePropagationStopped = true;
+    }
+  }, {
+    key: 'preventDefault',
+    value: function preventDefault() {
+      if (this.cancelable) {
+        var scope = internal$2(this);
+        scope.defaultPrevented = true;
+      }
     }
   }, {
     key: 'type',
@@ -326,10 +404,10 @@ var Event = function () {
       return scope.currentTarget;
     }
   }, {
-    key: 'phase',
+    key: 'eventPhase',
     get: function get$$1() {
       var scope = internal$2(this);
-      return scope.phase;
+      return scope.eventPhase;
     }
   }, {
     key: 'captures',
@@ -344,10 +422,16 @@ var Event = function () {
       return scope.bubbles;
     }
   }, {
-    key: 'timestamp',
+    key: 'cancelable',
     get: function get$$1() {
       var scope = internal$2(this);
-      return scope.timestamp;
+      return scope.cancelable;
+    }
+  }, {
+    key: 'timeStamp',
+    get: function get$$1() {
+      var scope = internal$2(this);
+      return scope.timeStamp;
     }
   }, {
     key: 'propagationStopped',
@@ -360,6 +444,12 @@ var Event = function () {
     get: function get$$1() {
       var scope = internal$2(this);
       return scope.immediatePropagationStopped;
+    }
+  }, {
+    key: 'defaultPrevented',
+    get: function get$$1() {
+      var scope = internal$2(this);
+      return scope.defaultPrevented;
     }
   }]);
   return Event;
@@ -376,8 +466,8 @@ function modifyEvent(event) {
       scope.currentTarget = value || null;
     },
 
-    set phase(value) {
-      scope.phase = value || null;
+    set eventPhase(value) {
+      scope.eventPhase = value || null;
     }
   };
 }
@@ -496,7 +586,10 @@ var StateEvent = function (_CustomEvent) {
   }], [{
     key: 'type',
     value: function type(name) {
-      return 'state:' + (name === null || name === undefined ? '' : name);
+      if (typeof name !== 'string') {
+        throw new Error('Type name must be a string');
+      }
+      return 'state:' + name;
     }
   }]);
   return StateEvent;
@@ -852,19 +945,17 @@ var EventBundle = function (_Event) {
   }, {
     key: 'preventDefault',
     value: function preventDefault() {
-      var scope = internal$4(this);
-      if (scope.originalEvent !== null) {
-        scope.originalEvent.preventDefault();
+      get(EventBundle.prototype.__proto__ || Object.getPrototypeOf(EventBundle.prototype), 'preventDefault', this).call(this);
+      if (this.cancelable) {
+        if (this.originalEvent !== null) {
+          this.originalEvent.preventDefault();
+        }
       }
     }
   }, {
-    key: 'defaultPrevented',
+    key: 'cancelable',
     get: function get$$1() {
-      var scope = internal$4(this);
-      if (scope.originalEvent === null) {
-        return false;
-      }
-      return scope.originalEvent.defaultPrevented;
+      return get(EventBundle.prototype.__proto__ || Object.getPrototypeOf(EventBundle.prototype), 'cancelable', this) && this.originalEvent.cancelable;
     }
   }, {
     key: 'originalEvent',
@@ -1193,8 +1284,8 @@ var EventDispatcherMixin = Mixin(function (S) {
         if (listeners === undefined) {
           return;
         }
-        var phase = event.phase;
-        if (!phase || phase === 'target' || phase === 'capture') {
+        var eventPhase = event.eventPhase;
+        if (!eventPhase || eventPhase === 'target' || eventPhase === 'capture') {
           [].concat(toConsumableArray(listeners.capture)).some(function (listener) {
             handleEvent(event, listener);
             return event.immediatePropagationStopped;
@@ -1203,7 +1294,7 @@ var EventDispatcherMixin = Mixin(function (S) {
         if (event.immediatePropagationStopped) {
           return;
         }
-        if (!phase || phase === 'target' || phase === 'bubble') {
+        if (!eventPhase || eventPhase === 'target' || eventPhase === 'bubble') {
           [].concat(toConsumableArray(listeners.bubble)).some(function (listener) {
             handleEvent(event, listener);
             return event.immediatePropagationStopped;
@@ -1370,9 +1461,9 @@ var EventTargetMixin = Mixin(function (S) {
         var bubblingPath = [].concat(toConsumableArray(capturingPath));
         bubblingPath.reverse();
 
-        // Capturing phase
+        // Capturing event phase
         if (event.captures) {
-          modifier.phase = 'capture';
+          modifier.eventPhase = 'capture';
           capturingPath.some(function (object) {
             object.dispatchImmediateEvent(event);
             return event.propagationStopped;
@@ -1382,19 +1473,19 @@ var EventTargetMixin = Mixin(function (S) {
           return;
         }
 
-        // Target phase. The target can be an integer if the parent target has
+        // Target event phase. The target can be an integer if the parent target has
         // multiple identifiers, typically when picking an instanced geometry.
         if (!Number.isInteger(event.target)) {
-          modifier.phase = 'target';
+          modifier.eventPhase = 'target';
           event.target.dispatchImmediateEvent(event);
           if (event.propagationStopped) {
             return;
           }
         }
 
-        // Bubbling phase
+        // Bubbling event phase
         if (event.bubbles) {
-          modifier.phase = 'bubble';
+          modifier.eventPhase = 'bubble';
           bubblingPath.some(function (object) {
             object.dispatchImmediateEvent(event);
             return event.propagationStopped;
@@ -1533,6 +1624,11 @@ var KeyboardEvent = function (_EventBundle) {
     key: 'repeat',
     get: function get$$1() {
       return this.originalEvent.repeat;
+    }
+  }, {
+    key: 'location',
+    get: function get$$1() {
+      return this.originalEvent.location;
     }
   }]);
   return KeyboardEvent;
