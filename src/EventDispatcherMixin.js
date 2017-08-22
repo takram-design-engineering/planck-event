@@ -107,7 +107,7 @@ export default Mixin(S => class EventDispatcherMixin extends S {
     const modifier = modifyEvent(event)
 
     // Set target to this when it's not set
-    if (!event.target) {
+    if (event.target === null) {
       modifier.target = this
     }
     // Current target should be always this
