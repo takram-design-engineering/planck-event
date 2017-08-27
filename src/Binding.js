@@ -30,20 +30,26 @@ export const internal = Namespace('Binding')
 
 function formatTargets(...args) {
   // Flatten arguments
-  const flatArgs = args.reduce((targets, value) => {
-    return targets.concat(value)
-  }, [])
+  const flatArgs = []
+  for (let i = 0; i < args.length; ++i) {
+    const value = args[i]
+    if (Array.isArray(value)) {
+      flatArgs.push(...value)
+    } else {
+      flatArgs.push(value)
+    }
+  }
 
   // Convert the array from [object, name, ...] to [{ object, name }, ...]
   let object
-  const targets = flatArgs.reduce((targets, value, index) => {
+  const targets = []
+  for (let index = 0; index < flatArgs.length; ++index) {
     if (index % 2 === 0) {
-      object = value
+      object = flatArgs[index]
     } else {
-      targets.push({ object, name: value })
+      targets.push({ object, name: flatArgs[index] })
     }
-    return targets
-  }, [])
+  }
 
   // Defaults to one-way binding for multiple targets
   const options = Object.assign({
@@ -60,13 +66,17 @@ function bind(source, name, targets, options) {
   if (scope.bindings[name] === undefined) {
     scope.bindings[name] = []
   }
-  let binders = scope.bindings[name]
-  binders.forEach(binder => {
+  const currentBinders = scope.bindings[name]
+  const nextBinders = []
+  for (let i = 0; i < currentBinders.length; ++i) {
+    const binder = currentBinders[i]
     binder.unbind(targets)
-  })
-  binders = binders.filter(binder => !binder.empty)
-  binders.push(new Binder(source, name, targets, options))
-  scope.bindings[name] = binders
+    if (!binder.empty) {
+      nextBinders.push(binder)
+    }
+  }
+  nextBinders.push(new Binder(source, name, targets, options))
+  scope.bindings[name] = nextBinders
 }
 
 function unbind(source, name, targets) {
@@ -77,12 +87,17 @@ function unbind(source, name, targets) {
   if (scope.bindings[name] === undefined) {
     return []
   }
-  let binders = scope.bindings[name]
-  const unboundTargets = binders.reduce((result, binder) => {
-    return result.concat(binder.unbind(targets))
-  }, [])
-  binders = binders.filter(binder => !binder.empty)
-  scope.bindings[name] = binders
+  const unboundTargets = []
+  const currentBinders = scope.bindings[name]
+  const nextBinders = []
+  for (let i = 0; i < currentBinders.length; ++i) {
+    const binder = currentBinders[i]
+    unboundTargets.push(...binder.unbind(targets))
+    if (!binder.empty) {
+      nextBinders.push(binder)
+    }
+  }
+  scope.bindings[name] = nextBinders
   return unboundTargets
 }
 
@@ -95,9 +110,10 @@ function unbindAll(source, name) {
     return []
   }
   const binders = scope.bindings[name]
-  const unboundTargets = binders.reduce((result, binder) => {
-    return result.concat(binder.unbindAll())
-  }, [])
+  const unboundTargets = []
+  for (let i = 0; i < binders.length; ++i) {
+    unboundTargets.push(...binders[i].unbindAll())
+  }
   scope.bindings[name] = []
   return unboundTargets
 }
@@ -106,12 +122,13 @@ export default class Binding {
   static bind(source, name, ...rest) {
     const [targets, options] = formatTargets(...rest)
     if (!options.oneWay) {
-      targets.forEach(target => {
+      for (let i = 0; i < targets.length; ++i) {
+        const target = targets[i]
         bind(target.object, target.name, [{ object: source, name }], {
           assigns: false,
           transform: options.inverseTransform,
         })
-      })
+      }
     }
     bind(source, name, targets, {
       assigns: true,
@@ -123,15 +140,18 @@ export default class Binding {
     const [targets, options] = formatTargets(...rest)
     const unboundTargets = unbind(source, name, targets)
     if (!options.oneWay) {
-      unboundTargets.forEach(target => {
+      for (let i = 0; i < unboundTargets.length; ++i) {
+        const target = unboundTargets[i]
         unbind(target.object, target.name, [{ object: source, name }])
-      })
+      }
     }
   }
 
   static unbindAll(source, name) {
-    unbindAll(source, name).forEach(target => {
+    const unboundTargets = unbindAll(source, name)
+    for (let i = 0; i < unboundTargets.length; ++i) {
+      const target = unboundTargets[i]
       unbindAll(target.object, target.name, [{ object: source, name }])
-    })
+    }
   }
 }

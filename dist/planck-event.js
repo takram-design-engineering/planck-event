@@ -351,7 +351,7 @@ var Event = function () {
           cancelable = _ref$cancelable === undefined ? true : _ref$cancelable;
 
       var scope = internal$2(this);
-      scope.type = type || null;
+      scope.type = type !== undefined ? type : null;
       scope.captures = !!captures;
       scope.bubbles = !!bubbles;
       scope.cancelable = !!cancelable;
@@ -459,15 +459,15 @@ function modifyEvent(event) {
   var scope = internal$2(event);
   return {
     set target(value) {
-      scope.target = value || null;
+      scope.target = value !== undefined ? value : null;
     },
 
     set currentTarget(value) {
-      scope.currentTarget = value || null;
+      scope.currentTarget = value !== undefined ? value : null;
     },
 
     set eventPhase(value) {
-      scope.eventPhase = value || null;
+      scope.eventPhase = value !== undefined ? value : null;
     }
   };
 }
@@ -515,7 +515,7 @@ var CustomEvent = function (_Event) {
 
       get(CustomEvent.prototype.__proto__ || Object.getPrototypeOf(CustomEvent.prototype), 'init', this).call(this, _extends({ type: type }, rest));
       // Support target as a parameter
-      modifyEvent(this).target = target || null;
+      modifyEvent(this).target = target !== undefined ? target : null;
       return this;
     }
   }]);
@@ -629,10 +629,10 @@ function handleChange(transform, event) {
   var scope = internal(this);
   if (event.target === scope.source && event.name === scope.name) {
     var value = transform(event.value);
-    scope.targets.forEach(function (target) {
-      // eslint-disable-next-line no-param-reassign
+    for (var i = 0; i < scope.targets.length; ++i) {
+      var target = scope.targets[i];
       target.object[target.name] = value;
-    });
+    }
   }
 }
 
@@ -666,10 +666,10 @@ var Binder = function () {
 
     // Initial assignment
     if (assigns) {
-      targets.forEach(function (target) {
-        // eslint-disable-next-line no-param-reassign
+      for (var i = 0; i < targets.length; ++i) {
+        var target = targets[i];
         target.object[target.name] = transform(source[name]);
-      });
+      }
     }
   }
 
@@ -680,11 +680,20 @@ var Binder = function () {
       if (!Array.isArray(targets) || targets.length === 0) {
         return false;
       }
-      return targets.every(function (other) {
-        return scope.targets.some(function (target) {
-          return isTargetSame(target, other);
-        });
-      });
+      for (var i = 0; i < targets.length; ++i) {
+        var matches = false;
+        var target = targets[i];
+        for (var _i = 0; _i < scope.targets.length; ++_i) {
+          if (isTargetSame(target, scope.targets[_i])) {
+            matches = true;
+            break;
+          }
+        }
+        if (!matches) {
+          return false;
+        }
+      }
+      return true;
     }
   }, {
     key: 'unbind',
@@ -693,16 +702,17 @@ var Binder = function () {
         return this.unbindAll();
       }
       var scope = internal(this);
-      var unboundTargets = targets.reduce(function (result, target) {
-        var index = scope.targets.findIndex(function (other) {
-          return isTargetSame(target, other);
-        });
-        if (index !== -1) {
-          scope.targets.splice(index, 1);
-          result.push(target);
+      var unboundTargets = [];
+      for (var i = 0; i < targets.length; ++i) {
+        var target = targets[i];
+        for (var index = 0; index < scope.targets.length; ++index) {
+          if (isTargetSame(target, scope.targets[index])) {
+            scope.targets.splice(index, 1);
+            unboundTargets.push(target);
+            break;
+          }
         }
-        return result;
-      }, []);
+      }
       if (scope.targets.length === 0) {
         dispose(this);
       }
@@ -754,25 +764,32 @@ var Binder = function () {
 var internal$3 = Namespace('Binding');
 
 function formatTargets() {
+  // Flatten arguments
+  var flatArgs = [];
+
   for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
     args[_key] = arguments[_key];
   }
 
-  // Flatten arguments
-  var flatArgs = args.reduce(function (targets, value) {
-    return targets.concat(value);
-  }, []);
+  for (var i = 0; i < args.length; ++i) {
+    var value = args[i];
+    if (Array.isArray(value)) {
+      flatArgs.push.apply(flatArgs, toConsumableArray(value));
+    } else {
+      flatArgs.push(value);
+    }
+  }
 
   // Convert the array from [object, name, ...] to [{ object, name }, ...]
   var object = void 0;
-  var targets = flatArgs.reduce(function (targets, value, index) {
+  var targets = [];
+  for (var index = 0; index < flatArgs.length; ++index) {
     if (index % 2 === 0) {
-      object = value;
+      object = flatArgs[index];
     } else {
-      targets.push({ object: object, name: value });
+      targets.push({ object: object, name: flatArgs[index] });
     }
-    return targets;
-  }, []);
+  }
 
   // Defaults to one-way binding for multiple targets
   var options = Object.assign({
@@ -789,15 +806,17 @@ function _bind(source, name, targets, options) {
   if (scope.bindings[name] === undefined) {
     scope.bindings[name] = [];
   }
-  var binders = scope.bindings[name];
-  binders.forEach(function (binder) {
+  var currentBinders = scope.bindings[name];
+  var nextBinders = [];
+  for (var i = 0; i < currentBinders.length; ++i) {
+    var binder = currentBinders[i];
     binder.unbind(targets);
-  });
-  binders = binders.filter(function (binder) {
-    return !binder.empty;
-  });
-  binders.push(new Binder(source, name, targets, options));
-  scope.bindings[name] = binders;
+    if (!binder.empty) {
+      nextBinders.push(binder);
+    }
+  }
+  nextBinders.push(new Binder(source, name, targets, options));
+  scope.bindings[name] = nextBinders;
 }
 
 function _unbind(source, name, targets) {
@@ -808,14 +827,17 @@ function _unbind(source, name, targets) {
   if (scope.bindings[name] === undefined) {
     return [];
   }
-  var binders = scope.bindings[name];
-  var unboundTargets = binders.reduce(function (result, binder) {
-    return result.concat(binder.unbind(targets));
-  }, []);
-  binders = binders.filter(function (binder) {
-    return !binder.empty;
-  });
-  scope.bindings[name] = binders;
+  var unboundTargets = [];
+  var currentBinders = scope.bindings[name];
+  var nextBinders = [];
+  for (var i = 0; i < currentBinders.length; ++i) {
+    var binder = currentBinders[i];
+    unboundTargets.push.apply(unboundTargets, toConsumableArray(binder.unbind(targets)));
+    if (!binder.empty) {
+      nextBinders.push(binder);
+    }
+  }
+  scope.bindings[name] = nextBinders;
   return unboundTargets;
 }
 
@@ -828,9 +850,10 @@ function _unbindAll(source, name) {
     return [];
   }
   var binders = scope.bindings[name];
-  var unboundTargets = binders.reduce(function (result, binder) {
-    return result.concat(binder.unbindAll());
-  }, []);
+  var unboundTargets = [];
+  for (var i = 0; i < binders.length; ++i) {
+    unboundTargets.push.apply(unboundTargets, toConsumableArray(binders[i].unbindAll()));
+  }
   scope.bindings[name] = [];
   return unboundTargets;
 }
@@ -853,12 +876,13 @@ var Binding = function () {
           options = _formatTargets2[1];
 
       if (!options.oneWay) {
-        targets.forEach(function (target) {
+        for (var i = 0; i < targets.length; ++i) {
+          var target = targets[i];
           _bind(target.object, target.name, [{ object: source, name: name }], {
             assigns: false,
             transform: options.inverseTransform
           });
-        });
+        }
       }
       _bind(source, name, targets, {
         assigns: true,
@@ -879,17 +903,20 @@ var Binding = function () {
 
       var unboundTargets = _unbind(source, name, targets);
       if (!options.oneWay) {
-        unboundTargets.forEach(function (target) {
+        for (var i = 0; i < unboundTargets.length; ++i) {
+          var target = unboundTargets[i];
           _unbind(target.object, target.name, [{ object: source, name: name }]);
-        });
+        }
       }
     }
   }, {
     key: 'unbindAll',
     value: function unbindAll(source, name) {
-      _unbindAll(source, name).forEach(function (target) {
+      var unboundTargets = _unbindAll(source, name);
+      for (var i = 0; i < unboundTargets.length; ++i) {
+        var target = unboundTargets[i];
         _unbindAll(target.object, target.name, [{ object: source, name: name }]);
-      });
+      }
     }
   }]);
   return Binding;
@@ -951,11 +978,6 @@ var EventBundle = function (_Event) {
           this.originalEvent.preventDefault();
         }
       }
-    }
-  }, {
-    key: 'cancelable',
-    get: function get$$1() {
-      return get(EventBundle.prototype.__proto__ || Object.getPrototypeOf(EventBundle.prototype), 'cancelable', this) && this.originalEvent.cancelable;
     }
   }, {
     key: 'originalEvent',
@@ -1115,8 +1137,6 @@ var GenericEvent = function (_CustomEvent) {
   createClass(GenericEvent, [{
     key: 'init',
     value: function init() {
-      var _this2 = this;
-
       var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       var type = _ref.type,
@@ -1128,17 +1148,15 @@ var GenericEvent = function (_CustomEvent) {
           rest = objectWithoutProperties(_ref, ['type', 'target', 'captures', 'bubbles']);
 
       get(GenericEvent.prototype.__proto__ || Object.getPrototypeOf(GenericEvent.prototype), 'init', this).call(this, { type: type, target: target, captures: captures, bubbles: bubbles });
-      Object.entries(rest).forEach(function (entry) {
-        var _entry = slicedToArray(entry, 2),
-            property = _entry[0],
-            value = _entry[1];
-
-        if (!{}.hasOwnProperty.call(_this2, property)) {
-          _this2[property] = value;
+      var names = Object.keys(rest);
+      for (var i = 0; i < names.length; ++i) {
+        var name = names[i];
+        if (!{}.hasOwnProperty.call(this, name)) {
+          this[name] = rest[name];
         } else {
-          throw new Error('Name "' + property + '" cannot be used for event property');
+          throw new Error('Name "' + name + '" cannot be used for event property');
         }
-      });
+      }
       return this;
     }
   }]);
@@ -1273,7 +1291,7 @@ var EventDispatcherMixin = Mixin(function (S) {
         var modifier = modifyEvent(event);
 
         // Set target to this when it's not set
-        if (!event.target) {
+        if (event.target === null) {
           modifier.target = this;
         }
         // Current target should be always this
@@ -1286,19 +1304,20 @@ var EventDispatcherMixin = Mixin(function (S) {
         }
         var eventPhase = event.eventPhase;
         if (!eventPhase || eventPhase === 'target' || eventPhase === 'capture') {
-          [].concat(toConsumableArray(listeners.capture)).some(function (listener) {
-            handleEvent(event, listener);
-            return event.immediatePropagationStopped;
-          });
-        }
-        if (event.immediatePropagationStopped) {
-          return;
+          for (var i = 0; i < listeners.capture.length; ++i) {
+            handleEvent(event, listeners.capture[i]);
+            if (event.immediatePropagationStopped) {
+              return;
+            }
+          }
         }
         if (!eventPhase || eventPhase === 'target' || eventPhase === 'bubble') {
-          [].concat(toConsumableArray(listeners.bubble)).some(function (listener) {
-            handleEvent(event, listener);
-            return event.immediatePropagationStopped;
-          });
+          for (var _i = 0; _i < listeners.bubble.length; ++_i) {
+            handleEvent(event, listeners.bubble[_i]);
+            if (event.immediatePropagationStopped) {
+              return;
+            }
+          }
         }
       }
     }]);
@@ -1444,33 +1463,30 @@ var EventTargetMixin = Mixin(function (S) {
           return;
         }
 
-        // Determine the capturing path of this event
-        var capturingPath = void 0;
+        // Determine the propagation path of this event
+        var path = void 0;
         if (Array.isArray(propagationPath)) {
-          capturingPath = [].concat(toConsumableArray(propagationPath));
+          path = [].concat(toConsumableArray(propagationPath));
         } else {
-          capturingPath = this.determinePropagationPath(event.target || this);
+          path = this.determinePropagationPath(event.target || this);
         }
 
         // The last item in the propagation path must always be the event target
         if (event.target === null) {
-          modifier.target = capturingPath.pop();
+          modifier.target = path.pop();
         } else {
-          capturingPath.pop();
+          path.pop();
         }
-        var bubblingPath = [].concat(toConsumableArray(capturingPath));
-        bubblingPath.reverse();
 
         // Capturing event phase
         if (event.captures) {
           modifier.eventPhase = 'capture';
-          capturingPath.some(function (object) {
-            object.dispatchImmediateEvent(event);
-            return event.propagationStopped;
-          });
-        }
-        if (event.propagationStopped) {
-          return;
+          for (var i = 0; i < path.length; ++i) {
+            path[i].dispatchImmediateEvent(event);
+            if (event.propagationStopped) {
+              return;
+            }
+          }
         }
 
         // Target event phase. The target can be an integer if the parent target has
@@ -1486,10 +1502,12 @@ var EventTargetMixin = Mixin(function (S) {
         // Bubbling event phase
         if (event.bubbles) {
           modifier.eventPhase = 'bubble';
-          bubblingPath.some(function (object) {
-            object.dispatchImmediateEvent(event);
-            return event.propagationStopped;
-          });
+          for (var _i = path.length - 1; _i >= 0; --_i) {
+            path[_i].dispatchImmediateEvent(event);
+            if (event.propagationStopped) {
+              return;
+            }
+          }
         }
       }
     }, {
@@ -1500,7 +1518,7 @@ var EventTargetMixin = Mixin(function (S) {
       },
       set: function set$$1(value) {
         var scope = internal$6(this);
-        scope.ancestorEventTarget = value || null;
+        scope.ancestorEventTarget = value !== undefined ? value : null;
       }
     }, {
       key: 'descendantEventTarget',
@@ -1510,7 +1528,7 @@ var EventTargetMixin = Mixin(function (S) {
       },
       set: function set$$1(value) {
         var scope = internal$6(this);
-        scope.descendantEventTarget = value || null;
+        scope.descendantEventTarget = value !== undefined ? value : null;
       }
     }]);
     return EventTargetMixin;
@@ -1786,8 +1804,8 @@ var Touch = function () {
       var scope = internal$8(this);
       scope.x = x || 0;
       scope.y = y || 0;
-      scope.target = target || null;
-      scope.originalTouch = originalTouch || null;
+      scope.target = target !== undefined ? target : null;
+      scope.originalTouch = originalTouch !== undefined ? originalTouch : null;
       return this;
     }
   }, {
@@ -1822,91 +1840,6 @@ var Touch = function () {
   }]);
   return Touch;
 }();
-
-//
-//  The MIT License
-//
-//  Copyright (C) 2016-Present Shota Matsuda
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a
-//  copy of this software and associated documentation files (the "Software"),
-//  to deal in the Software without restriction, including without limitation
-//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-//  and/or sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-//  DEALINGS IN THE SOFTWARE.
-//
-
-var internal$9 = Namespace('TouchEvent');
-
-var TouchEvent = function (_EventBundle) {
-  inherits(TouchEvent, _EventBundle);
-
-  function TouchEvent() {
-    classCallCheck(this, TouchEvent);
-    return possibleConstructorReturn(this, (TouchEvent.__proto__ || Object.getPrototypeOf(TouchEvent)).apply(this, arguments));
-  }
-
-  createClass(TouchEvent, [{
-    key: 'init',
-    value: function init() {
-      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      var touches = _ref.touches,
-          changedTouches = _ref.changedTouches,
-          rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
-
-      get(TouchEvent.prototype.__proto__ || Object.getPrototypeOf(TouchEvent.prototype), 'init', this).call(this, _extends({}, rest));
-      var scope = internal$9(this);
-      scope.touches = touches;
-      scope.changedTouches = changedTouches;
-      return this;
-    }
-  }, {
-    key: 'touches',
-    get: function get$$1() {
-      var scope = internal$9(this);
-      return scope.touches;
-    }
-  }, {
-    key: 'changedTouches',
-    get: function get$$1() {
-      var scope = internal$9(this);
-      return scope.changedTouches;
-    }
-  }, {
-    key: 'ctrlKey',
-    get: function get$$1() {
-      return this.originalEvent.ctrlKey;
-    }
-  }, {
-    key: 'shiftKey',
-    get: function get$$1() {
-      return this.originalEvent.shiftKey;
-    }
-  }, {
-    key: 'altKey',
-    get: function get$$1() {
-      return this.originalEvent.altKey;
-    }
-  }, {
-    key: 'metaKey',
-    get: function get$$1() {
-      return this.originalEvent.metaKey;
-    }
-  }]);
-  return TouchEvent;
-}(EventBundle);
 
 //
 //  The MIT License
@@ -1977,6 +1910,93 @@ var TouchList = function () {
   }]);
   return TouchList;
 }();
+
+//
+//  The MIT License
+//
+//  Copyright (C) 2016-Present Shota Matsuda
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
+//
+
+var emptyTouchList = new TouchList();
+
+var internal$9 = Namespace('TouchEvent');
+
+var TouchEvent = function (_EventBundle) {
+  inherits(TouchEvent, _EventBundle);
+
+  function TouchEvent() {
+    classCallCheck(this, TouchEvent);
+    return possibleConstructorReturn(this, (TouchEvent.__proto__ || Object.getPrototypeOf(TouchEvent)).apply(this, arguments));
+  }
+
+  createClass(TouchEvent, [{
+    key: 'init',
+    value: function init() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      var touches = _ref.touches,
+          changedTouches = _ref.changedTouches,
+          rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
+
+      get(TouchEvent.prototype.__proto__ || Object.getPrototypeOf(TouchEvent.prototype), 'init', this).call(this, _extends({}, rest));
+      var scope = internal$9(this);
+      scope.touches = touches || emptyTouchList;
+      scope.changedTouches = changedTouches || emptyTouchList;
+      return this;
+    }
+  }, {
+    key: 'touches',
+    get: function get$$1() {
+      var scope = internal$9(this);
+      return scope.touches;
+    }
+  }, {
+    key: 'changedTouches',
+    get: function get$$1() {
+      var scope = internal$9(this);
+      return scope.changedTouches;
+    }
+  }, {
+    key: 'ctrlKey',
+    get: function get$$1() {
+      return this.originalEvent.ctrlKey;
+    }
+  }, {
+    key: 'shiftKey',
+    get: function get$$1() {
+      return this.originalEvent.shiftKey;
+    }
+  }, {
+    key: 'altKey',
+    get: function get$$1() {
+      return this.originalEvent.altKey;
+    }
+  }, {
+    key: 'metaKey',
+    get: function get$$1() {
+      return this.originalEvent.metaKey;
+    }
+  }]);
+  return TouchEvent;
+}(EventBundle);
 
 //
 //  The MIT License

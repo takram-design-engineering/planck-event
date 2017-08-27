@@ -25,6 +25,9 @@
 import Namespace from '@takram/planck-core/src/Namespace'
 
 import EventBundle from './EventBundle'
+import TouchList from './TouchList'
+
+const emptyTouchList = new TouchList()
 
 export const internal = Namespace('TouchEvent')
 
@@ -32,8 +35,8 @@ export default class TouchEvent extends EventBundle {
   init({ touches, changedTouches, ...rest } = {}) {
     super.init({ ...rest })
     const scope = internal(this)
-    scope.touches = touches
-    scope.changedTouches = changedTouches
+    scope.touches = touches || emptyTouchList
+    scope.changedTouches = changedTouches || emptyTouchList
     return this
   }
 

@@ -36,10 +36,10 @@ function handleChange(transform, event) {
   const scope = internal(this)
   if (event.target === scope.source && event.name === scope.name) {
     const value = transform(event.value)
-    scope.targets.forEach(target => {
-      // eslint-disable-next-line no-param-reassign
+    for (let i = 0; i < scope.targets.length; ++i) {
+      const target = scope.targets[i]
       target.object[target.name] = value
-    })
+    }
   }
 }
 
@@ -66,10 +66,10 @@ export default class Binder {
 
     // Initial assignment
     if (assigns) {
-      targets.forEach(target => {
-        // eslint-disable-next-line no-param-reassign
+      for (let i = 0; i < targets.length; ++i) {
+        const target = targets[i]
         target.object[target.name] = transform(source[name])
-      })
+      }
     }
   }
 
@@ -83,11 +83,20 @@ export default class Binder {
     if (!Array.isArray(targets) || targets.length === 0) {
       return false
     }
-    return targets.every(other => {
-      return scope.targets.some(target => {
-        return isTargetSame(target, other)
-      })
-    })
+    for (let i = 0; i < targets.length; ++i) {
+      let matches = false
+      const target = targets[i]
+      for (let i = 0; i < scope.targets.length; ++i) {
+        if (isTargetSame(target, scope.targets[i])) {
+          matches = true
+          break
+        }
+      }
+      if (!matches) {
+        return false
+      }
+    }
+    return true
   }
 
   unbind(targets) {
@@ -95,16 +104,17 @@ export default class Binder {
       return this.unbindAll()
     }
     const scope = internal(this)
-    const unboundTargets = targets.reduce((result, target) => {
-      const index = scope.targets.findIndex(other => {
-        return isTargetSame(target, other)
-      })
-      if (index !== -1) {
-        scope.targets.splice(index, 1)
-        result.push(target)
+    const unboundTargets = []
+    for (let i = 0; i < targets.length; ++i) {
+      const target = targets[i]
+      for (let index = 0; index < scope.targets.length; ++index) {
+        if (isTargetSame(target, scope.targets[index])) {
+          scope.targets.splice(index, 1)
+          unboundTargets.push(target)
+          break
+        }
       }
-      return result
-    }, [])
+    }
     if (scope.targets.length === 0) {
       dispose(this)
     }
