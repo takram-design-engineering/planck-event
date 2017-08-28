@@ -36,10 +36,6 @@ export default class EventBundle extends Event {
     return this
   }
 
-  get cancelable() {
-    return super.cancelable && this.originalEvent.cancelable
-  }
-
   preventDefault() {
     super.preventDefault()
     if (this.cancelable) {

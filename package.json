@@ -1,6 +1,6 @@
 {
   "name": "@takram/planck-event",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "",
   "repository": "takram-design-engineering/planck-event",
   "main": "dist/planck-event.js",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@takram/eslint-config-planck": "^0.2.1",
-    "@takram/planck-core": "^0.2.3",
+    "@takram/planck-core": "^0.2.4",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -64,7 +64,7 @@
     "express": "^4.15.4",
     "mocha": "^3.5.0",
     "nodemon": "^1.11.0",
-    "npm-run-all": "^4.0.2",
+    "npm-run-all": "^4.1.0",
     "rollup": "^0.48.2",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.1.0",

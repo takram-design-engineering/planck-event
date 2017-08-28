@@ -47,7 +47,7 @@ export default Mixin(S => class EventTargetMixin extends S {
 
   set ancestorEventTarget(value) {
     const scope = internal(this)
-    scope.ancestorEventTarget = value || null
+    scope.ancestorEventTarget = value !== undefined ? value : null
   }
 
   get descendantEventTarget() {
@@ -57,7 +57,7 @@ export default Mixin(S => class EventTargetMixin extends S {
 
   set descendantEventTarget(value) {
     const scope = internal(this)
-    scope.descendantEventTarget = value || null
+    scope.descendantEventTarget = value !== undefined ? value : null
   }
 
   determinePropagationPath(target = null) {
@@ -101,33 +101,30 @@ export default Mixin(S => class EventTargetMixin extends S {
       return
     }
 
-    // Determine the capturing path of this event
-    let capturingPath
+    // Determine the propagation path of this event
+    let path
     if (Array.isArray(propagationPath)) {
-      capturingPath = [...propagationPath]
+      path = [...propagationPath]
     } else {
-      capturingPath = this.determinePropagationPath(event.target || this)
+      path = this.determinePropagationPath(event.target || this)
     }
 
     // The last item in the propagation path must always be the event target
     if (event.target === null) {
-      modifier.target = capturingPath.pop()
+      modifier.target = path.pop()
     } else {
-      capturingPath.pop()
+      path.pop()
     }
-    const bubblingPath = [...capturingPath]
-    bubblingPath.reverse()
 
     // Capturing event phase
     if (event.captures) {
       modifier.eventPhase = 'capture'
-      capturingPath.some(object => {
-        object.dispatchImmediateEvent(event)
-        return event.propagationStopped
-      })
-    }
-    if (event.propagationStopped) {
-      return
+      for (let i = 0; i < path.length; ++i) {
+        path[i].dispatchImmediateEvent(event)
+        if (event.propagationStopped) {
+          return
+        }
+      }
     }
 
     // Target event phase. The target can be an integer if the parent target has
@@ -143,10 +140,12 @@ export default Mixin(S => class EventTargetMixin extends S {
     // Bubbling event phase
     if (event.bubbles) {
       modifier.eventPhase = 'bubble'
-      bubblingPath.some(object => {
-        object.dispatchImmediateEvent(event)
-        return event.propagationStopped
-      })
+      for (let i = path.length - 1; i >= 0; --i) {
+        path[i].dispatchImmediateEvent(event)
+        if (event.propagationStopped) {
+          return
+        }
+      }
     }
   }
 })
