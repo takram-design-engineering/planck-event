@@ -1,7 +1,7 @@
 {
   "name": "@takram/planck-event",
   "version": "0.4.1",
-  "description": "",
+  "description": "Provides for phased event dispatching and state binding",
   "repository": "takram-design-engineering/planck-event",
   "main": "dist/planck-event.js",
   "browser": "dist/planck-event.js",
