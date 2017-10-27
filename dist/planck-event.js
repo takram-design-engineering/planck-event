@@ -1417,16 +1417,18 @@ var EventDispatcherMixin = Mixin(function (S) {
         }
         var eventPhase = event.eventPhase;
         if (!eventPhase || eventPhase === 'target' || eventPhase === 'capture') {
-          for (var i = 0; i < listeners.capture.length; ++i) {
-            handleEvent(event, listeners.capture[i]);
+          var capture = [].concat(toConsumableArray(listeners.capture));
+          for (var i = 0; i < capture.length; ++i) {
+            handleEvent(event, capture[i]);
             if (event.immediatePropagationStopped) {
               return;
             }
           }
         }
         if (!eventPhase || eventPhase === 'target' || eventPhase === 'bubble') {
-          for (var _i = 0; _i < listeners.bubble.length; ++_i) {
-            handleEvent(event, listeners.bubble[_i]);
+          var bubble = [].concat(toConsumableArray(listeners.bubble));
+          for (var _i = 0; _i < bubble.length; ++_i) {
+            handleEvent(event, bubble[_i]);
             if (event.immediatePropagationStopped) {
               return;
             }

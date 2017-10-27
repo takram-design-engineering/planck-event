@@ -120,16 +120,18 @@ export default Mixin(S => class EventDispatcherMixin extends S {
     }
     const eventPhase = event.eventPhase
     if (!eventPhase || eventPhase === 'target' || eventPhase === 'capture') {
-      for (let i = 0; i < listeners.capture.length; ++i) {
-        handleEvent(event, listeners.capture[i])
+      const capture = [...listeners.capture]
+      for (let i = 0; i < capture.length; ++i) {
+        handleEvent(event, capture[i])
         if (event.immediatePropagationStopped) {
           return
         }
       }
     }
     if (!eventPhase || eventPhase === 'target' || eventPhase === 'bubble') {
-      for (let i = 0; i < listeners.bubble.length; ++i) {
-        handleEvent(event, listeners.bubble[i])
+      const bubble = [...listeners.bubble]
+      for (let i = 0; i < bubble.length; ++i) {
+        handleEvent(event, bubble[i])
         if (event.immediatePropagationStopped) {
           return
         }
