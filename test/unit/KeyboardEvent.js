@@ -30,7 +30,7 @@ import { Environment } from '@takram/planck-core'
 
 import { EventBundle, KeyboardEvent } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('KeyboardEvent', () => {
   if (Environment.type === 'node') {

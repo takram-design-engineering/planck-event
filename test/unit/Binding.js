@@ -28,7 +28,7 @@ import chai from 'chai'
 
 import { Binding, StateEvent, EventDispatcher } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('Binding', () => {
   function createObject(name, value) {
@@ -292,11 +292,13 @@ describe('Binding', () => {
       const target1 = createObject('a', 0)
       const target2 = createObject('b', 0)
       source.value = 1
-      Binding.bind(source, 'value',
+      Binding.bind(
+        source, 'value',
         target1, 'a',
         target2, 'b', {
           oneWay: true,
-        })
+        },
+      )
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
       source.value = 2
@@ -306,11 +308,13 @@ describe('Binding', () => {
       target2.b = 4
       expect(source.value).equal(2)
 
-      Binding.unbind(source, 'value',
+      Binding.unbind(
+        source, 'value',
         target1, 'a',
         target2, 'b', {
           oneWay: true,
-        })
+        },
+      )
       source.value = 5
       expect(target1.a).equal(3)
       expect(target2.b).equal(4)
@@ -322,10 +326,13 @@ describe('Binding', () => {
       const target1 = createObject('a', 0)
       const target2 = createObject('b', 0)
       source.value = 1
-      Binding.bind(source, name, [
-        target1, 'a',
-        target2, 'b',
-      ], { oneWay: true })
+      Binding.bind(
+        source, name, [
+          target1, 'a',
+          target2, 'b',
+        ],
+        { oneWay: true },
+      )
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
       source.value = 2
@@ -400,11 +407,13 @@ describe('Binding', () => {
       const target1 = createObject('a', 0)
       const target2 = createObject('b', 0)
       source.value = 1
-      Binding.bind(source, 'value',
+      Binding.bind(
+        source, 'value',
         target1, 'a',
         target2, 'b', {
           oneWay: false,
-        })
+        },
+      )
       expect(source.value).equal(1)
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
@@ -421,11 +430,13 @@ describe('Binding', () => {
       expect(target1.a).equal(4)
       expect(target2.b).equal(4)
 
-      Binding.unbind(source, 'value',
+      Binding.unbind(
+        source, 'value',
         target1, 'a',
         target2, 'b', {
           oneWay: false,
-        })
+        },
+      )
       source.value = 5
       expect(source.value).equal(5)
       expect(target1.a).equal(4)

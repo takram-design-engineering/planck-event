@@ -28,7 +28,7 @@ import chai from 'chai'
 
 import { Event, CustomEvent } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('CustomEvent', () => {
   it('supports instanceof', () => {

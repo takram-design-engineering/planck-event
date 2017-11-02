@@ -30,7 +30,7 @@ import { Environment } from '@takram/planck-core'
 
 import { EventBundle, MouseEvent } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('MouseEvent', () => {
   if (Environment.type === 'node') {
@@ -79,7 +79,9 @@ describe('MouseEvent', () => {
 
     it('takes mouse parameters', () => {
       const event = new MouseEvent()
-      event.init({ x: 1, y: 2, movementX: 3, movementY: 4 })
+      event.init({
+        x: 1, y: 2, movementX: 3, movementY: 4,
+      })
       expect(event.x).equal(1)
       expect(event.y).equal(2)
       expect(event.movementX).equal(3)

@@ -28,7 +28,7 @@ import chai from 'chai'
 
 import { Binder, StateEvent, EventDispatcher, EventTarget } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('Binder', () => {
   it('binds source’s property to targets', () => {

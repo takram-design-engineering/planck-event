@@ -32,7 +32,7 @@ import { Environment } from '@takram/planck-core'
 
 import { Event, EventBundle } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 chai.use(sinonChai)
 
 describe('EventBundle', () => {

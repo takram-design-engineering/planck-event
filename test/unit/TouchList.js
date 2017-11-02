@@ -30,7 +30,7 @@ import { Environment } from '@takram/planck-core'
 
 import { Touch, TouchList } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('TouchList', () => {
   if (Environment.type === 'node') {

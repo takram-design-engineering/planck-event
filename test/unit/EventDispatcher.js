@@ -34,7 +34,7 @@ import {
   EventDispatcher,
 } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 chai.use(sinonChai)
 
 describe('EventDispatcher', () => {

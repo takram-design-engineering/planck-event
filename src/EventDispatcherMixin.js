@@ -118,7 +118,7 @@ export default Mixin(S => class EventDispatcherMixin extends S {
     if (listeners === undefined) {
       return
     }
-    const eventPhase = event.eventPhase
+    const { eventPhase } = event
     if (!eventPhase || eventPhase === 'target' || eventPhase === 'capture') {
       const capture = [...listeners.capture]
       for (let i = 0; i < capture.length; ++i) {

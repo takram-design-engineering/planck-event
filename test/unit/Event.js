@@ -28,7 +28,7 @@ import chai from 'chai'
 
 import { Event, modifyEvent } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('Event', () => {
   it('supports instanceof', () => {
@@ -69,7 +69,7 @@ describe('Event', () => {
       modifyEvent(event).target = target
       modifyEvent(event).currentTarget = currentTarget
       modifyEvent(event).eventPhase = 'bubble'
-      const timeStamp = event.timeStamp
+      const { timeStamp } = event
       setTimeout(() => {
         event.init({ type: 'init' })
         expect(event.type).equal('init')

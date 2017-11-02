@@ -30,7 +30,7 @@ import { Environment } from '@takram/planck-core'
 
 import { EventBundle, WheelEvent } from '../..'
 
-const expect = chai.expect
+const { expect } = chai
 
 describe('WheelEvent', () => {
   if (Environment.type === 'node') {
