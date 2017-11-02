@@ -97,6 +97,7 @@ switch (environmentType) {
     environmentSelf = window;
     break;
   case 'worker':
+    // eslint-disable-next-line no-restricted-globals
     environmentSelf = self;
     break;
   case 'node':
@@ -1260,7 +1261,9 @@ var GenericEvent = function (_CustomEvent) {
           bubbles = _ref$bubbles === undefined ? false : _ref$bubbles,
           rest = objectWithoutProperties(_ref, ['type', 'target', 'captures', 'bubbles']);
 
-      get(GenericEvent.prototype.__proto__ || Object.getPrototypeOf(GenericEvent.prototype), 'init', this).call(this, { type: type, target: target, captures: captures, bubbles: bubbles });
+      get(GenericEvent.prototype.__proto__ || Object.getPrototypeOf(GenericEvent.prototype), 'init', this).call(this, {
+        type: type, target: target, captures: captures, bubbles: bubbles
+      });
       var names = Object.keys(rest);
       for (var i = 0; i < names.length; ++i) {
         var name = names[i];
@@ -1415,7 +1418,9 @@ var EventDispatcherMixin = Mixin(function (S) {
         if (listeners === undefined) {
           return;
         }
-        var eventPhase = event.eventPhase;
+        var _event = event,
+            eventPhase = _event.eventPhase;
+
         if (!eventPhase || eventPhase === 'target' || eventPhase === 'capture') {
           var capture = [].concat(toConsumableArray(listeners.capture));
           for (var i = 0; i < capture.length; ++i) {
