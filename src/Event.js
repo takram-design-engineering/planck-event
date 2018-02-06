@@ -1,7 +1,7 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
-import Environment from '@takram/planck-core/src/Environment'
+import Global from '@takram/planck-core/src/Global'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 export const internal = Namespace('Event')
@@ -20,9 +20,9 @@ export default class Event {
     scope.bubbles = !!bubbles
     scope.cancelable = !!cancelable
     scope.timeStamp = (
-      Environment.self.performance &&
-      Environment.self.performance.now &&
-      Environment.self.performance.now()) || Date.now()
+      Global.scope.performance &&
+      Global.scope.performance.now &&
+      Global.scope.performance.now()) || Date.now()
     scope.propagationStopped = false
     scope.immediatePropagationStopped = false
     scope.defaultPrevented = false

@@ -5,15 +5,15 @@ import 'source-map-support/register'
 
 import chai from 'chai'
 
-import { Environment } from '@takram/planck-core'
+import { Global } from '@takram/planck-core'
 
 import { Touch } from '../..'
 
 const { expect } = chai
 
 describe('Touch', () => {
-  if (Environment.type === 'node') {
-    Environment.self.Touch = class {}
+  if (Global.isNode) {
+    Global.scope.Touch = class {}
   }
 
   it('supports instanceof', () => {

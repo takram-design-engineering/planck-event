@@ -5,15 +5,15 @@ import 'source-map-support/register'
 
 import chai from 'chai'
 
-import { Environment } from '@takram/planck-core'
+import { Global } from '@takram/planck-core'
 
 import { EventBundle, MouseEvent } from '../..'
 
 const { expect } = chai
 
 describe('MouseEvent', () => {
-  if (Environment.type === 'node') {
-    Environment.self.Event = class {
+  if (Global.isNode) {
+    Global.scope.Event = class {
       constructor(type) {
         this.defaultPrevented = false
       }
@@ -68,7 +68,7 @@ describe('MouseEvent', () => {
     })
 
     it('initializes parent class', () => {
-      const originalEvent = new Environment.self.Event('')
+      const originalEvent = new Global.scope.Event('')
       const event = new MouseEvent()
       event.init({
         type: 'test',

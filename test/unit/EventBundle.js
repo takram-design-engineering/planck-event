@@ -7,7 +7,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
-import { Environment } from '@takram/planck-core'
+import { Global } from '@takram/planck-core'
 
 import { Event, EventBundle } from '../..'
 
@@ -15,8 +15,8 @@ const { expect } = chai
 chai.use(sinonChai)
 
 describe('EventBundle', () => {
-  if (Environment.type === 'node') {
-    Environment.self.Event = class Event {
+  if (Global.isNode) {
+    Global.scope.Event = class Event {
       constructor() {
         this.cancelable = true
         this.defaultPrevented = false
@@ -57,7 +57,7 @@ describe('EventBundle', () => {
     })
 
     it('takes original event as a parameter', () => {
-      const originalEvent = new Environment.self.Event('')
+      const originalEvent = new Global.scope.Event('')
       const event = new EventBundle()
       event.init({ originalEvent })
       expect(event.originalEvent).equal(originalEvent)
@@ -78,7 +78,7 @@ describe('EventBundle', () => {
 
   describe('#preventDefault', () => {
     it('propagates to original event', () => {
-      const originalEvent = new Environment.self.Event('')
+      const originalEvent = new Global.scope.Event('')
       sinon.spy(originalEvent, 'preventDefault')
       const event = new EventBundle()
       event.init({ originalEvent })

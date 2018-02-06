@@ -5,15 +5,15 @@ import 'source-map-support/register'
 
 import chai from 'chai'
 
-import { Environment } from '@takram/planck-core'
+import { Global } from '@takram/planck-core'
 
 import { EventBundle, WheelEvent } from '../..'
 
 const { expect } = chai
 
 describe('WheelEvent', () => {
-  if (Environment.type === 'node') {
-    Environment.self.Event = class {
+  if (Global.isNode) {
+    Global.scope.Event = class {
       constructor(type) {
         this.defaultPrevented = false
       }
@@ -53,7 +53,7 @@ describe('WheelEvent', () => {
     })
 
     it('initializes parent class', () => {
-      const originalEvent = new Environment.self.Event('')
+      const originalEvent = new Global.scope.Event('')
       const event = new WheelEvent()
       event.init({
         type: 'test',
