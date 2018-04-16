@@ -7,19 +7,18 @@ export const internal = Namespace('TouchList')
 
 export default class TouchList {
   constructor (...args) {
-    const scope = internal(this)
-    scope.array = []
+    internal(this).array = []
     this.init(...args)
   }
 
   init (first, ...rest) {
-    const { array } = internal(this)
-    array.length = 0
+    const array = []
     if (Array.isArray(first)) {
       array.push(...first)
     } else if (first) {
       array.push(first, ...rest)
     }
+    internal(this).array = array
   }
 
   get length () {
