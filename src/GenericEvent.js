@@ -4,12 +4,8 @@
 import CustomEvent from './CustomEvent'
 
 export default class GenericEvent extends CustomEvent {
-  init ({
-    type, target, captures = false, bubbles = false, ...rest
-  } = {}) {
-    super.init({
-      type, target, captures, bubbles
-    })
+  init ({ type, target, captures = false, bubbles = false, ...rest } = {}) {
+    super.init({ type, target, captures, bubbles })
     const names = Object.keys(rest)
     for (let i = 0; i < names.length; ++i) {
       const name = names[i]

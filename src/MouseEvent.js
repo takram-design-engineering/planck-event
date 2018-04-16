@@ -8,9 +8,7 @@ import EventBundle from './EventBundle'
 export const internal = Namespace('MouseEvent')
 
 export default class MouseEvent extends EventBundle {
-  init ({
-    x, y, movementX, movementY, ...rest
-  } = {}) {
+  init ({ x, y, movementX, movementY, ...rest } = {}) {
     super.init({ ...rest })
     const scope = internal(this)
     scope.x = x || 0

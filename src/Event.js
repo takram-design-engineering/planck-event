@@ -11,9 +11,7 @@ export default class Event {
     this.init(options)
   }
 
-  init ({
-    type, captures = false, bubbles = true, cancelable = true
-  } = {}) {
+  init ({ type, captures = false, bubbles = true, cancelable = true } = {}) {
     const scope = internal(this)
     scope.type = type != null ? type : null
     scope.captures = !!captures

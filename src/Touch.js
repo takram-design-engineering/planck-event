@@ -10,9 +10,7 @@ export default class Touch {
     this.init(options)
   }
 
-  init ({
-    x, y, target, originalTouch
-  } = {}) {
+  init ({ x, y, target, originalTouch } = {}) {
     const scope = internal(this)
     scope.x = x || 0
     scope.y = y || 0
