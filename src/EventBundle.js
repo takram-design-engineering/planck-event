@@ -18,7 +18,7 @@ export default class EventBundle extends Event {
   preventDefault () {
     super.preventDefault()
     if (this.cancelable) {
-      if (this.originalEvent !== null) {
+      if (this.originalEvent != null) {
         this.originalEvent.preventDefault()
       }
     }

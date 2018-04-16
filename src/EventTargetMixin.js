@@ -25,7 +25,7 @@ export default Mixin(S => class EventTargetMixin extends S {
 
   set ancestorEventTarget (value) {
     const scope = internal(this)
-    scope.ancestorEventTarget = value !== undefined ? value : null
+    scope.ancestorEventTarget = value != null ? value : null
   }
 
   get descendantEventTarget () {
@@ -35,14 +35,14 @@ export default Mixin(S => class EventTargetMixin extends S {
 
   set descendantEventTarget (value) {
     const scope = internal(this)
-    scope.descendantEventTarget = value !== undefined ? value : null
+    scope.descendantEventTarget = value != null ? value : null
   }
 
   determinePropagationPath (target = null) {
     const path = []
-    if (target !== null && target !== undefined) {
+    if (target != null) {
       let ancestor = target
-      while (ancestor !== null && ancestor !== undefined) {
+      while (ancestor != null) {
         path.unshift(ancestor)
         ancestor = ancestor.ancestorEventTarget
         if (path.includes(ancestor)) {
@@ -51,7 +51,7 @@ export default Mixin(S => class EventTargetMixin extends S {
       }
     } else {
       let descendant = this
-      while (descendant !== null && descendant !== undefined) {
+      while (descendant != null) {
         path.push(descendant)
         descendant = descendant.descendantEventTarget
         if (path.includes(descendant)) {
@@ -88,7 +88,7 @@ export default Mixin(S => class EventTargetMixin extends S {
     }
 
     // The last item in the propagation path must always be the event target
-    if (event.target === null) {
+    if (event.target == null) {
       modifier.target = path.pop()
     } else {
       path.pop()

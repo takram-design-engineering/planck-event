@@ -15,7 +15,7 @@ export default class Event {
     type, captures = false, bubbles = true, cancelable = true
   } = {}) {
     const scope = internal(this)
-    scope.type = type !== undefined ? type : null
+    scope.type = type != null ? type : null
     scope.captures = !!captures
     scope.bubbles = !!bubbles
     scope.cancelable = !!cancelable
@@ -114,7 +114,7 @@ export function modifyEvent (event) {
     },
 
     set target (value) {
-      scope.target = value !== undefined ? value : null
+      scope.target = value != null ? value : null
     },
 
     get currentTarget () {
@@ -122,7 +122,7 @@ export function modifyEvent (event) {
     },
 
     set currentTarget (value) {
-      scope.currentTarget = value !== undefined ? value : null
+      scope.currentTarget = value != null ? value : null
     },
 
     get eventPhase () {
@@ -130,7 +130,7 @@ export function modifyEvent (event) {
     },
 
     set eventPhase (value) {
-      scope.eventPhase = value !== undefined ? value : null
+      scope.eventPhase = value != null ? value : null
     }
   }
 }

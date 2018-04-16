@@ -32,7 +32,7 @@ export default Mixin(S => class EventDispatcherMixin extends S {
       throw new Error('Attempt to add non-function non-object listener')
     }
     const scope = internal(this)
-    if (scope.listeners[type] === undefined) {
+    if (scope.listeners[type] == null) {
       scope.listeners[type] = { bubble: [], capture: [] }
     }
     const listeners = (capture
@@ -46,7 +46,7 @@ export default Mixin(S => class EventDispatcherMixin extends S {
 
   removeEventListener (type, listener, capture = false) {
     const scope = internal(this)
-    if (scope.listeners[type] === undefined) {
+    if (scope.listeners[type] == null) {
       return
     }
     const listeners = (capture
@@ -85,7 +85,7 @@ export default Mixin(S => class EventDispatcherMixin extends S {
     const modifier = modifyEvent(event)
 
     // Set target to this when it's not set
-    if (event.target === null) {
+    if (event.target == null) {
       modifier.target = this
     }
     // Current target should be always this
@@ -93,7 +93,7 @@ export default Mixin(S => class EventDispatcherMixin extends S {
 
     const scope = internal(this)
     const listeners = scope.listeners[event.type]
-    if (listeners === undefined) {
+    if (listeners == null) {
       return
     }
     const { eventPhase } = event

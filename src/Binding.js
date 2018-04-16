@@ -39,10 +39,10 @@ function formatTargets (...args) {
 
 function bind (source, name, targets, options) {
   const scope = internal(source)
-  if (scope.bindings === undefined) {
+  if (scope.bindings == null) {
     scope.bindings = {}
   }
-  if (scope.bindings[name] === undefined) {
+  if (scope.bindings[name] == null) {
     scope.bindings[name] = []
   }
   const currentBinders = scope.bindings[name]
@@ -60,10 +60,10 @@ function bind (source, name, targets, options) {
 
 function unbind (source, name, targets) {
   const scope = internal(source)
-  if (scope.bindings === undefined) {
+  if (scope.bindings == null) {
     return []
   }
-  if (scope.bindings[name] === undefined) {
+  if (scope.bindings[name] == null) {
     return []
   }
   const unboundTargets = []
@@ -82,10 +82,10 @@ function unbind (source, name, targets) {
 
 function unbindAll (source, name) {
   const scope = internal(source)
-  if (scope.bindings === undefined) {
+  if (scope.bindings == null) {
     return []
   }
-  if (scope.bindings[name] === undefined) {
+  if (scope.bindings[name] == null) {
     return []
   }
   const binders = scope.bindings[name]
