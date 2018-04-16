@@ -15,7 +15,7 @@ export default class Touch {
     scope.x = x || 0
     scope.y = y || 0
     scope.target = target != null ? target : null
-    scope.originalTouch = originalTouch != null ? originalTouch : null
+    scope.originalTouch = originalTouch || null
     return this
   }
 
