@@ -13,22 +13,20 @@ export default class TouchList {
   }
 
   init (first, ...rest) {
-    const scope = internal(this)
-    scope.array.length = 0
+    const { array } = internal(this)
+    array.length = 0
     if (Array.isArray(first)) {
-      scope.array.push(...first)
+      array.push(...first)
     } else if (first) {
-      scope.array.push(first, ...rest)
+      array.push(first, ...rest)
     }
   }
 
   get length () {
-    const scope = internal(this)
-    return scope.array.length
+    return internal(this).array.length
   }
 
   item (index) {
-    const scope = internal(this)
-    return scope.array[index]
+    return internal(this).array[index]
   }
 }

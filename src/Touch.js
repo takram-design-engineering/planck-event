@@ -20,23 +20,19 @@ export default class Touch {
   }
 
   get x () {
-    const scope = internal(this)
-    return scope.x
+    return internal(this).x
   }
 
   get y () {
-    const scope = internal(this)
-    return scope.y
+    return internal(this).y
   }
 
   get target () {
-    const scope = internal(this)
-    return scope.target
+    return internal(this).target
   }
 
   get originalTouch () {
-    const scope = internal(this)
-    return scope.originalTouch
+    return internal(this).originalTouch
   }
 
   get identifier () {

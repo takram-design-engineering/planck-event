@@ -19,23 +19,19 @@ export default class MouseEvent extends EventBundle {
   }
 
   get x () {
-    const scope = internal(this)
-    return scope.x
+    return internal(this).x
   }
 
   get y () {
-    const scope = internal(this)
-    return scope.y
+    return internal(this).y
   }
 
   get movementX () {
-    const scope = internal(this)
-    return scope.movementX
+    return internal(this).movementX
   }
 
   get movementY () {
-    const scope = internal(this)
-    return scope.movementY
+    return internal(this).movementY
   }
 
   get button () {

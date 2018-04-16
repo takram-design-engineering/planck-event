@@ -20,13 +20,11 @@ export default class TouchEvent extends EventBundle {
   }
 
   get touches () {
-    const scope = internal(this)
-    return scope.touches
+    return internal(this).touches
   }
 
   get changedTouches () {
-    const scope = internal(this)
-    return scope.changedTouches
+    return internal(this).changedTouches
   }
 
   get ctrlKey () {

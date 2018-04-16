@@ -1,7 +1,7 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
-import Global from '@takram/planck-core/src/Global'
+import { globalScope } from '@takram/planck-core/src/Global'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 export const internal = Namespace('Event')
@@ -18,9 +18,9 @@ export default class Event {
     scope.bubbles = !!bubbles
     scope.cancelable = !!cancelable
     scope.timeStamp = (
-      Global.scope.performance &&
-      Global.scope.performance.now &&
-      Global.scope.performance.now()) || Date.now()
+      globalScope.performance &&
+      globalScope.performance.now &&
+      globalScope.performance.now()) || Date.now()
     scope.propagationStopped = false
     scope.immediatePropagationStopped = false
     scope.defaultPrevented = false
@@ -31,43 +31,35 @@ export default class Event {
   }
 
   get type () {
-    const scope = internal(this)
-    return scope.type
+    return internal(this).type
   }
 
   get target () {
-    const scope = internal(this)
-    return scope.target
+    return internal(this).target
   }
 
   get currentTarget () {
-    const scope = internal(this)
-    return scope.currentTarget
+    return internal(this).currentTarget
   }
 
   get eventPhase () {
-    const scope = internal(this)
-    return scope.eventPhase
+    return internal(this).eventPhase
   }
 
   get captures () {
-    const scope = internal(this)
-    return scope.captures
+    return internal(this).captures
   }
 
   get bubbles () {
-    const scope = internal(this)
-    return scope.bubbles
+    return internal(this).bubbles
   }
 
   get cancelable () {
-    const scope = internal(this)
-    return scope.cancelable
+    return internal(this).cancelable
   }
 
   get timeStamp () {
-    const scope = internal(this)
-    return scope.timeStamp
+    return internal(this).timeStamp
   }
 
   stopPropagation () {
@@ -89,18 +81,15 @@ export default class Event {
   }
 
   get propagationStopped () {
-    const scope = internal(this)
-    return scope.propagationStopped
+    return internal(this).propagationStopped
   }
 
   get immediatePropagationStopped () {
-    const scope = internal(this)
-    return scope.immediatePropagationStopped
+    return internal(this).immediatePropagationStopped
   }
 
   get defaultPrevented () {
-    const scope = internal(this)
-    return scope.defaultPrevented
+    return internal(this).defaultPrevented
   }
 }
 

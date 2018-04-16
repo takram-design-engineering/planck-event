@@ -17,13 +17,11 @@ export default class StateEvent extends CustomEvent {
   }
 
   get name () {
-    const scope = internal(this)
-    return scope.name
+    return internal(this).name
   }
 
   get value () {
-    const scope = internal(this)
-    return scope.value
+    return internal(this).value
   }
 
   static type (name) {

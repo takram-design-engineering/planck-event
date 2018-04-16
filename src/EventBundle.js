@@ -25,7 +25,6 @@ export default class EventBundle extends Event {
   }
 
   get originalEvent () {
-    const scope = internal(this)
-    return scope.originalEvent
+    return internal(this).originalEvent
   }
 }
