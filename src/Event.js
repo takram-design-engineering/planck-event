@@ -94,30 +94,29 @@ export default class Event {
 }
 
 export function modifyEvent (event) {
-  const scope = internal(event)
   return {
     get target () {
-      return scope.target
+      return internal(event).target
     },
 
     set target (value) {
-      scope.target = value != null ? value : null
+      internal(event).target = value != null ? value : null
     },
 
     get currentTarget () {
-      return scope.currentTarget
+      return internal(event).currentTarget
     },
 
     set currentTarget (value) {
-      scope.currentTarget = value != null ? value : null
+      internal(event).currentTarget = value != null ? value : null
     },
 
     get eventPhase () {
-      return scope.eventPhase
+      return internal(event).eventPhase
     },
 
     set eventPhase (value) {
-      scope.eventPhase = value != null ? value : null
+      internal(event).eventPhase = value != null ? value : null
     }
   }
 }
