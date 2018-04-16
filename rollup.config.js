@@ -16,18 +16,20 @@ export default {
         'es2016',
         'es2017',
         'stage-3',
+        'stage-2'
       ],
       plugins: [
-        'external-helpers',
+        'external-helpers'
       ],
-      babelrc: false,
-    }),
+      babelrc: false
+    })
   ],
   output: {
     format: 'umd',
+    exports: 'named',
     extend: true,
     name: 'Planck',
     file: './dist/planck-event.js',
-    sourcemap: true,
-  },
+    sourcemap: true
+  }
 }

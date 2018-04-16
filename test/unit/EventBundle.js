@@ -1,6 +1,8 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
@@ -17,12 +19,12 @@ chai.use(sinonChai)
 describe('EventBundle', () => {
   if (Global.isNode) {
     Global.scope.Event = class Event {
-      constructor() {
+      constructor () {
         this.cancelable = true
         this.defaultPrevented = false
       }
 
-      preventDefault() {
+      preventDefault () {
         this.defaultPrevented = true
       }
     }
@@ -68,7 +70,7 @@ describe('EventBundle', () => {
       event.init({
         type: 'test',
         captures: true,
-        bubbles: false,
+        bubbles: false
       })
       expect(event.type).equal('test')
       expect(event.captures).true

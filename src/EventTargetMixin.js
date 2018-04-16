@@ -10,36 +10,35 @@ import GenericEvent from './GenericEvent'
 
 export const internal = Namespace('EventTargetMixin')
 
-// eslint-disable-next-line arrow-parens
 export default Mixin(S => class EventTargetMixin extends S {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     const scope = internal(this)
     scope.ancestorEventTarget = null
     scope.descendantEventTarget = null
   }
 
-  get ancestorEventTarget() {
+  get ancestorEventTarget () {
     const scope = internal(this)
     return scope.ancestorEventTarget
   }
 
-  set ancestorEventTarget(value) {
+  set ancestorEventTarget (value) {
     const scope = internal(this)
     scope.ancestorEventTarget = value !== undefined ? value : null
   }
 
-  get descendantEventTarget() {
+  get descendantEventTarget () {
     const scope = internal(this)
     return scope.descendantEventTarget
   }
 
-  set descendantEventTarget(value) {
+  set descendantEventTarget (value) {
     const scope = internal(this)
     scope.descendantEventTarget = value !== undefined ? value : null
   }
 
-  determinePropagationPath(target = null) {
+  determinePropagationPath (target = null) {
     const path = []
     if (target !== null && target !== undefined) {
       let ancestor = target
@@ -63,11 +62,11 @@ export default Mixin(S => class EventTargetMixin extends S {
     return path
   }
 
-  dispatchImmediateEvent(event) {
+  dispatchImmediateEvent (event) {
     super.dispatchEvent(event)
   }
 
-  dispatchEvent(object, propagationPath = null) {
+  dispatchEvent (object, propagationPath = null) {
     let event = object
     if (!(event instanceof Event)) {
       event = new GenericEvent(object)

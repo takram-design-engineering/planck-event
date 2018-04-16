@@ -8,14 +8,14 @@ import Event from './Event'
 export const internal = Namespace('EventBundle')
 
 export default class EventBundle extends Event {
-  init({ originalEvent, ...rest } = {}) {
+  init ({ originalEvent, ...rest } = {}) {
     super.init({ ...rest })
     const scope = internal(this)
     scope.originalEvent = originalEvent || null
     return this
   }
 
-  preventDefault() {
+  preventDefault () {
     super.preventDefault()
     if (this.cancelable) {
       if (this.originalEvent !== null) {
@@ -24,7 +24,7 @@ export default class EventBundle extends Event {
     }
   }
 
-  get originalEvent() {
+  get originalEvent () {
     const scope = internal(this)
     return scope.originalEvent
   }

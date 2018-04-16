@@ -8,7 +8,7 @@ import EventBundle from './EventBundle'
 export const internal = Namespace('MouseEvent')
 
 export default class MouseEvent extends EventBundle {
-  init({
+  init ({
     x, y, movementX, movementY, ...rest
   } = {}) {
     super.init({ ...rest })
@@ -20,43 +20,43 @@ export default class MouseEvent extends EventBundle {
     return this
   }
 
-  get x() {
+  get x () {
     const scope = internal(this)
     return scope.x
   }
 
-  get y() {
+  get y () {
     const scope = internal(this)
     return scope.y
   }
 
-  get movementX() {
+  get movementX () {
     const scope = internal(this)
     return scope.movementX
   }
 
-  get movementY() {
+  get movementY () {
     const scope = internal(this)
     return scope.movementY
   }
 
-  get button() {
+  get button () {
     return this.originalEvent.button
   }
 
-  get ctrlKey() {
+  get ctrlKey () {
     return this.originalEvent.ctrlKey
   }
 
-  get shiftKey() {
+  get shiftKey () {
     return this.originalEvent.shiftKey
   }
 
-  get altKey() {
+  get altKey () {
     return this.originalEvent.altKey
   }
 
-  get metaKey() {
+  get metaKey () {
     return this.originalEvent.metaKey
   }
 }

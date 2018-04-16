@@ -11,7 +11,7 @@ const emptyTouchList = new TouchList()
 export const internal = Namespace('TouchEvent')
 
 export default class TouchEvent extends EventBundle {
-  init({ touches, changedTouches, ...rest } = {}) {
+  init ({ touches, changedTouches, ...rest } = {}) {
     super.init({ ...rest })
     const scope = internal(this)
     scope.touches = touches || emptyTouchList
@@ -19,29 +19,29 @@ export default class TouchEvent extends EventBundle {
     return this
   }
 
-  get touches() {
+  get touches () {
     const scope = internal(this)
     return scope.touches
   }
 
-  get changedTouches() {
+  get changedTouches () {
     const scope = internal(this)
     return scope.changedTouches
   }
 
-  get ctrlKey() {
+  get ctrlKey () {
     return this.originalEvent.ctrlKey
   }
 
-  get shiftKey() {
+  get shiftKey () {
     return this.originalEvent.shiftKey
   }
 
-  get altKey() {
+  get altKey () {
     return this.originalEvent.altKey
   }
 
-  get metaKey() {
+  get metaKey () {
     return this.originalEvent.metaKey
   }
 }

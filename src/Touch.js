@@ -6,12 +6,12 @@ import Namespace from '@takram/planck-core/src/Namespace'
 export const internal = Namespace('Touch')
 
 export default class Touch {
-  constructor(options = {}) {
+  constructor (options = {}) {
     this.init(options)
   }
 
-  init({
-    x, y, target, originalTouch,
+  init ({
+    x, y, target, originalTouch
   } = {}) {
     const scope = internal(this)
     scope.x = x || 0
@@ -21,27 +21,27 @@ export default class Touch {
     return this
   }
 
-  get x() {
+  get x () {
     const scope = internal(this)
     return scope.x
   }
 
-  get y() {
+  get y () {
     const scope = internal(this)
     return scope.y
   }
 
-  get target() {
+  get target () {
     const scope = internal(this)
     return scope.target
   }
 
-  get originalTouch() {
+  get originalTouch () {
     const scope = internal(this)
     return scope.originalTouch
   }
 
-  get identifier() {
+  get identifier () {
     return this.originalTouch.identifier
   }
 }

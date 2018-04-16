@@ -1,6 +1,8 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
@@ -14,11 +16,11 @@ const { expect } = chai
 describe('KeyboardEvent', () => {
   if (Global.isNode) {
     Global.scope.Event = class {
-      constructor(type) {
+      constructor (type) {
         this.defaultPrevented = false
       }
 
-      preventDefault() {
+      preventDefault () {
         this.defaultPrevented = true
       }
     }
@@ -59,7 +61,7 @@ describe('KeyboardEvent', () => {
         type: 'test',
         captures: true,
         bubbles: false,
-        originalEvent,
+        originalEvent
       })
       expect(event.type).equal('test')
       expect(event.captures).true

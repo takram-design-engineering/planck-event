@@ -45,7 +45,7 @@ describe('Touch', () => {
         x: 1,
         y: 2,
         target,
-        originalTouch,
+        originalTouch
       })
       expect(touch.x).equal(1)
       expect(touch.y).equal(2)

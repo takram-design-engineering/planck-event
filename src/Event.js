@@ -7,12 +7,12 @@ import Namespace from '@takram/planck-core/src/Namespace'
 export const internal = Namespace('Event')
 
 export default class Event {
-  constructor(options = {}) {
+  constructor (options = {}) {
     this.init(options)
   }
 
-  init({
-    type, captures = false, bubbles = true, cancelable = true,
+  init ({
+    type, captures = false, bubbles = true, cancelable = true
   } = {}) {
     const scope = internal(this)
     scope.type = type !== undefined ? type : null
@@ -32,93 +32,105 @@ export default class Event {
     return this
   }
 
-  get type() {
+  get type () {
     const scope = internal(this)
     return scope.type
   }
 
-  get target() {
+  get target () {
     const scope = internal(this)
     return scope.target
   }
 
-  get currentTarget() {
+  get currentTarget () {
     const scope = internal(this)
     return scope.currentTarget
   }
 
-  get eventPhase() {
+  get eventPhase () {
     const scope = internal(this)
     return scope.eventPhase
   }
 
-  get captures() {
+  get captures () {
     const scope = internal(this)
     return scope.captures
   }
 
-  get bubbles() {
+  get bubbles () {
     const scope = internal(this)
     return scope.bubbles
   }
 
-  get cancelable() {
+  get cancelable () {
     const scope = internal(this)
     return scope.cancelable
   }
 
-  get timeStamp() {
+  get timeStamp () {
     const scope = internal(this)
     return scope.timeStamp
   }
 
-  stopPropagation() {
+  stopPropagation () {
     const scope = internal(this)
     scope.propagationStopped = true
   }
 
-  stopImmediatePropagation() {
+  stopImmediatePropagation () {
     const scope = internal(this)
     scope.propagationStopped = true
     scope.immediatePropagationStopped = true
   }
 
-  preventDefault() {
+  preventDefault () {
     if (this.cancelable) {
       const scope = internal(this)
       scope.defaultPrevented = true
     }
   }
 
-  get propagationStopped() {
+  get propagationStopped () {
     const scope = internal(this)
     return scope.propagationStopped
   }
 
-  get immediatePropagationStopped() {
+  get immediatePropagationStopped () {
     const scope = internal(this)
     return scope.immediatePropagationStopped
   }
 
-  get defaultPrevented() {
+  get defaultPrevented () {
     const scope = internal(this)
     return scope.defaultPrevented
   }
 }
 
-export function modifyEvent(event) {
+export function modifyEvent (event) {
   const scope = internal(event)
   return {
-    set target(value) {
+    get target () {
+      return scope.target
+    },
+
+    set target (value) {
       scope.target = value !== undefined ? value : null
     },
 
-    set currentTarget(value) {
+    get currentTarget () {
+      return scope.currentTarget
+    },
+
+    set currentTarget (value) {
       scope.currentTarget = value !== undefined ? value : null
     },
 
-    set eventPhase(value) {
-      scope.eventPhase = value !== undefined ? value : null
+    get eventPhase () {
+      return scope.eventPhase
     },
+
+    set eventPhase (value) {
+      scope.eventPhase = value !== undefined ? value : null
+    }
   }
 }

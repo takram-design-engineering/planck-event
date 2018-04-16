@@ -4,7 +4,7 @@
 import Event, { modifyEvent } from './Event'
 
 export default class CustomEvent extends Event {
-  init({ type, target, ...rest } = {}) {
+  init ({ type, target, ...rest } = {}) {
     super.init({ type, ...rest })
     // Support target as a parameter
     modifyEvent(this).target = target !== undefined ? target : null
