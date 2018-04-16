@@ -23,21 +23,20 @@ function handleEvent (event, listener) {
 export default Mixin(S => class EventDispatcherMixin extends S {
   constructor (...args) {
     super(...args)
-    const scope = internal(this)
-    scope.listeners = {}
+    internal(this).eventTypes = {}
   }
 
   addEventListener (type, listener, capture = false) {
     if (typeof listener !== 'function' && typeof listener !== 'object') {
       throw new Error('Attempt to add non-function non-object listener')
     }
-    const scope = internal(this)
-    if (scope.listeners[type] == null) {
-      scope.listeners[type] = { bubble: [], capture: [] }
+    const { eventTypes } = internal(this)
+    if (eventTypes[type] == null) {
+      eventTypes[type] = { bubble: [], capture: [] }
     }
     const listeners = (capture
-      ? scope.listeners[type].capture
-      : scope.listeners[type].bubble)
+      ? eventTypes[type].capture
+      : eventTypes[type].bubble)
     if (listeners.includes(listener)) {
       return
     }
@@ -45,13 +44,13 @@ export default Mixin(S => class EventDispatcherMixin extends S {
   }
 
   removeEventListener (type, listener, capture = false) {
-    const scope = internal(this)
-    if (scope.listeners[type] == null) {
+    const { eventTypes } = internal(this)
+    if (eventTypes[type] == null) {
       return
     }
     const listeners = (capture
-      ? scope.listeners[type].capture
-      : scope.listeners[type].bubble)
+      ? eventTypes[type].capture
+      : eventTypes[type].bubble)
     const index = listeners.indexOf(listener)
     if (index !== -1) {
       listeners.splice(index, 1)
@@ -69,11 +68,11 @@ export default Mixin(S => class EventDispatcherMixin extends S {
   }
 
   once (type, listener, ...rest) {
-    const delegate = event => {
+    const callback = event => {
       handleEvent(event, listener)
-      this.removeEventListener(type, delegate, ...rest)
+      this.removeEventListener(type, callback, ...rest)
     }
-    this.addEventListener(type, delegate, ...rest)
+    this.addEventListener(type, callback, ...rest)
     return this
   }
 
@@ -91,8 +90,8 @@ export default Mixin(S => class EventDispatcherMixin extends S {
     // Current target should be always this
     modifier.currentTarget = this
 
-    const scope = internal(this)
-    const listeners = scope.listeners[event.type]
+    const { eventTypes } = internal(this)
+    const listeners = eventTypes[event.type]
     if (listeners == null) {
       return
     }
