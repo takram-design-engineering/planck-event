@@ -1,6 +1,8 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
@@ -10,7 +12,7 @@ import sinonChai from 'sinon-chai'
 import {
   Event,
   modifyEvent,
-  EventDispatcher,
+  EventDispatcher
 } from '../..'
 
 const { expect } = chai
@@ -54,17 +56,17 @@ describe('EventDispatcher', () => {
         expect(arg).equal(event)
         expect(arg.target).equal(dispatcher)
         expect(arg.currentTarget).equal(dispatcher)
-      }),
+      })
     }
     const listener2 = {
       handleEvent: sinon.spy(arg => {
         expect(arg).equal(event)
         expect(arg.target).equal(dispatcher)
         expect(arg.currentTarget).equal(dispatcher)
-      }),
+      })
     }
     const listener3 = {
-      handleEvent: sinon.spy(),
+      handleEvent: sinon.spy()
     }
     dispatcher.addEventListener('test', listener1)
     dispatcher.addEventListener('test', listener2)

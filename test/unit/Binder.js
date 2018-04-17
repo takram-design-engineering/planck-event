@@ -1,6 +1,8 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
@@ -17,7 +19,7 @@ describe('Binder', () => {
     const object2 = { b: 0 }
     const targets = [
       { object: object1, name: 'a' },
-      { object: object2, name: 'b' },
+      { object: object2, name: 'b' }
     ]
     const binder = new Binder(source, name, targets)
     expect(object1.a).equal(0)
@@ -42,10 +44,10 @@ describe('Binder', () => {
     const object2 = { b: 0 }
     const targets = [
       { object: object1, name: 'a' },
-      { object: object2, name: 'b' },
+      { object: object2, name: 'b' }
     ]
     const binder = new Binder(source, name, targets, {
-      assigns: true,
+      assigns: true
     })
     expect(object1.a).equal(1)
     expect(object2.b).equal(1)
@@ -69,10 +71,10 @@ describe('Binder', () => {
     const object2 = { b: 0 }
     const targets = [
       { object: object1, name: 'a' },
-      { object: object2, name: 'b' },
+      { object: object2, name: 'b' }
     ]
     const binder1 = new Binder(source, name, targets, {
-      transform: value => +`${value}0`,
+      transform: value => +`${value}0`
     })
     expect(object1.a).equal(0)
     expect(object2.b).equal(0)
@@ -89,7 +91,7 @@ describe('Binder', () => {
 
     const binder2 = new Binder(source, name, targets, {
       assigns: true,
-      transform: value => +`${value}0`,
+      transform: value => +`${value}0`
     })
     expect(object1.a).equal(10)
     expect(object2.b).equal(10)
@@ -119,7 +121,7 @@ describe('Binder', () => {
     const object2 = { b: 0 }
     const targets = [
       { object: object1, name: 'a' },
-      { object: object2, name: 'b' },
+      { object: object2, name: 'b' }
     ]
     // eslint-disable-next-line no-unused-vars
     const binder = new Binder(target2, name, targets)
@@ -140,22 +142,22 @@ describe('Binder', () => {
         { object: {}, name: 'a' },
         { object: {}, name: 'a' },
         { object, name: 'a' },
-        { object, name: 'b' },
+        { object, name: 'b' }
       ]
       const binder = new Binder(source, name, targets)
       expect(binder.matches([
-        { object, name: 'a' },
+        { object, name: 'a' }
       ])).true
       expect(binder.matches([
         { object, name: 'a' },
-        { object, name: 'b' },
+        { object, name: 'b' }
       ])).true
       expect(binder.matches([
         { object, name: 'a' },
-        { object: {}, name: 'a' },
+        { object: {}, name: 'a' }
       ])).false
       expect(binder.matches([
-        { object: {}, name: 'a' },
+        { object: {}, name: 'a' }
       ])).false
       expect(binder.matches([])).false
     })
@@ -171,7 +173,7 @@ describe('Binder', () => {
       const targets = [
         { object: object1, name: 'a' },
         { object: object2, name: 'b' },
-        { object: object3, name: 'c' },
+        { object: object3, name: 'c' }
       ]
       const binder = new Binder(source, name, targets)
       source.dispatchEvent(new StateEvent({ name, value: 1 }))
@@ -180,19 +182,19 @@ describe('Binder', () => {
       expect(object3.c).equal(1)
       expect(binder.unbind([
         { object: object1, name: 'a' },
-        { object: object2, name: 'b' },
+        { object: object2, name: 'b' }
       ])).deep.equal([
         { object: object1, name: 'a' },
-        { object: object2, name: 'b' },
+        { object: object2, name: 'b' }
       ])
       source.dispatchEvent(new StateEvent({ name, value: 2 }))
       expect(object1.a).equal(1)
       expect(object2.b).equal(1)
       expect(object3.c).equal(2)
       expect(binder.unbind([
-        { object: object3, name: 'c' },
+        { object: object3, name: 'c' }
       ])).deep.equal([
-        { object: object3, name: 'c' },
+        { object: object3, name: 'c' }
       ])
       expect(binder.empty).true
       source.dispatchEvent(new StateEvent({ name, value: 3 }))
@@ -210,7 +212,7 @@ describe('Binder', () => {
       const object2 = { b: 0 }
       const targets = [
         { object: object1, name: 'a' },
-        { object: object2, name: 'b' },
+        { object: object2, name: 'b' }
       ]
       const binder = new Binder(source, name, targets)
       source.dispatchEvent(new StateEvent({ name, value: 1 }))
@@ -218,7 +220,7 @@ describe('Binder', () => {
       expect(object2.b).equal(1)
       expect(binder.unbindAll()).deep.equal([
         { object: object1, name: 'a' },
-        { object: object2, name: 'b' },
+        { object: object2, name: 'b' }
       ])
       expect(binder.empty).true
       source.dispatchEvent(new StateEvent({ name, value: 2 }))

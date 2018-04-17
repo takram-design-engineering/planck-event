@@ -1,28 +1,26 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
-import Global from '@takram/planck-core/src/Global'
+import { globalScope } from '@takram/planck-core/src/Global'
 import Namespace from '@takram/planck-core/src/Namespace'
 
 export const internal = Namespace('Event')
 
 export default class Event {
-  constructor(options = {}) {
+  constructor (options = {}) {
     this.init(options)
   }
 
-  init({
-    type, captures = false, bubbles = true, cancelable = true,
-  } = {}) {
+  init ({ type, captures = false, bubbles = true, cancelable = true } = {}) {
     const scope = internal(this)
-    scope.type = type !== undefined ? type : null
+    scope.type = type != null ? type : null
     scope.captures = !!captures
     scope.bubbles = !!bubbles
     scope.cancelable = !!cancelable
     scope.timeStamp = (
-      Global.scope.performance &&
-      Global.scope.performance.now &&
-      Global.scope.performance.now()) || Date.now()
+      globalScope.performance &&
+      globalScope.performance.now &&
+      globalScope.performance.now()) || Date.now()
     scope.propagationStopped = false
     scope.immediatePropagationStopped = false
     scope.defaultPrevented = false
@@ -32,93 +30,93 @@ export default class Event {
     return this
   }
 
-  get type() {
-    const scope = internal(this)
-    return scope.type
+  get type () {
+    return internal(this).type
   }
 
-  get target() {
-    const scope = internal(this)
-    return scope.target
+  get target () {
+    return internal(this).target
   }
 
-  get currentTarget() {
-    const scope = internal(this)
-    return scope.currentTarget
+  get currentTarget () {
+    return internal(this).currentTarget
   }
 
-  get eventPhase() {
-    const scope = internal(this)
-    return scope.eventPhase
+  get eventPhase () {
+    return internal(this).eventPhase
   }
 
-  get captures() {
-    const scope = internal(this)
-    return scope.captures
+  get captures () {
+    return internal(this).captures
   }
 
-  get bubbles() {
-    const scope = internal(this)
-    return scope.bubbles
+  get bubbles () {
+    return internal(this).bubbles
   }
 
-  get cancelable() {
-    const scope = internal(this)
-    return scope.cancelable
+  get cancelable () {
+    return internal(this).cancelable
   }
 
-  get timeStamp() {
-    const scope = internal(this)
-    return scope.timeStamp
+  get timeStamp () {
+    return internal(this).timeStamp
   }
 
-  stopPropagation() {
+  stopPropagation () {
     const scope = internal(this)
     scope.propagationStopped = true
   }
 
-  stopImmediatePropagation() {
+  stopImmediatePropagation () {
     const scope = internal(this)
     scope.propagationStopped = true
     scope.immediatePropagationStopped = true
   }
 
-  preventDefault() {
+  preventDefault () {
     if (this.cancelable) {
       const scope = internal(this)
       scope.defaultPrevented = true
     }
   }
 
-  get propagationStopped() {
-    const scope = internal(this)
-    return scope.propagationStopped
+  get propagationStopped () {
+    return internal(this).propagationStopped
   }
 
-  get immediatePropagationStopped() {
-    const scope = internal(this)
-    return scope.immediatePropagationStopped
+  get immediatePropagationStopped () {
+    return internal(this).immediatePropagationStopped
   }
 
-  get defaultPrevented() {
-    const scope = internal(this)
-    return scope.defaultPrevented
+  get defaultPrevented () {
+    return internal(this).defaultPrevented
   }
 }
 
-export function modifyEvent(event) {
-  const scope = internal(event)
+export function modifyEvent (event) {
   return {
-    set target(value) {
-      scope.target = value !== undefined ? value : null
+    get target () {
+      return internal(event).target
     },
 
-    set currentTarget(value) {
-      scope.currentTarget = value !== undefined ? value : null
+    set target (value) {
+      internal(event).target = value != null ? value : null
     },
 
-    set eventPhase(value) {
-      scope.eventPhase = value !== undefined ? value : null
+    get currentTarget () {
+      return internal(event).currentTarget
     },
+
+    set currentTarget (value) {
+      internal(event).currentTarget = value != null ? value : null
+    },
+
+    get eventPhase () {
+      return internal(event).eventPhase
+    },
+
+    set eventPhase (value) {
+      internal(event).eventPhase = value != null ? value : null
+    }
   }
 }

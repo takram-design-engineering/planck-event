@@ -4,15 +4,15 @@
 import MouseEvent from './MouseEvent'
 
 export default class WheelEvent extends MouseEvent {
-  get deltaX() {
+  get deltaX () {
     return this.originalEvent.deltaX
   }
 
-  get deltaY() {
+  get deltaY () {
     return this.originalEvent.deltaY
   }
 
-  get deltaZ() {
+  get deltaZ () {
     return this.originalEvent.deltaZ
   }
 }

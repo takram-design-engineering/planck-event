@@ -4,35 +4,35 @@
 import EventBundle from './EventBundle'
 
 export default class KeyboardEvent extends EventBundle {
-  get key() {
+  get key () {
     return this.originalEvent.key
   }
 
-  get code() {
+  get code () {
     return this.originalEvent.code
   }
 
-  get ctrlKey() {
+  get ctrlKey () {
     return this.originalEvent.ctrlKey
   }
 
-  get shiftKey() {
+  get shiftKey () {
     return this.originalEvent.shiftKey
   }
 
-  get altKey() {
+  get altKey () {
     return this.originalEvent.altKey
   }
 
-  get metaKey() {
+  get metaKey () {
     return this.originalEvent.metaKey
   }
 
-  get repeat() {
+  get repeat () {
     return this.originalEvent.repeat
   }
 
-  get location() {
+  get location () {
     return this.originalEvent.location
   }
 }

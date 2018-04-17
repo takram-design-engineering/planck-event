@@ -10,40 +10,39 @@ import GenericEvent from './GenericEvent'
 
 export const internal = Namespace('EventTargetMixin')
 
-// eslint-disable-next-line arrow-parens
 export default Mixin(S => class EventTargetMixin extends S {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     const scope = internal(this)
     scope.ancestorEventTarget = null
     scope.descendantEventTarget = null
   }
 
-  get ancestorEventTarget() {
+  get ancestorEventTarget () {
     const scope = internal(this)
     return scope.ancestorEventTarget
   }
 
-  set ancestorEventTarget(value) {
+  set ancestorEventTarget (value) {
     const scope = internal(this)
-    scope.ancestorEventTarget = value !== undefined ? value : null
+    scope.ancestorEventTarget = value != null ? value : null
   }
 
-  get descendantEventTarget() {
+  get descendantEventTarget () {
     const scope = internal(this)
     return scope.descendantEventTarget
   }
 
-  set descendantEventTarget(value) {
+  set descendantEventTarget (value) {
     const scope = internal(this)
-    scope.descendantEventTarget = value !== undefined ? value : null
+    scope.descendantEventTarget = value != null ? value : null
   }
 
-  determinePropagationPath(target = null) {
+  determinePropagationPath (target = null) {
     const path = []
-    if (target !== null && target !== undefined) {
+    if (target != null) {
       let ancestor = target
-      while (ancestor !== null && ancestor !== undefined) {
+      while (ancestor != null) {
         path.unshift(ancestor)
         ancestor = ancestor.ancestorEventTarget
         if (path.includes(ancestor)) {
@@ -52,7 +51,7 @@ export default Mixin(S => class EventTargetMixin extends S {
       }
     } else {
       let descendant = this
-      while (descendant !== null && descendant !== undefined) {
+      while (descendant != null) {
         path.push(descendant)
         descendant = descendant.descendantEventTarget
         if (path.includes(descendant)) {
@@ -63,11 +62,11 @@ export default Mixin(S => class EventTargetMixin extends S {
     return path
   }
 
-  dispatchImmediateEvent(event) {
+  dispatchImmediateEvent (event) {
     super.dispatchEvent(event)
   }
 
-  dispatchEvent(object, propagationPath = null) {
+  dispatchEvent (object, propagationPath = null) {
     let event = object
     if (!(event instanceof Event)) {
       event = new GenericEvent(object)
@@ -89,7 +88,7 @@ export default Mixin(S => class EventTargetMixin extends S {
     }
 
     // The last item in the propagation path must always be the event target
-    if (event.target === null) {
+    if (event.target == null) {
       modifier.target = path.pop()
     } else {
       path.pop()

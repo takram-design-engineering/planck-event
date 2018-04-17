@@ -7,11 +7,11 @@ import StateEvent from './StateEvent'
 
 export const internal = Namespace('Binder')
 
-function isTargetSame(target, other) {
+function isTargetSame (target, other) {
   return other.object === target.object && other.name === target.name
 }
 
-function handleChange(transform, event) {
+function handleChange (transform, event) {
   const scope = internal(this)
   if (event.target === scope.source && event.name === scope.name) {
     const value = transform(event.value)
@@ -22,16 +22,16 @@ function handleChange(transform, event) {
   }
 }
 
-function dispose(binder) {
+function dispose (binder) {
   const scope = internal(binder)
   const type = StateEvent.type(scope.name)
   scope.source.removeEventListener(type, scope.handleChange, false)
 }
 
 export default class Binder {
-  constructor(source, name, targets, {
+  constructor (source, name, targets, {
     assigns = false,
-    transform = value => value,
+    transform = value => value
   } = {}) {
     const scope = internal(this)
     scope.source = source
@@ -52,12 +52,12 @@ export default class Binder {
     }
   }
 
-  get empty() {
+  get empty () {
     const scope = internal(this)
     return scope.targets.length === 0
   }
 
-  matches(targets) {
+  matches (targets) {
     const scope = internal(this)
     if (!Array.isArray(targets) || targets.length === 0) {
       return false
@@ -78,7 +78,7 @@ export default class Binder {
     return true
   }
 
-  unbind(targets) {
+  unbind (targets) {
     if (!targets) {
       return this.unbindAll()
     }
@@ -100,7 +100,7 @@ export default class Binder {
     return unboundTargets
   }
 
-  unbindAll() {
+  unbindAll () {
     const scope = internal(this)
     const unboundTargets = scope.targets
     scope.targets = []

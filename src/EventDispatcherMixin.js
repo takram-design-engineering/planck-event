@@ -10,7 +10,7 @@ import GenericEvent from './GenericEvent'
 
 export const internal = Namespace('EventDispatcherMixin')
 
-function handleEvent(event, listener) {
+function handleEvent (event, listener) {
   if (typeof listener === 'function') {
     listener(event)
   } else if (typeof listener.handleEvent === 'function') {
@@ -20,65 +20,63 @@ function handleEvent(event, listener) {
   }
 }
 
-// eslint-disable-next-line arrow-parens
 export default Mixin(S => class EventDispatcherMixin extends S {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
-    const scope = internal(this)
-    scope.listeners = {}
+    internal(this).eventTypes = {}
   }
 
-  addEventListener(type, listener, capture = false) {
+  addEventListener (type, listener, capture = false) {
     if (typeof listener !== 'function' && typeof listener !== 'object') {
       throw new Error('Attempt to add non-function non-object listener')
     }
-    const scope = internal(this)
-    if (scope.listeners[type] === undefined) {
-      scope.listeners[type] = { bubble: [], capture: [] }
+    const { eventTypes } = internal(this)
+    if (eventTypes[type] == null) {
+      eventTypes[type] = { bubble: [], capture: [] }
     }
-    const listeners = (capture ?
-      scope.listeners[type].capture :
-      scope.listeners[type].bubble)
+    const listeners = (capture
+      ? eventTypes[type].capture
+      : eventTypes[type].bubble)
     if (listeners.includes(listener)) {
       return
     }
     listeners.push(listener)
   }
 
-  removeEventListener(type, listener, capture = false) {
-    const scope = internal(this)
-    if (scope.listeners[type] === undefined) {
+  removeEventListener (type, listener, capture = false) {
+    const { eventTypes } = internal(this)
+    if (eventTypes[type] == null) {
       return
     }
-    const listeners = (capture ?
-      scope.listeners[type].capture :
-      scope.listeners[type].bubble)
+    const listeners = (capture
+      ? eventTypes[type].capture
+      : eventTypes[type].bubble)
     const index = listeners.indexOf(listener)
     if (index !== -1) {
       listeners.splice(index, 1)
     }
   }
 
-  on(...args) {
+  on (...args) {
     this.addEventListener(...args)
     return this
   }
 
-  off(...args) {
+  off (...args) {
     this.removeEventListener(...args)
     return this
   }
 
-  once(type, listener, ...rest) {
-    const delegate = event => {
+  once (type, listener, ...rest) {
+    const callback = event => {
       handleEvent(event, listener)
-      this.removeEventListener(type, delegate, ...rest)
+      this.removeEventListener(type, callback, ...rest)
     }
-    this.addEventListener(type, delegate, ...rest)
+    this.addEventListener(type, callback, ...rest)
     return this
   }
 
-  dispatchEvent(object) {
+  dispatchEvent (object) {
     let event = object
     if (!(event instanceof Event)) {
       event = new GenericEvent(object)
@@ -86,15 +84,15 @@ export default Mixin(S => class EventDispatcherMixin extends S {
     const modifier = modifyEvent(event)
 
     // Set target to this when it's not set
-    if (event.target === null) {
+    if (event.target == null) {
       modifier.target = this
     }
     // Current target should be always this
     modifier.currentTarget = this
 
-    const scope = internal(this)
-    const listeners = scope.listeners[event.type]
-    if (listeners === undefined) {
+    const { eventTypes } = internal(this)
+    const listeners = eventTypes[event.type]
+    if (listeners == null) {
       return
     }
     const { eventPhase } = event
