@@ -8,7 +8,7 @@ import CustomEvent from './CustomEvent'
 export const internal = Namespace('StateEvent')
 
 export default class StateEvent extends CustomEvent {
-  init({ name, value, ...rest } = {}) {
+  init ({ name, value, ...rest } = {}) {
     super.init({ ...rest, type: StateEvent.type(name) })
     const scope = internal(this)
     scope.name = name
@@ -16,17 +16,15 @@ export default class StateEvent extends CustomEvent {
     return this
   }
 
-  get name() {
-    const scope = internal(this)
-    return scope.name
+  get name () {
+    return internal(this).name
   }
 
-  get value() {
-    const scope = internal(this)
-    return scope.value
+  get value () {
+    return internal(this).value
   }
 
-  static type(name) {
+  static type (name) {
     if (typeof name !== 'string') {
       throw new Error('Type name must be a string')
     }

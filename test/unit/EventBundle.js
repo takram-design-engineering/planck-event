@@ -1,13 +1,15 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
-import { Global } from '@takram/planck-core'
+import { isNode, globalScope } from '@takram/planck-core'
 
 import { Event, EventBundle } from '../..'
 
@@ -15,14 +17,14 @@ const { expect } = chai
 chai.use(sinonChai)
 
 describe('EventBundle', () => {
-  if (Global.isNode) {
-    Global.scope.Event = class Event {
-      constructor() {
+  if (isNode) {
+    globalScope.Event = class Event {
+      constructor () {
         this.cancelable = true
         this.defaultPrevented = false
       }
 
-      preventDefault() {
+      preventDefault () {
         this.defaultPrevented = true
       }
     }
@@ -57,7 +59,7 @@ describe('EventBundle', () => {
     })
 
     it('takes original event as a parameter', () => {
-      const originalEvent = new Global.scope.Event('')
+      const originalEvent = new globalScope.Event('')
       const event = new EventBundle()
       event.init({ originalEvent })
       expect(event.originalEvent).equal(originalEvent)
@@ -68,7 +70,7 @@ describe('EventBundle', () => {
       event.init({
         type: 'test',
         captures: true,
-        bubbles: false,
+        bubbles: false
       })
       expect(event.type).equal('test')
       expect(event.captures).true
@@ -78,7 +80,7 @@ describe('EventBundle', () => {
 
   describe('#preventDefault', () => {
     it('propagates to original event', () => {
-      const originalEvent = new Global.scope.Event('')
+      const originalEvent = new globalScope.Event('')
       sinon.spy(originalEvent, 'preventDefault')
       const event = new EventBundle()
       event.init({ originalEvent })

@@ -1,6 +1,8 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
@@ -9,7 +11,7 @@ import sinonChai from 'sinon-chai'
 
 import {
   Event,
-  EventTarget,
+  EventTarget
 } from '../..'
 
 const { expect } = chai
@@ -52,17 +54,17 @@ describe('EventTarget', () => {
         expect(arg).equal(event)
         expect(arg.target).equal(target)
         expect(arg.currentTarget).equal(target)
-      }),
+      })
     }
     const listener2 = {
       handleEvent: sinon.spy(arg => {
         expect(arg).equal(event)
         expect(arg.target).equal(target)
         expect(arg.currentTarget).equal(target)
-      }),
+      })
     }
     const listener3 = {
-      handleEvent: sinon.spy(),
+      handleEvent: sinon.spy()
     }
     target.addEventListener('test', listener1)
     target.addEventListener('test', listener2)
@@ -150,7 +152,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: true,
-        captures: false,
+        captures: false
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
@@ -186,7 +188,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: true,
-        captures: false,
+        captures: false
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
@@ -222,7 +224,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: false,
-        captures: true,
+        captures: true
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
@@ -258,7 +260,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: false,
-        captures: true,
+        captures: true
       })
       const listener1 = sinon.spy(arg => {
         expect(arg).equal(event)
@@ -304,7 +306,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: true,
-        captures: false,
+        captures: false
       })
       target3.dispatchEvent(event)
       expect(listener1).not.called
@@ -327,7 +329,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: true,
-        captures: false,
+        captures: false
       })
       target3.dispatchEvent(event)
       expect(listener1).not.called
@@ -350,7 +352,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: true,
-        captures: true,
+        captures: true
       })
       target3.dispatchEvent(event)
       expect(listener1).calledOnce
@@ -373,7 +375,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: true,
-        captures: true,
+        captures: true
       })
       target3.dispatchEvent(event)
       expect(listener1).calledOnce
@@ -396,7 +398,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: false,
-        captures: true,
+        captures: true
       })
       target3.dispatchEvent(event)
       expect(listener1).calledOnce
@@ -419,7 +421,7 @@ describe('EventTarget', () => {
       const event = new Event({
         type: 'test',
         bubbles: false,
-        captures: true,
+        captures: true
       })
       target3.dispatchEvent(event)
       expect(listener1).calledOnce

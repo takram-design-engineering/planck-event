@@ -10,18 +10,18 @@ import { Binding, StateEvent, EventDispatcher } from '../..'
 const { expect } = chai
 
 describe('Binding', () => {
-  function createObject(name, value) {
+  function createObject (name, value) {
     return new (class extends EventDispatcher {
-      constructor() {
+      constructor () {
         super()
         this.states = { [name]: value }
       }
 
-      get [name]() {
+      get [name] () {
         return this.states[name]
       }
 
-      set [name](value) {
+      set [name] (value) {
         if (value !== this.states[name]) {
           this.states[name] = value
           this.dispatchEvent(new StateEvent({ name, value }))
@@ -37,10 +37,10 @@ describe('Binding', () => {
     const target2 = createObject('b', 0)
     source.value = 1
     Binding.bind(source, name, [
-      target1, 'a',
+      target1, 'a'
     ])
     Binding.bind(source, name, [
-      target2, 'b',
+      target2, 'b'
     ])
     expect(target1.a).equal(1)
     expect(target2.b).equal(1)
@@ -61,7 +61,7 @@ describe('Binding', () => {
     source.value = 1
     Binding.bind(source, name, [
       target1, 'a',
-      target2, 'b',
+      target2, 'b'
     ])
     expect(target1.a).equal(1)
     expect(target2.b).equal(1)
@@ -82,10 +82,10 @@ describe('Binding', () => {
     source.value = 1
     Binding.bind(source, name, [
       target1, 'a',
-      target2, 'b',
+      target2, 'b'
     ], {
       oneWay: true,
-      transform: value => +`${value}0`,
+      transform: value => +`${value}0`
     })
     expect(target1.a).equal(10)
     expect(target2.b).equal(10)
@@ -106,11 +106,11 @@ describe('Binding', () => {
     source.value = 1
     Binding.bind(source, name, [
       target1, 'a',
-      target2, 'b',
+      target2, 'b'
     ], {
       oneWay: false,
       transform: value => +`${value}0`,
-      inverseTransform: value => +`${value}`.slice(0, -1),
+      inverseTransform: value => +`${value}`.slice(0, -1)
     })
     expect(target1.a).equal(10)
     expect(target2.b).equal(10)
@@ -129,7 +129,7 @@ describe('Binding', () => {
     const target1 = createObject('a', 0)
     source.value = 1
     Binding.bind(source, name, [
-      target1, 'a',
+      target1, 'a'
     ])
     expect(target1.a).equal(1)
     source.value = 2
@@ -138,10 +138,10 @@ describe('Binding', () => {
     expect(source.value).equal(3)
 
     Binding.bind(source, name, [
-      target1, 'a',
+      target1, 'a'
     ], {
       transform: value => +`${value}0`,
-      inverseTransform: value => +`${value}`.slice(0, -1),
+      inverseTransform: value => +`${value}`.slice(0, -1)
     })
   })
 
@@ -192,9 +192,9 @@ describe('Binding', () => {
 
     Binding.unbind(source, name, [
       target1, 'a',
-      target2, 'b',
+      target2, 'b'
     ], {
-      oneWay: true,
+      oneWay: true
     })
 
     source.value = 6
@@ -240,10 +240,10 @@ describe('Binding', () => {
       const target2 = createObject('b', 0)
       source.value = 1
       Binding.bind(source, 'value', target1, 'a', {
-        oneWay: true,
+        oneWay: true
       })
       Binding.bind(source, 'value', target2, 'b', {
-        oneWay: true,
+        oneWay: true
       })
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
@@ -255,10 +255,10 @@ describe('Binding', () => {
       expect(source.value).equal(2)
 
       Binding.unbind(source, 'value', target1, 'a', {
-        oneWay: true,
+        oneWay: true
       })
       Binding.unbind(source, 'value', target2, 'b', {
-        oneWay: true,
+        oneWay: true
       })
       source.value = 5
       expect(target1.a).equal(3)
@@ -275,8 +275,8 @@ describe('Binding', () => {
         source, 'value',
         target1, 'a',
         target2, 'b', {
-          oneWay: true,
-        },
+          oneWay: true
+        }
       )
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
@@ -291,8 +291,8 @@ describe('Binding', () => {
         source, 'value',
         target1, 'a',
         target2, 'b', {
-          oneWay: true,
-        },
+          oneWay: true
+        }
       )
       source.value = 5
       expect(target1.a).equal(3)
@@ -308,9 +308,9 @@ describe('Binding', () => {
       Binding.bind(
         source, name, [
           target1, 'a',
-          target2, 'b',
+          target2, 'b'
         ],
-        { oneWay: true },
+        { oneWay: true }
       )
       expect(target1.a).equal(1)
       expect(target2.b).equal(1)
@@ -323,7 +323,7 @@ describe('Binding', () => {
 
       Binding.unbind(source, name, [
         target1, 'a',
-        target2, 'b',
+        target2, 'b'
       ], { oneWay: true })
       source.value = 5
       expect(target1.a).equal(3)
@@ -339,10 +339,10 @@ describe('Binding', () => {
       const target2 = createObject('b', 0)
       source.value = 1
       Binding.bind(source, 'value', target1, 'a', {
-        oneWay: false,
+        oneWay: false
       })
       Binding.bind(source, 'value', target2, 'b', {
-        oneWay: false,
+        oneWay: false
       })
       expect(source.value).equal(1)
       expect(target1.a).equal(1)
@@ -361,10 +361,10 @@ describe('Binding', () => {
       expect(target2.b).equal(4)
 
       Binding.unbind(source, 'value', target1, 'a', {
-        oneWay: false,
+        oneWay: false
       })
       Binding.unbind(source, 'value', target2, 'b', {
-        oneWay: false,
+        oneWay: false
       })
       source.value = 5
       expect(source.value).equal(5)
@@ -390,8 +390,8 @@ describe('Binding', () => {
         source, 'value',
         target1, 'a',
         target2, 'b', {
-          oneWay: false,
-        },
+          oneWay: false
+        }
       )
       expect(source.value).equal(1)
       expect(target1.a).equal(1)
@@ -413,8 +413,8 @@ describe('Binding', () => {
         source, 'value',
         target1, 'a',
         target2, 'b', {
-          oneWay: false,
-        },
+          oneWay: false
+        }
       )
       source.value = 5
       expect(source.value).equal(5)
@@ -438,7 +438,7 @@ describe('Binding', () => {
       source.value = 1
       Binding.bind(source, name, [
         target1, 'a',
-        target2, 'b',
+        target2, 'b'
       ], { oneWay: false })
       expect(source.value).equal(1)
       expect(target1.a).equal(1)
@@ -458,7 +458,7 @@ describe('Binding', () => {
 
       Binding.unbind(source, name, [
         target1, 'a',
-        target2, 'b',
+        target2, 'b'
       ], { oneWay: false })
       source.value = 5
       expect(source.value).equal(5)

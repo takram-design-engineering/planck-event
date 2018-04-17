@@ -5,15 +5,15 @@ import 'source-map-support/register'
 
 import chai from 'chai'
 
-import { Global } from '@takram/planck-core'
+import { isNode, globalScope } from '@takram/planck-core'
 
 import { Touch } from '../..'
 
 const { expect } = chai
 
 describe('Touch', () => {
-  if (Global.isNode) {
-    Global.scope.Touch = class {}
+  if (isNode) {
+    globalScope.Touch = class {}
   }
 
   it('supports instanceof', () => {
@@ -45,7 +45,7 @@ describe('Touch', () => {
         x: 1,
         y: 2,
         target,
-        originalTouch,
+        originalTouch
       })
       expect(touch.x).equal(1)
       expect(touch.y).equal(2)

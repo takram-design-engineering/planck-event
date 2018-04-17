@@ -1,24 +1,26 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
+/* eslint-disable no-unused-expressions */
+
 import 'source-map-support/register'
 
 import chai from 'chai'
 
-import { Global } from '@takram/planck-core'
+import { isNode, globalScope } from '@takram/planck-core'
 
 import { EventBundle, KeyboardEvent } from '../..'
 
 const { expect } = chai
 
 describe('KeyboardEvent', () => {
-  if (Global.isNode) {
-    Global.scope.Event = class {
-      constructor(type) {
+  if (isNode) {
+    globalScope.Event = class {
+      constructor (type) {
         this.defaultPrevented = false
       }
 
-      preventDefault() {
+      preventDefault () {
         this.defaultPrevented = true
       }
     }
@@ -53,13 +55,13 @@ describe('KeyboardEvent', () => {
     })
 
     it('initializes parent class', () => {
-      const originalEvent = new Global.scope.Event('')
+      const originalEvent = new globalScope.Event('')
       const event = new KeyboardEvent()
       event.init({
         type: 'test',
         captures: true,
         bubbles: false,
-        originalEvent,
+        originalEvent
       })
       expect(event.type).equal('test')
       expect(event.captures).true

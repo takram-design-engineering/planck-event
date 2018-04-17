@@ -7,7 +7,7 @@ import Binder from './Binder'
 
 export const internal = Namespace('Binding')
 
-function formatTargets(...args) {
+function formatTargets (...args) {
   // Flatten arguments
   const flatArgs = []
   for (let i = 0; i < args.length; ++i) {
@@ -32,17 +32,17 @@ function formatTargets(...args) {
 
   // Defaults to one-way binding for multiple targets
   const options = Object.assign({
-    oneWay: targets.length > 1,
+    oneWay: targets.length > 1
   }, flatArgs[targets.length * 2])
   return [targets, options]
 }
 
-function bind(source, name, targets, options) {
+function bind (source, name, targets, options) {
   const scope = internal(source)
-  if (scope.bindings === undefined) {
+  if (scope.bindings == null) {
     scope.bindings = {}
   }
-  if (scope.bindings[name] === undefined) {
+  if (scope.bindings[name] == null) {
     scope.bindings[name] = []
   }
   const currentBinders = scope.bindings[name]
@@ -58,12 +58,12 @@ function bind(source, name, targets, options) {
   scope.bindings[name] = nextBinders
 }
 
-function unbind(source, name, targets) {
+function unbind (source, name, targets) {
   const scope = internal(source)
-  if (scope.bindings === undefined) {
+  if (scope.bindings == null) {
     return []
   }
-  if (scope.bindings[name] === undefined) {
+  if (scope.bindings[name] == null) {
     return []
   }
   const unboundTargets = []
@@ -80,12 +80,12 @@ function unbind(source, name, targets) {
   return unboundTargets
 }
 
-function unbindAll(source, name) {
+function unbindAll (source, name) {
   const scope = internal(source)
-  if (scope.bindings === undefined) {
+  if (scope.bindings == null) {
     return []
   }
-  if (scope.bindings[name] === undefined) {
+  if (scope.bindings[name] == null) {
     return []
   }
   const binders = scope.bindings[name]
@@ -98,24 +98,24 @@ function unbindAll(source, name) {
 }
 
 export default class Binding {
-  static bind(source, name, ...rest) {
+  static bind (source, name, ...rest) {
     const [targets, options] = formatTargets(...rest)
     if (!options.oneWay) {
       for (let i = 0; i < targets.length; ++i) {
         const target = targets[i]
         bind(target.object, target.name, [{ object: source, name }], {
           assigns: false,
-          transform: options.inverseTransform,
+          transform: options.inverseTransform
         })
       }
     }
     bind(source, name, targets, {
       assigns: true,
-      transform: options.transform,
+      transform: options.transform
     })
   }
 
-  static unbind(source, name, ...rest) {
+  static unbind (source, name, ...rest) {
     const [targets, options] = formatTargets(...rest)
     const unboundTargets = unbind(source, name, targets)
     if (!options.oneWay) {
@@ -126,7 +126,7 @@ export default class Binding {
     }
   }
 
-  static unbindAll(source, name) {
+  static unbindAll (source, name) {
     const unboundTargets = unbindAll(source, name)
     for (let i = 0; i < unboundTargets.length; ++i) {
       const target = unboundTargets[i]

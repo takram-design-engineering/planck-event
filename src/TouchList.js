@@ -6,29 +6,26 @@ import Namespace from '@takram/planck-core/src/Namespace'
 export const internal = Namespace('TouchList')
 
 export default class TouchList {
-  constructor(...args) {
-    const scope = internal(this)
-    scope.array = []
+  constructor (...args) {
+    internal(this).array = []
     this.init(...args)
   }
 
-  init(first, ...rest) {
-    const scope = internal(this)
-    scope.array.length = 0
+  init (first, ...rest) {
+    const array = []
     if (Array.isArray(first)) {
-      scope.array.push(...first)
+      array.push(...first)
     } else if (first) {
-      scope.array.push(first, ...rest)
+      array.push(first, ...rest)
     }
+    internal(this).array = array
   }
 
-  get length() {
-    const scope = internal(this)
-    return scope.array.length
+  get length () {
+    return internal(this).array.length
   }
 
-  item(index) {
-    const scope = internal(this)
-    return scope.array[index]
+  item (index) {
+    return internal(this).array[index]
   }
 }

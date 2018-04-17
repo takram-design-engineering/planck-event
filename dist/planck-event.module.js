@@ -1,20 +1,62 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
-export { default as Binder } from '../src/Binder'
-export { default as Binding } from '../src/Binding'
-export { default as CustomEvent } from '../src/CustomEvent'
-export { default as Event, modifyEvent } from '../src/Event'
-export { default as EventBundle } from '../src/EventBundle'
-export { default as EventDispatcher } from '../src/EventDispatcher'
-export { default as EventDispatcherMixin } from '../src/EventDispatcherMixin'
-export { default as EventTarget } from '../src/EventTarget'
-export { default as EventTargetMixin } from '../src/EventTargetMixin'
-export { default as GenericEvent } from '../src/GenericEvent'
-export { default as KeyboardEvent } from '../src/KeyboardEvent'
-export { default as MouseEvent } from '../src/MouseEvent'
-export { default as StateEvent } from '../src/StateEvent'
-export { default as Touch } from '../src/Touch'
-export { default as TouchEvent } from '../src/TouchEvent'
-export { default as TouchList } from '../src/TouchList'
-export { default as WheelEvent } from '../src/WheelEvent'
+import Binder from '../src/Binder'
+import Binding from '../src/Binding'
+import CustomEvent from '../src/CustomEvent'
+import Event, { modifyEvent } from '../src/Event'
+import EventBundle from '../src/EventBundle'
+import EventDispatcher from '../src/EventDispatcher'
+import EventDispatcherMixin from '../src/EventDispatcherMixin'
+import EventTarget from '../src/EventTarget'
+import EventTargetMixin from '../src/EventTargetMixin'
+import GenericEvent from '../src/GenericEvent'
+import KeyboardEvent from '../src/KeyboardEvent'
+import MouseEvent from '../src/MouseEvent'
+import StateEvent from '../src/StateEvent'
+import Touch from '../src/Touch'
+import TouchEvent from '../src/TouchEvent'
+import TouchList from '../src/TouchList'
+import WheelEvent from '../src/WheelEvent'
+
+export {
+  Binder,
+  Binding,
+  CustomEvent,
+  Event,
+  EventBundle,
+  EventDispatcher,
+  EventDispatcherMixin,
+  EventTarget,
+  EventTargetMixin,
+  GenericEvent,
+  KeyboardEvent,
+  modifyEvent,
+  MouseEvent,
+  StateEvent,
+  Touch,
+  TouchEvent,
+  TouchList,
+  WheelEvent
+}
+
+export default {
+  Binder,
+  Binding,
+  CustomEvent,
+  Event,
+  EventBundle,
+  EventDispatcher,
+  EventDispatcherMixin,
+  EventTarget,
+  EventTargetMixin,
+  GenericEvent,
+  KeyboardEvent,
+  modifyEvent,
+  MouseEvent,
+  StateEvent,
+  Touch,
+  TouchEvent,
+  TouchList,
+  WheelEvent
+}
