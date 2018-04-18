@@ -1,7 +1,7 @@
 // The MIT License
 // Copyright (C) 2016-Present Shota Matsuda
 
-import Namespace from '@takram/planck-core/src/Namespace'
+import { Namespace } from '@takram/planck-core'
 
 export const internal = Namespace('Touch')
 

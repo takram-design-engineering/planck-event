@@ -3,7 +3,7 @@
 
 import { Mixin } from 'mixwith/src/mixwith'
 
-import Namespace from '@takram/planck-core/src/Namespace'
+import { Namespace } from '@takram/planck-core'
 
 import Event, { modifyEvent } from './Event'
 import GenericEvent from './GenericEvent'
