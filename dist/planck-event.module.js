@@ -1,65 +1,4 @@
-// The MIT License
-// Copyright (C) 2016-Present Shota Matsuda
-
-function createNamespace(name) {
-  var symbol = Symbol(name);
-  return function namespace(object, init) {
-    if (object[symbol] == null) {
-      if (typeof init === 'function') {
-        object[symbol] = init({});
-      } else {
-        object[symbol] = {};
-      }
-    }
-    return object[symbol];
-  };
-}
-
-// The MIT License
-// Copyright (C) 2016-Present Shota Matsuda
-
-/* eslint-env worker */
-/* eslint-disable no-new-func */
-
-var isBrowser = function () {
-  try {
-    if (new Function('return this === window')()) {
-      return true;
-    }
-  } catch (error) {}
-  return false;
-}();
-
-var isWorker = !isBrowser && function () {
-  try {
-    if (new Function('return this === self')()) {
-      return true;
-    }
-  } catch (error) {}
-  return false;
-}();
-
-var isNode = !isBrowser && !isWorker && function () {
-  try {
-    if (new Function('return this === global')()) {
-      return true;
-    }
-  } catch (error) {}
-  return false;
-}();
-
-var globalScope = function () {
-  if (isBrowser) {
-    return window;
-  }
-  if (isWorker) {
-    return self;
-  }
-  if (isNode) {
-    return global;
-  }
-  return undefined;
-}();
+import { Namespace, globalScope } from '@takram/planck-core';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -216,7 +155,7 @@ var toConsumableArray = function (arr) {
 
 // The MIT License
 
-var internal = createNamespace('Event');
+var internal = Namespace('Event');
 
 var Event = function () {
   function Event() {
@@ -391,7 +330,7 @@ var CustomEvent = function (_Event) {
 
 // The MIT License
 
-var internal$1 = createNamespace('StateEvent');
+var internal$1 = Namespace('StateEvent');
 
 var StateEvent = function (_CustomEvent) {
   inherits(StateEvent, _CustomEvent);
@@ -440,7 +379,7 @@ var StateEvent = function (_CustomEvent) {
 
 // The MIT License
 
-var internal$2 = createNamespace('Binder');
+var internal$2 = Namespace('Binder');
 
 function isTargetSame(target, other) {
   return other.object === target.object && other.name === target.name;
@@ -560,7 +499,7 @@ var Binder = function () {
 
 // The MIT License
 
-var internal$3 = createNamespace('Binding');
+var internal$3 = Namespace('Binding');
 
 function formatTargets() {
   // Flatten arguments
@@ -723,7 +662,7 @@ var Binding = function () {
 
 // The MIT License
 
-var internal$4 = createNamespace('EventBundle');
+var internal$4 = Namespace('EventBundle');
 
 var EventBundle = function (_Event) {
   inherits(EventBundle, _Event);
@@ -919,7 +858,7 @@ var GenericEvent = function (_CustomEvent) {
 
 // The MIT License
 
-var internal$5 = createNamespace('EventDispatcherMixin');
+var internal$5 = Namespace('EventDispatcherMixin');
 
 function handleEvent(event, listener) {
   if (typeof listener === 'function') {
@@ -1087,7 +1026,7 @@ var EventDispatcher = function (_mix$with) {
 
 // The MIT License
 
-var internal$6 = createNamespace('EventTargetMixin');
+var internal$6 = Namespace('EventTargetMixin');
 
 var EventTargetMixin = Mixin(function (S) {
   return function (_S) {
@@ -1306,7 +1245,7 @@ var KeyboardEvent = function (_EventBundle) {
 
 // The MIT License
 
-var internal$7 = createNamespace('MouseEvent');
+var internal$7 = Namespace('MouseEvent');
 
 var MouseEvent = function (_EventBundle) {
   inherits(MouseEvent, _EventBundle);
@@ -1386,7 +1325,7 @@ var MouseEvent = function (_EventBundle) {
 
 // The MIT License
 
-var internal$8 = createNamespace('Touch');
+var internal$8 = Namespace('Touch');
 
 var Touch = function () {
   function Touch() {
@@ -1443,7 +1382,7 @@ var Touch = function () {
 
 // The MIT License
 
-var internal$9 = createNamespace('TouchList');
+var internal$9 = Namespace('TouchList');
 
 var TouchList = function () {
   function TouchList() {
@@ -1484,7 +1423,7 @@ var TouchList = function () {
 
 // The MIT License
 
-var internal$10 = createNamespace('TouchEvent');
+var internal$10 = Namespace('TouchEvent');
 
 var TouchEvent = function (_EventBundle) {
   inherits(TouchEvent, _EventBundle);

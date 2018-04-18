@@ -1,71 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.Planck = global.Planck || {})));
-}(this, (function (exports) { 'use strict';
-
-  // The MIT License
-  // Copyright (C) 2016-Present Shota Matsuda
-
-  function createNamespace(name) {
-    var symbol = Symbol(name);
-    return function namespace(object, init) {
-      if (object[symbol] == null) {
-        if (typeof init === 'function') {
-          object[symbol] = init({});
-        } else {
-          object[symbol] = {};
-        }
-      }
-      return object[symbol];
-    };
-  }
-
-  // The MIT License
-  // Copyright (C) 2016-Present Shota Matsuda
-
-  /* eslint-env worker */
-  /* eslint-disable no-new-func */
-
-  var isBrowser = function () {
-    try {
-      if (new Function('return this === window')()) {
-        return true;
-      }
-    } catch (error) {}
-    return false;
-  }();
-
-  var isWorker = !isBrowser && function () {
-    try {
-      if (new Function('return this === self')()) {
-        return true;
-      }
-    } catch (error) {}
-    return false;
-  }();
-
-  var isNode = !isBrowser && !isWorker && function () {
-    try {
-      if (new Function('return this === global')()) {
-        return true;
-      }
-    } catch (error) {}
-    return false;
-  }();
-
-  var globalScope = function () {
-    if (isBrowser) {
-      return window;
-    }
-    if (isWorker) {
-      return self;
-    }
-    if (isNode) {
-      return global;
-    }
-    return undefined;
-  }();
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@takram/planck-core')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@takram/planck-core'], factory) :
+  (factory((global.Planck = global.Planck || {}),global.Planck));
+}(this, (function (exports,planckCore) { 'use strict';
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
@@ -222,7 +159,7 @@
 
   // The MIT License
 
-  var internal = createNamespace('Event');
+  var internal = planckCore.Namespace('Event');
 
   var Event = function () {
     function Event() {
@@ -249,7 +186,7 @@
         scope.captures = !!captures;
         scope.bubbles = !!bubbles;
         scope.cancelable = !!cancelable;
-        scope.timeStamp = globalScope.performance && globalScope.performance.now && globalScope.performance.now() || Date.now();
+        scope.timeStamp = planckCore.globalScope.performance && planckCore.globalScope.performance.now && planckCore.globalScope.performance.now() || Date.now();
         scope.propagationStopped = false;
         scope.immediatePropagationStopped = false;
         scope.defaultPrevented = false;
@@ -397,7 +334,7 @@
 
   // The MIT License
 
-  var internal$1 = createNamespace('StateEvent');
+  var internal$1 = planckCore.Namespace('StateEvent');
 
   var StateEvent = function (_CustomEvent) {
     inherits(StateEvent, _CustomEvent);
@@ -446,7 +383,7 @@
 
   // The MIT License
 
-  var internal$2 = createNamespace('Binder');
+  var internal$2 = planckCore.Namespace('Binder');
 
   function isTargetSame(target, other) {
     return other.object === target.object && other.name === target.name;
@@ -566,7 +503,7 @@
 
   // The MIT License
 
-  var internal$3 = createNamespace('Binding');
+  var internal$3 = planckCore.Namespace('Binding');
 
   function formatTargets() {
     // Flatten arguments
@@ -729,7 +666,7 @@
 
   // The MIT License
 
-  var internal$4 = createNamespace('EventBundle');
+  var internal$4 = planckCore.Namespace('EventBundle');
 
   var EventBundle = function (_Event) {
     inherits(EventBundle, _Event);
@@ -925,7 +862,7 @@
 
   // The MIT License
 
-  var internal$5 = createNamespace('EventDispatcherMixin');
+  var internal$5 = planckCore.Namespace('EventDispatcherMixin');
 
   function handleEvent(event, listener) {
     if (typeof listener === 'function') {
@@ -1093,7 +1030,7 @@
 
   // The MIT License
 
-  var internal$6 = createNamespace('EventTargetMixin');
+  var internal$6 = planckCore.Namespace('EventTargetMixin');
 
   var EventTargetMixin = Mixin(function (S) {
     return function (_S) {
@@ -1312,7 +1249,7 @@
 
   // The MIT License
 
-  var internal$7 = createNamespace('MouseEvent');
+  var internal$7 = planckCore.Namespace('MouseEvent');
 
   var MouseEvent = function (_EventBundle) {
     inherits(MouseEvent, _EventBundle);
@@ -1392,7 +1329,7 @@
 
   // The MIT License
 
-  var internal$8 = createNamespace('Touch');
+  var internal$8 = planckCore.Namespace('Touch');
 
   var Touch = function () {
     function Touch() {
@@ -1449,7 +1386,7 @@
 
   // The MIT License
 
-  var internal$9 = createNamespace('TouchList');
+  var internal$9 = planckCore.Namespace('TouchList');
 
   var TouchList = function () {
     function TouchList() {
@@ -1490,7 +1427,7 @@
 
   // The MIT License
 
-  var internal$10 = createNamespace('TouchEvent');
+  var internal$10 = planckCore.Namespace('TouchEvent');
 
   var TouchEvent = function (_EventBundle) {
     inherits(TouchEvent, _EventBundle);
