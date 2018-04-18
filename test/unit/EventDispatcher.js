@@ -9,11 +9,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
-import {
-  Event,
-  modifyEvent,
-  EventDispatcher
-} from '../..'
+import { Event, modifyEvent, EventDispatcher } from '../..'
 
 const { expect } = chai
 chai.use(sinonChai)

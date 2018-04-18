@@ -1,6 +1,6 @@
 {
   "name": "@takram/planck-event",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Provides for phased event dispatching and state binding",
   "repository": "takram-design-engineering/planck-event",
   "main": "dist/planck-event.js",
@@ -29,11 +29,11 @@
     "test:browser": "browser-sync start --server . --files dist --startPath test --no-open --no-notify",
     "test:cloud": "mocha test/setup.js",
     "lint": "npm-run-all lint:main lint:test",
-    "lint:main": "standard -v ${npm_package_module} src/**/*.js *.js",
-    "lint:test": "standard -v --env mocha test/**/*.js",
+    "lint:main": "standard -v *.js src/*.js src/**/*.js",
+    "lint:test": "standard -v --env mocha test/*.js test/**/*.js",
     "lint-fix": "npm-run-all lint-fix:main lint-fix:test",
-    "lint-fix:main": "standard -v --fix ${npm_package_module} src/**/*.js *.js",
-    "lint-fix:test": "standard -v --fix --env mocha test/**/*.js",
+    "lint-fix:main": "standard -v --fix *.js src/*.js src/**/*.js",
+    "lint-fix:test": "standard -v --fix --env mocha test/*.js test/**/*.js",
     "prewatch": "npm-run-all main:compile test:compile",
     "watch": "npm-run-all --parallel test:node watch:main watch:test watch:rollup watch:webpack test:browser",
     "watch:main": "nodemon -C --watch rollup.config.js --watch src --exec 'npm-run-all main:compile test:node'",
@@ -48,7 +48,7 @@
     "@takram/planck-core": "0.x"
   },
   "devDependencies": {
-    "@takram/planck-core": "^0.5.1",
+    "@takram/planck-core": "^0.6.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -78,7 +78,7 @@
     "source-map-support": "^0.5.4",
     "standard": "^11.0.1",
     "uglify-js": "^3.3.21",
-    "webpack": "^4.5.0",
+    "webpack": "^4.6.0",
     "webpack-cli": "^2.0.14"
   },
   "saucelabs": {

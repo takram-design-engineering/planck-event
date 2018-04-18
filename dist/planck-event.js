@@ -1580,7 +1580,7 @@
 
   // The MIT License
 
-  var planckEvent_module = {
+  var main = {
     Binder: Binder,
     Binding: Binding,
     CustomEvent: CustomEvent,
@@ -1619,7 +1619,7 @@
   exports.TouchEvent = TouchEvent;
   exports.TouchList = TouchList;
   exports.WheelEvent = WheelEvent;
-  exports.default = planckEvent_module;
+  exports.default = main;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
