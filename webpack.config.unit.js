@@ -18,8 +18,7 @@ module.exports = {
     'chai': 'chai',
     'mocha': 'mocha',
     'sinon': 'sinon',
-    'source-map-support/register': 'null',
-    '@takram/planck-core': 'Planck'
+    'source-map-support/register': 'null'
   },
   module: {
     rules: [
