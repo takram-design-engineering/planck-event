@@ -42,7 +42,6 @@ export default {
       sourcemap: true
     },
     {
-      globals,
       format: 'es',
       file: pkg.module,
       sourcemap: true
