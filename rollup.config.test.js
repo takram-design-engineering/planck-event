@@ -12,9 +12,9 @@ const globals = {
 }
 
 export default {
-  input: './test/unit.js',
+  input: './test/index.js',
   plugins: [
-    nodeResolve(),
+    nodeResolve({ browser: true }),
     commonjs(),
     babel({
       presets: [
@@ -38,7 +38,7 @@ export default {
     globals,
     intro: 'var BUNDLER = "rollup";',
     format: 'iife',
-    file: './dist/test/unit/rollup.js',
+    file: './dist/test/rollup.js',
     sourcemap: true
   }
 }
