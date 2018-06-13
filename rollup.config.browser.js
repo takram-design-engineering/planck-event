@@ -7,13 +7,15 @@ import nodeResolve from 'rollup-plugin-node-resolve'
 
 import pkg from './package.json'
 
+const globals = {
+  '@takram/planck-core': 'Planck'
+}
+
 export default {
   input: './src/index.js',
-  external: [
-    '@takram/planck-core'
-  ],
+  external: Object.keys(globals),
   plugins: [
-    nodeResolve(),
+    nodeResolve({ browser: true }),
     commonjs(),
     babel({
       presets: [
@@ -31,14 +33,17 @@ export default {
   ],
   output: [
     {
-      format: 'cjs',
+      globals,
+      format: 'umd',
       exports: 'named',
-      file: pkg.main,
+      extend: true,
+      name: 'Planck',
+      file: pkg.browser[pkg.main],
       sourcemap: true
     },
     {
       format: 'es',
-      file: pkg.module,
+      file: pkg.browser[pkg.module],
       sourcemap: true
     }
   ]
