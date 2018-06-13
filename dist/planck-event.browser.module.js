@@ -1,8 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var planckCore = require('@takram/planck-core');
+import { Namespace, globalScope } from '@takram/planck-core';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -159,7 +155,7 @@ var toConsumableArray = function (arr) {
 
 // The MIT License
 
-var internal = planckCore.Namespace('Event');
+var internal = Namespace('Event');
 
 var Event = function () {
   function Event() {
@@ -186,7 +182,7 @@ var Event = function () {
       scope.captures = !!captures;
       scope.bubbles = !!bubbles;
       scope.cancelable = !!cancelable;
-      scope.timeStamp = planckCore.globalScope.performance && planckCore.globalScope.performance.now && planckCore.globalScope.performance.now() || Date.now();
+      scope.timeStamp = globalScope.performance && globalScope.performance.now && globalScope.performance.now() || Date.now();
       scope.propagationStopped = false;
       scope.immediatePropagationStopped = false;
       scope.defaultPrevented = false;
@@ -334,7 +330,7 @@ var CustomEvent = function (_Event) {
 
 // The MIT License
 
-var internal$1 = planckCore.Namespace('StateEvent');
+var internal$1 = Namespace('StateEvent');
 
 var StateEvent = function (_CustomEvent) {
   inherits(StateEvent, _CustomEvent);
@@ -383,7 +379,7 @@ var StateEvent = function (_CustomEvent) {
 
 // The MIT License
 
-var internal$2 = planckCore.Namespace('Binder');
+var internal$2 = Namespace('Binder');
 
 function isTargetSame(target, other) {
   return other.object === target.object && other.name === target.name;
@@ -503,7 +499,7 @@ var Binder = function () {
 
 // The MIT License
 
-var internal$3 = planckCore.Namespace('Binding');
+var internal$3 = Namespace('Binding');
 
 function formatTargets() {
   // Flatten arguments
@@ -666,7 +662,7 @@ var Binding = function () {
 
 // The MIT License
 
-var internal$4 = planckCore.Namespace('EventBundle');
+var internal$4 = Namespace('EventBundle');
 
 var EventBundle = function (_Event) {
   inherits(EventBundle, _Event);
@@ -862,7 +858,7 @@ var GenericEvent = function (_CustomEvent) {
 
 // The MIT License
 
-var internal$5 = planckCore.Namespace('EventDispatcherMixin');
+var internal$5 = Namespace('EventDispatcherMixin');
 
 function handleEvent(event, listener) {
   if (typeof listener === 'function') {
@@ -1030,7 +1026,7 @@ var EventDispatcher = function (_mix$with) {
 
 // The MIT License
 
-var internal$6 = planckCore.Namespace('EventTargetMixin');
+var internal$6 = Namespace('EventTargetMixin');
 
 var EventTargetMixin = Mixin(function (S) {
   return function (_S) {
@@ -1249,7 +1245,7 @@ var KeyboardEvent = function (_EventBundle) {
 
 // The MIT License
 
-var internal$7 = planckCore.Namespace('MouseEvent');
+var internal$7 = Namespace('MouseEvent');
 
 var MouseEvent = function (_EventBundle) {
   inherits(MouseEvent, _EventBundle);
@@ -1329,7 +1325,7 @@ var MouseEvent = function (_EventBundle) {
 
 // The MIT License
 
-var internal$8 = planckCore.Namespace('Touch');
+var internal$8 = Namespace('Touch');
 
 var Touch = function () {
   function Touch() {
@@ -1386,7 +1382,7 @@ var Touch = function () {
 
 // The MIT License
 
-var internal$9 = planckCore.Namespace('TouchList');
+var internal$9 = Namespace('TouchList');
 
 var TouchList = function () {
   function TouchList() {
@@ -1427,7 +1423,7 @@ var TouchList = function () {
 
 // The MIT License
 
-var internal$a = planckCore.Namespace('TouchEvent');
+var internal$a = Namespace('TouchEvent');
 
 var TouchEvent = function (_EventBundle) {
   inherits(TouchEvent, _EventBundle);
@@ -1538,23 +1534,6 @@ var index = {
   WheelEvent: WheelEvent
 };
 
-exports.Binder = Binder;
-exports.Binding = Binding;
-exports.CustomEvent = CustomEvent;
-exports.Event = Event;
-exports.EventBundle = EventBundle;
-exports.EventDispatcher = EventDispatcher;
-exports.EventDispatcherMixin = EventDispatcherMixin;
-exports.EventTarget = EventTarget;
-exports.EventTargetMixin = EventTargetMixin;
-exports.GenericEvent = GenericEvent;
-exports.KeyboardEvent = KeyboardEvent;
-exports.modifyEvent = modifyEvent;
-exports.MouseEvent = MouseEvent;
-exports.StateEvent = StateEvent;
-exports.Touch = Touch;
-exports.TouchEvent = TouchEvent;
-exports.TouchList = TouchList;
-exports.WheelEvent = WheelEvent;
-exports.default = index;
-//# sourceMappingURL=planck-event.js.map
+export default index;
+export { Binder, Binding, CustomEvent, Event, EventBundle, EventDispatcher, EventDispatcherMixin, EventTarget, EventTargetMixin, GenericEvent, KeyboardEvent, modifyEvent, MouseEvent, StateEvent, Touch, TouchEvent, TouchList, WheelEvent };
+//# sourceMappingURL=planck-event.browser.module.js.map
