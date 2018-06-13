@@ -1423,7 +1423,7 @@ var TouchList = function () {
 
 // The MIT License
 
-var internal$10 = Namespace('TouchEvent');
+var internal$a = Namespace('TouchEvent');
 
 var TouchEvent = function (_EventBundle) {
   inherits(TouchEvent, _EventBundle);
@@ -1443,7 +1443,7 @@ var TouchEvent = function (_EventBundle) {
           rest = objectWithoutProperties(_ref, ['touches', 'changedTouches']);
 
       get(TouchEvent.prototype.__proto__ || Object.getPrototypeOf(TouchEvent.prototype), 'init', this).call(this, _extends({}, rest));
-      var scope = internal$10(this);
+      var scope = internal$a(this);
       scope.touches = touches || new TouchList();
       scope.changedTouches = changedTouches || new TouchList();
       return this;
@@ -1451,12 +1451,12 @@ var TouchEvent = function (_EventBundle) {
   }, {
     key: 'touches',
     get: function get$$1() {
-      return internal$10(this).touches;
+      return internal$a(this).touches;
     }
   }, {
     key: 'changedTouches',
     get: function get$$1() {
-      return internal$10(this).changedTouches;
+      return internal$a(this).changedTouches;
     }
   }, {
     key: 'ctrlKey',
@@ -1513,7 +1513,7 @@ var WheelEvent = function (_MouseEvent) {
 
 // The MIT License
 
-var main = {
+var index = {
   Binder: Binder,
   Binding: Binding,
   CustomEvent: CustomEvent,
@@ -1534,6 +1534,6 @@ var main = {
   WheelEvent: WheelEvent
 };
 
-export default main;
+export default index;
 export { Binder, Binding, CustomEvent, Event, EventBundle, EventDispatcher, EventDispatcherMixin, EventTarget, EventTargetMixin, GenericEvent, KeyboardEvent, modifyEvent, MouseEvent, StateEvent, Touch, TouchEvent, TouchList, WheelEvent };
 //# sourceMappingURL=planck-event.module.js.map
